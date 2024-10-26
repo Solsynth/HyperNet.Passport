@@ -5,7 +5,6 @@ import (
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
-	"github.com/samber/lo"
 )
 
 func ListAbuseReport(account models.Account) ([]models.AbuseReport, error) {
@@ -42,10 +41,10 @@ func UpdateAbuseReportStatus(id uint, status, message string) error {
 		return err
 	}
 
-	NewNotification(models.Notification{
+	_ = NewNotification(models.Notification{
 		Topic:     "reports.feedback",
 		Title:     "Abuse report status has been changed.",
-		Subtitle:  lo.ToPtr(fmt.Sprintf("The report #%d's status updated", id)),
+		Subtitle:  fmt.Sprintf("The report #%d's status updated", id),
 		Body:      fmt.Sprintf("The report created by you with ID #%d's status has been changed to %s. Moderator message: %s", id, status, message),
 		Account:   account,
 		AccountID: account.ID,

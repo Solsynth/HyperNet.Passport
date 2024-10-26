@@ -1,15 +1,14 @@
 module git.solsynth.dev/hydrogen/passport
 
-go 1.22.0
-
-toolchain go1.23.2
+go 1.23.2
 
 require (
-	git.solsynth.dev/hydrogen/dealer v0.0.0-20241015165700-60e4bbfd9782
-	git.solsynth.dev/hypernet/nexus v0.0.0-20241023163829-f51b22f0e880
+	git.solsynth.dev/hypernet/nexus v0.0.0-20241024155238-421834ae5c4a
+	git.solsynth.dev/hypernet/pusher v0.0.0-20241026153052-cd2c326efa4e
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/eko/gocache/lib/v4 v4.1.6
 	github.com/eko/gocache/store/ristretto/v4 v4.2.2
+	github.com/fatih/color v1.17.0
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/golang-jwt/jwt/v5 v5.2.1
@@ -35,7 +34,6 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
-	github.com/fatih/color v1.17.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-playground/form v3.1.4+incompatible // indirect
@@ -75,6 +73,9 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/nats-io/nats.go v1.37.0 // indirect
+	github.com/nats-io/nkeys v0.4.7 // indirect
+	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/philhofer/fwd v1.1.3-0.20240916144458-20a13a1f6b7c // indirect
 	github.com/pkg/errors v0.9.1 // indirect

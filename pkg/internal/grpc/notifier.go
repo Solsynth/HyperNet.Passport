@@ -24,17 +24,15 @@ func (v *Server) NotifyUser(_ context.Context, in *proto.NotifyUserRequest) (*pr
 	metadata := nex.DecodeMap(in.GetNotify().GetMetadata())
 
 	notification := models.Notification{
-		Topic:       in.GetNotify().GetTopic(),
-		Title:       in.GetNotify().GetTitle(),
-		Subtitle:    in.GetNotify().Subtitle,
-		Body:        in.GetNotify().GetBody(),
-		Metadata:    metadata,
-		Avatar:      in.GetNotify().Avatar,
-		Picture:     in.GetNotify().Picture,
-		IsRealtime:  in.GetNotify().GetIsRealtime(),
-		IsForcePush: in.GetNotify().GetIsForcePush(),
-		Account:     user,
-		AccountID:   user.ID,
+		Topic:      in.GetNotify().GetTopic(),
+		Title:      in.GetNotify().GetTitle(),
+		Subtitle:   in.GetNotify().GetSubtitle(),
+		Body:       in.GetNotify().GetBody(),
+		Metadata:   metadata,
+		Priority:   int(in.GetNotify().GetPriority()),
+		IsRealtime: in.GetNotify().GetIsRealtime(),
+		Account:    user,
+		AccountID:  user.ID,
 	}
 
 	log.Debug().Str("topic", notification.Topic).Uint("uid", notification.AccountID).Msg("Notifying user...")
@@ -73,17 +71,15 @@ func (v *Server) NotifyUserBatch(_ context.Context, in *proto.NotifyUserBatchReq
 		}
 
 		notification := models.Notification{
-			Topic:       in.GetNotify().GetTopic(),
-			Title:       in.GetNotify().GetTitle(),
-			Subtitle:    in.GetNotify().Subtitle,
-			Body:        in.GetNotify().GetBody(),
-			Metadata:    metadata,
-			Avatar:      in.GetNotify().Avatar,
-			Picture:     in.GetNotify().Picture,
-			IsRealtime:  in.GetNotify().GetIsRealtime(),
-			IsForcePush: in.GetNotify().GetIsForcePush(),
-			Account:     user,
-			AccountID:   user.ID,
+			Topic:      in.GetNotify().GetTopic(),
+			Title:      in.GetNotify().GetTitle(),
+			Subtitle:   in.GetNotify().GetSubtitle(),
+			Body:       in.GetNotify().GetBody(),
+			Metadata:   metadata,
+			Priority:   int(in.GetNotify().GetPriority()),
+			IsRealtime: in.GetNotify().GetIsRealtime(),
+			Account:    user,
+			AccountID:  user.ID,
 		}
 		checklist[user.ID] = true
 
@@ -121,17 +117,15 @@ func (v *Server) NotifyAllUser(_ context.Context, in *proto.NotifyRequest) (*pro
 		}
 
 		notification := models.Notification{
-			Topic:       in.GetTopic(),
-			Title:       in.GetTitle(),
-			Subtitle:    in.Subtitle,
-			Body:        in.GetBody(),
-			Metadata:    metadata,
-			Avatar:      in.Avatar,
-			Picture:     in.Picture,
-			IsRealtime:  in.GetIsRealtime(),
-			IsForcePush: in.GetIsForcePush(),
-			Account:     user,
-			AccountID:   user.ID,
+			Topic:      in.GetTopic(),
+			Title:      in.GetTitle(),
+			Subtitle:   in.GetSubtitle(),
+			Body:       in.GetBody(),
+			Metadata:   metadata,
+			Priority:   int(in.GetPriority()),
+			IsRealtime: in.GetIsRealtime(),
+			Account:    user,
+			AccountID:  user.ID,
 		}
 		checklist[user.ID] = true
 

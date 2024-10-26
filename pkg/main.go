@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
+	"github.com/fatih/color"
 	"os"
 	"os/signal"
 	"syscall"
@@ -27,6 +29,12 @@ func init() {
 }
 
 func main() {
+	// Booting screen
+	fmt.Println(color.YellowString(" ____                                _\n|  _ \\ __ _ ___ ___ _ __   ___  _ __| |_\n| |_) / _` / __/ __| '_ \\ / _ \\| '__| __|\n|  __/ (_| \\__ \\__ \\ |_) | (_) | |  | |_\n|_|   \\__,_|___/___/ .__/ \\___/|_|   \\__|\n                   |_|"))
+	fmt.Printf("%s v%s\n", color.New(color.FgHiYellow).Add(color.Bold).Sprintf("Hypernet.Passport"), pkg.AppVersion)
+	fmt.Printf("The user identity service in Hypernet\n")
+	color.HiBlack("=====================================================\n")
+
 	// Configure settings
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("..")

@@ -10,11 +10,10 @@ type Notification struct {
 
 	Topic    string            `json:"topic"`
 	Title    string            `json:"title"`
-	Subtitle *string           `json:"subtitle"`
+	Subtitle string            `json:"subtitle"`
 	Body     string            `json:"body"`
 	Metadata datatypes.JSONMap `json:"metadata"`
-	Avatar   *string           `json:"avatar"`
-	Picture  *string           `json:"picture"`
+	Priority int               `json:"priority"`
 	SenderID *uint             `json:"sender_id"`
 
 	Account   Account `json:"account"`
@@ -22,8 +21,7 @@ type Notification struct {
 
 	ReadAt *time.Time `json:"read_at"`
 
-	IsRealtime  bool `json:"is_realtime" gorm:"-"`
-	IsForcePush bool `json:"is_force_push" gorm:"-"`
+	IsRealtime bool `json:"is_realtime" gorm:"-"`
 }
 
 const (

@@ -11,15 +11,13 @@ import (
 
 func notifyAllUser(c *fiber.Ctx) error {
 	var data struct {
-		Topic       string         `json:"type" validate:"required"`
-		Title       string         `json:"subject" validate:"required,max=1024"`
-		Subtitle    *string        `json:"subtitle" validate:"max=1024"`
-		Body        string         `json:"content" validate:"required,max=4096"`
-		Metadata    map[string]any `json:"metadata"`
-		Avatar      *string        `json:"avatar"`
-		Picture     *string        `json:"picture"`
-		IsForcePush bool           `json:"is_force_push"`
-		IsRealtime  bool           `json:"is_realtime"`
+		Topic      string         `json:"type" validate:"required"`
+		Title      string         `json:"subject" validate:"required,max=1024"`
+		Subtitle   string         `json:"subtitle" validate:"max=1024"`
+		Body       string         `json:"content" validate:"required,max=4096"`
+		Metadata   map[string]any `json:"metadata"`
+		Priority   int            `json:"priority"`
+		IsRealtime bool           `json:"is_realtime"`
 	}
 
 	if err := exts.BindAndValidate(c, &data); err != nil {
@@ -43,17 +41,14 @@ func notifyAllUser(c *fiber.Ctx) error {
 	go func() {
 		for _, user := range users {
 			notification := models.Notification{
-				Topic:       data.Topic,
-				Subtitle:    data.Subtitle,
-				Title:       data.Title,
-				Body:        data.Body,
-				Metadata:    data.Metadata,
-				Avatar:      data.Avatar,
-				Picture:     data.Picture,
-				IsRealtime:  data.IsRealtime,
-				IsForcePush: data.IsForcePush,
-				Account:     user,
-				AccountID:   user.ID,
+				Topic:     data.Topic,
+				Subtitle:  data.Subtitle,
+				Title:     data.Title,
+				Body:      data.Body,
+				Metadata:  data.Metadata,
+				Priority:  data.Priority,
+				Account:   user,
+				AccountID: user.ID,
 			}
 
 			if data.IsRealtime {
@@ -73,14 +68,14 @@ func notifyAllUser(c *fiber.Ctx) error {
 
 func notifyOneUser(c *fiber.Ctx) error {
 	var data struct {
-		Topic       string         `json:"type" validate:"required"`
-		Title       string         `json:"subject" validate:"required,max=1024"`
-		Subtitle    *string        `json:"subtitle" validate:"max=1024"`
-		Body        string         `json:"content" validate:"required,max=4096"`
-		Metadata    map[string]any `json:"metadata"`
-		IsForcePush bool           `json:"is_force_push"`
-		IsRealtime  bool           `json:"is_realtime"`
-		UserID      uint           `json:"user_id" validate:"required"`
+		Topic      string         `json:"type" validate:"required"`
+		Title      string         `json:"subject" validate:"required,max=1024"`
+		Subtitle   string         `json:"subtitle" validate:"max=1024"`
+		Body       string         `json:"content" validate:"required,max=4096"`
+		Metadata   map[string]any `json:"metadata"`
+		Priority   int            `json:"priority"`
+		IsRealtime bool           `json:"is_realtime"`
+		UserID     uint           `json:"user_id" validate:"required"`
 	}
 
 	if err := exts.BindAndValidate(c, &data); err != nil {
@@ -103,13 +98,12 @@ func notifyOneUser(c *fiber.Ctx) error {
 	}
 
 	notification := models.Notification{
-		Topic:       data.Topic,
-		Subtitle:    data.Subtitle,
-		Title:       data.Title,
-		Body:        data.Body,
-		IsRealtime:  data.IsRealtime,
-		IsForcePush: data.IsForcePush,
-		AccountID:   user.ID,
+		Topic:     data.Topic,
+		Subtitle:  data.Subtitle,
+		Title:     data.Title,
+		Body:      data.Body,
+		Priority:  data.Priority,
+		AccountID: user.ID,
 	}
 
 	if data.IsRealtime {

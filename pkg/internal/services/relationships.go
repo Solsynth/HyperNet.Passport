@@ -6,7 +6,6 @@ import (
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
-	"github.com/samber/lo"
 	"gorm.io/gorm"
 )
 
@@ -131,7 +130,7 @@ func NewFriend(userA models.Account, userB models.Account, skipPending ...bool) 
 	} else {
 		_ = NewNotification(models.Notification{
 			Title:     "New Friend Request",
-			Subtitle:  lo.ToPtr(fmt.Sprintf("New friend request from %s", userA.Name)),
+			Subtitle:  fmt.Sprintf("New friend request from %s", userA.Name),
 			Body:      fmt.Sprintf("You got a new friend request from %s. Go to your account page and decide how to deal it.", userA.Nick),
 			Account:   userB,
 			AccountID: userB.ID,
@@ -168,7 +167,7 @@ func HandleFriend(userA models.Account, userB models.Account, isAccept bool) err
 
 		_ = NewNotification(models.Notification{
 			Title:     "Friend Request Processed",
-			Subtitle:  lo.ToPtr(fmt.Sprintf("Your friend request to %s has been processsed.", userA.Name)),
+			Subtitle:  fmt.Sprintf("Your friend request to %s has been processsed.", userA.Name),
 			Body:      fmt.Sprintf("Your relationship status with %s has been updated, go check it out!", userA.Nick),
 			Account:   userB,
 			AccountID: userB.ID,

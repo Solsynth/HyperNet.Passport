@@ -3,9 +3,9 @@ package services
 import (
 	"context"
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"time"
 
-	"git.solsynth.dev/hydrogen/dealer/pkg/proto"
 	localCache "git.solsynth.dev/hydrogen/passport/pkg/internal/cache"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/gap"
 
@@ -60,7 +60,7 @@ func CacheUserStatus(uid uint, status models.Status) {
 }
 
 func GetUserOnline(uid uint) bool {
-	pc := proto.NewStreamControllerClient(gap.Nx.GetNexusGrpcConn())
+	pc := proto.NewStreamServiceClient(gap.Nx.GetNexusGrpcConn())
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	resp, err := pc.CountStreamConnection(ctx, &proto.CountConnectionRequest{

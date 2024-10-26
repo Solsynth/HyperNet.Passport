@@ -4,21 +4,19 @@ import (
 	"context"
 	"fmt"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
+	"git.solsynth.dev/hypernet/nexus/pkg/proto"
+	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
 	"reflect"
 	"time"
 
-	jsoniter "github.com/json-iterator/go"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
 
-	"git.solsynth.dev/hydrogen/dealer/pkg/proto"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/gap"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 )
-
-// TODO Awaiting for the new notification pusher
 
 func AddNotifySubscriber(user models.Account, provider, id, tk, ua string) (models.NotificationSubscriber, error) {
 	var prev models.NotificationSubscriber
@@ -101,7 +99,7 @@ func PushNotification(notification models.Notification, skipNotifiableCheck ...b
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	_, err := proto.NewStreamControllerClient(gap.Nx.GetNexusGrpcConn()).PushStream(ctx, &proto.PushStreamRequest{
+	_, err := proto.NewStreamServiceClient(gap.Nx.GetNexusGrpcConn()).PushStream(ctx, &proto.PushStreamRequest{
 		UserId: lo.ToPtr(uint64(notification.AccountID)),
 		Body: nex.WebSocketPackage{
 			Action:  "notifications.new",
@@ -131,23 +129,17 @@ func PushNotification(notification models.Notification, skipNotifiableCheck ...b
 		tokens = append(tokens, subscriber.DeviceToken)
 	}
 
-	metadata, _ := jsoniter.Marshal(notification.Metadata)
-
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	_, err = proto.NewPostmanClient(gap.Nx.GetNexusGrpcConn()).DeliverNotificationBatch(ctx, &proto.DeliverNotificationBatchRequest{
-		Providers:    providers,
-		DeviceTokens: tokens,
-		Notify: &proto.NotifyRequest{
-			Topic:       notification.Topic,
-			Title:       notification.Title,
-			Subtitle:    notification.Subtitle,
-			Body:        notification.Body,
-			Metadata:    metadata,
-			Avatar:      notification.Avatar,
-			Picture:     notification.Picture,
-			IsRealtime:  notification.IsRealtime,
-			IsForcePush: notification.IsForcePush,
+	err = gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
+		Providers: providers,
+		Tokens:    tokens,
+		Notification: pushkit.Notification{
+			Topic:    notification.Topic,
+			Title:    notification.Title,
+			Subtitle: notification.Subtitle,
+			Body:     notification.Body,
+			Metadata: notification.Metadata,
 		},
 	})
 
@@ -188,7 +180,7 @@ func PushNotificationBatch(notifications []models.Notification, skipNotifiableCh
 	var subscribers []models.NotificationSubscriber
 	database.C.Where("account_id IN ?", accountIdx).Find(&subscribers)
 
-	stream := proto.NewStreamControllerClient(gap.Nx.GetNexusGrpcConn())
+	stream := proto.NewStreamServiceClient(gap.Nx.GetNexusGrpcConn())
 	for _, notification := range notifications {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		_, _ = stream.PushStream(ctx, &proto.PushStreamRequest{
@@ -214,22 +206,16 @@ func PushNotificationBatch(notifications []models.Notification, skipNotifiableCh
 			tokens = append(tokens, subscriber.DeviceToken)
 		}
 
-		metadata, _ := jsoniter.Marshal(notification.Metadata)
-
 		ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
-		_, _ = proto.NewPostmanClient(gap.Nx.GetNexusGrpcConn()).DeliverNotificationBatch(ctx, &proto.DeliverNotificationBatchRequest{
-			Providers:    providers,
-			DeviceTokens: tokens,
-			Notify: &proto.NotifyRequest{
-				Topic:       notification.Topic,
-				Title:       notification.Title,
-				Subtitle:    notification.Subtitle,
-				Body:        notification.Body,
-				Metadata:    metadata,
-				Avatar:      notification.Avatar,
-				Picture:     notification.Picture,
-				IsRealtime:  notification.IsRealtime,
-				IsForcePush: notification.IsForcePush,
+		_ = gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
+			Providers: providers,
+			Tokens:    tokens,
+			Notification: pushkit.Notification{
+				Topic:    notification.Topic,
+				Title:    notification.Title,
+				Subtitle: notification.Subtitle,
+				Body:     notification.Body,
+				Metadata: notification.Metadata,
 			},
 		})
 		cancel()

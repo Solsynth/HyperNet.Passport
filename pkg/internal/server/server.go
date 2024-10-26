@@ -25,8 +25,8 @@ func NewServer() *HTTPApp {
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 		EnableIPValidation:    true,
-		ServerHeader:          "Hydrogen.Passport",
-		AppName:               "Hydrogen.Passport",
+		ServerHeader:          "Hypernet.Passport",
+		AppName:               "Hypernet.Passport",
 		ProxyHeader:           fiber.HeaderXForwardedFor,
 		JSONEncoder:           jsoniter.ConfigCompatibleWithStandardLibrary.Marshal,
 		JSONDecoder:           jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal,

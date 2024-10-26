@@ -13,12 +13,11 @@ default_user_group = 1
 
 use_registration_magic_token = false
 
+nexus_addr = "localhost:7001"
+
 [debug]
 database = false
 print_routes = false
-
-[dealer]
-addr = "127.0.0.1:7442"
 
 [security]
 issuer = "https://solsynth.dev"

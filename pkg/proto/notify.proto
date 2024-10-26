@@ -26,10 +26,8 @@ message NotifyRequest {
   optional string subtitle = 3;
   string body = 4;
   bytes metadata = 5;
-  optional string avatar = 6;
-  optional string picture = 7;
+  int64 priority = 6;
   bool is_realtime = 8;
-  bool is_force_push = 9;
 }
 
 message NotifyResponse {

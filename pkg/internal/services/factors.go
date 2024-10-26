@@ -1,19 +1,16 @@
 package services
 
 import (
-	"context"
 	"fmt"
-	"git.solsynth.dev/hydrogen/dealer/pkg/proto"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/gap"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
+	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
+	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
-	"strings"
-	"time"
-
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
-	"github.com/google/uuid"
 	"github.com/spf13/viper"
+	"strings"
 )
 
 const EmailPasswordTemplate = `Dear %s,
@@ -86,13 +83,11 @@ func GetFactorCode(factor models.AuthFactor) (bool, error) {
 		subject := fmt.Sprintf("[%s] Login verification code", viper.GetString("name"))
 		content := fmt.Sprintf(EmailPasswordTemplate, user.Name, factor.Secret, viper.GetString("maintainer"))
 
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		_, err := proto.NewPostmanClient(gap.Nx.GetNexusGrpcConn()).DeliverEmail(ctx, &proto.DeliverEmailRequest{
+		err := gap.Px.PushEmail(pushkit.EmailDeliverRequest{
 			To: user.GetPrimaryEmail().Content,
-			Email: &proto.EmailRequest{
-				Subject:  subject,
-				TextBody: &content,
+			Email: pushkit.EmailData{
+				Subject: subject,
+				Text:    &content,
 			},
 		})
 		if err != nil {

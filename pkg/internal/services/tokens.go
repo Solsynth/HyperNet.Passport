@@ -1,10 +1,9 @@
 package services
 
 import (
-	"context"
 	"fmt"
-	"git.solsynth.dev/hydrogen/dealer/pkg/proto"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/gap"
+	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
 	"strings"
 	"time"
 
@@ -143,13 +142,11 @@ func NotifyMagicToken(token models.MagicToken) error {
 		return fmt.Errorf("unsupported magic token type to notify")
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	_, err := proto.NewPostmanClient(gap.Nx.GetNexusGrpcConn()).DeliverEmail(ctx, &proto.DeliverEmailRequest{
+	err := gap.Px.PushEmail(pushkit.EmailDeliverRequest{
 		To: user.GetPrimaryEmail().Content,
-		Email: &proto.EmailRequest{
-			Subject:  subject,
-			TextBody: &content,
+		Email: pushkit.EmailData{
+			Subject: subject,
+			Text:    &content,
 		},
 	})
 	return err

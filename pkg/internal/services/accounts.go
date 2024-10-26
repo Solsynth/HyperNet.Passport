@@ -3,10 +3,11 @@ package services
 import (
 	"context"
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex"
+	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"time"
 	"unicode"
 
-	"git.solsynth.dev/hydrogen/dealer/pkg/proto"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/gap"
 
 	"gorm.io/gorm/clause"
@@ -312,9 +313,12 @@ func DeleteAccount(id uint) error {
 		return err
 	} else {
 		InvalidAuthCacheWithUser(id)
-		_, _ = proto.NewServiceDirectoryClient(gap.Nx.GetNexusGrpcConn()).BroadcastDeletion(context.Background(), &proto.DeletionRequest{
-			ResourceType: "account",
-			ResourceId:   fmt.Sprintf("%d", id),
+		_, _ = proto.NewDirectoryServiceClient(gap.Nx.GetNexusGrpcConn()).BroadcastEvent(context.Background(), &proto.EventInfo{
+			Event: "deletion",
+			Data: nex.EncodeMap(map[string]any{
+				"type": "account",
+				"id":   fmt.Sprintf("%d", id),
+			}),
 		})
 	}
 

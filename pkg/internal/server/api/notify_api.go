@@ -16,17 +16,15 @@ func notifyUser(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.Account)
 
 	var data struct {
-		ClientID    string         `json:"client_id" validate:"required"`
-		Topic       string         `json:"type" validate:"required"`
-		Title       string         `json:"subject" validate:"required,max=1024"`
-		Subtitle    *string        `json:"subtitle" validate:"max=1024"`
-		Body        string         `json:"content" validate:"required,max=4096"`
-		Metadata    map[string]any `json:"metadata"`
-		Avatar      *string        `json:"avatar"`
-		Picture     *string        `json:"picture"`
-		IsForcePush bool           `json:"is_force_push"`
-		IsRealtime  bool           `json:"is_realtime"`
-		UserID      uint           `json:"user_id" validate:"required"`
+		ClientID   string         `json:"client_id" validate:"required"`
+		Topic      string         `json:"type" validate:"required"`
+		Title      string         `json:"subject" validate:"required,max=1024"`
+		Subtitle   string         `json:"subtitle" validate:"max=1024"`
+		Body       string         `json:"content" validate:"required,max=4096"`
+		Metadata   map[string]any `json:"metadata"`
+		Priority   int            `json:"priority"`
+		IsRealtime bool           `json:"is_realtime"`
+		UserID     uint           `json:"user_id" validate:"required"`
 	}
 
 	if err := exts.BindAndValidate(c, &data); err != nil {
@@ -44,18 +42,15 @@ func notifyUser(c *fiber.Ctx) error {
 	}
 
 	notification := models.Notification{
-		Topic:       data.Topic,
-		Subtitle:    data.Subtitle,
-		Title:       data.Title,
-		Body:        data.Body,
-		Metadata:    data.Metadata,
-		Avatar:      data.Avatar,
-		Picture:     data.Picture,
-		IsRealtime:  data.IsRealtime,
-		IsForcePush: data.IsForcePush,
-		Account:     target,
-		AccountID:   target.ID,
-		SenderID:    &client.ID,
+		Topic:     data.Topic,
+		Subtitle:  data.Subtitle,
+		Title:     data.Title,
+		Body:      data.Body,
+		Metadata:  data.Metadata,
+		Priority:  data.Priority,
+		Account:   target,
+		AccountID: target.ID,
+		SenderID:  &client.ID,
 	}
 
 	if data.IsRealtime {
