@@ -47,7 +47,7 @@ func (c *eventRecorderClient) RecordEvent(ctx context.Context, in *RecordEventRe
 	return out, nil
 }
 
-// EventRecorderServer is the server API for EventRecorder service.
+// EventRecorderServer is the http API for EventRecorder service.
 // All implementations must embed UnimplementedEventRecorderServer
 // for forward compatibility.
 type EventRecorderServer interface {

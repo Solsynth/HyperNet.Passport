@@ -13,7 +13,7 @@ import (
 	health "google.golang.org/grpc/health/grpc_health_v1"
 )
 
-type Server struct {
+type App struct {
 	nroto.UnimplementedAuthServiceServer
 	nroto.UnimplementedDirectoryServiceServer
 	proto.UnimplementedNotifierServer
@@ -24,8 +24,8 @@ type Server struct {
 	srv *grpc.Server
 }
 
-func NewServer() *Server {
-	server := &Server{
+func NewServer() *App {
+	server := &App{
 		srv: grpc.NewServer(),
 	}
 
@@ -40,7 +40,7 @@ func NewServer() *Server {
 	return server
 }
 
-func (v *Server) Listen() error {
+func (v *App) Listen() error {
 	listener, err := net.Listen("tcp", viper.GetString("grpc_bind"))
 	if err != nil {
 		return err

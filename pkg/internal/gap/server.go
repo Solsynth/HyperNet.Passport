@@ -6,6 +6,7 @@ import (
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit/pushcon"
 	"github.com/rs/zerolog/log"
+	"github.com/samber/lo"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -29,7 +30,7 @@ func InitializeToNexus() error {
 		Type:     nex.ServiceTypeAuth,
 		Label:    "Passport",
 		GrpcAddr: grpcOutbound,
-		HttpAddr: &httpOutbound,
+		HttpAddr: lo.ToPtr("http://" + httpOutbound),
 	})
 	if err == nil {
 		go func() {

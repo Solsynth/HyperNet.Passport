@@ -7,7 +7,7 @@ import (
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 )
 
-func (v *Server) BroadcastEvent(ctx context.Context, request *proto.EventInfo) (*proto.EventResponse, error) {
+func (v *App) BroadcastEvent(ctx context.Context, request *proto.EventInfo) (*proto.EventResponse, error) {
 	switch request.GetEvent() {
 	case "ws.client.register":
 		// No longer need update user online status

@@ -12,7 +12,7 @@ import (
 	"github.com/samber/lo"
 )
 
-func (v *Server) ListCommunityRealm(ctx context.Context, empty *proto.ListRealmRequest) (*proto.ListRealmResponse, error) {
+func (v *App) ListCommunityRealm(ctx context.Context, empty *proto.ListRealmRequest) (*proto.ListRealmResponse, error) {
 	realms, err := services.ListCommunityRealm()
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func (v *Server) ListCommunityRealm(ctx context.Context, empty *proto.ListRealmR
 	}, nil
 }
 
-func (v *Server) ListAvailableRealm(ctx context.Context, request *proto.LookupUserRealmRequest) (*proto.ListRealmResponse, error) {
+func (v *App) ListAvailableRealm(ctx context.Context, request *proto.LookupUserRealmRequest) (*proto.ListRealmResponse, error) {
 	account, err := services.GetAccount(uint(request.GetUserId()))
 	if err != nil {
 		return nil, fmt.Errorf("unable to find target account: %v", err)
@@ -72,7 +72,7 @@ func (v *Server) ListAvailableRealm(ctx context.Context, request *proto.LookupUs
 	}, nil
 }
 
-func (v *Server) ListOwnedRealm(ctx context.Context, request *proto.LookupUserRealmRequest) (*proto.ListRealmResponse, error) {
+func (v *App) ListOwnedRealm(ctx context.Context, request *proto.LookupUserRealmRequest) (*proto.ListRealmResponse, error) {
 	account, err := services.GetAccount(uint(request.GetUserId()))
 	if err != nil {
 		return nil, fmt.Errorf("unable to find target account: %v", err)
@@ -104,7 +104,7 @@ func (v *Server) ListOwnedRealm(ctx context.Context, request *proto.LookupUserRe
 	}, nil
 }
 
-func (v *Server) GetRealm(ctx context.Context, request *proto.LookupRealmRequest) (*proto.RealmInfo, error) {
+func (v *App) GetRealm(ctx context.Context, request *proto.LookupRealmRequest) (*proto.RealmInfo, error) {
 	var realm models.Realm
 
 	tx := database.C.Model(&models.Realm{})
@@ -143,7 +143,7 @@ func (v *Server) GetRealm(ctx context.Context, request *proto.LookupRealmRequest
 	return info, nil
 }
 
-func (v *Server) ListRealmMember(ctx context.Context, request *proto.RealmMemberLookupRequest) (*proto.ListRealmMemberResponse, error) {
+func (v *App) ListRealmMember(ctx context.Context, request *proto.RealmMemberLookupRequest) (*proto.ListRealmMemberResponse, error) {
 	var members []models.RealmMember
 	if request.UserId == nil && request.RealmId == nil {
 		return nil, fmt.Errorf("either user id or realm id must be provided")
@@ -171,7 +171,7 @@ func (v *Server) ListRealmMember(ctx context.Context, request *proto.RealmMember
 	}, nil
 }
 
-func (v *Server) GetRealmMember(ctx context.Context, request *proto.RealmMemberLookupRequest) (*proto.RealmMemberInfo, error) {
+func (v *App) GetRealmMember(ctx context.Context, request *proto.RealmMemberLookupRequest) (*proto.RealmMemberInfo, error) {
 	var member models.RealmMember
 	if request.UserId == nil && request.RealmId == nil {
 		return nil, fmt.Errorf("either user id or realm id must be provided")
@@ -195,7 +195,7 @@ func (v *Server) GetRealmMember(ctx context.Context, request *proto.RealmMemberL
 	}, nil
 }
 
-func (v *Server) CheckRealmMemberPerm(ctx context.Context, request *proto.CheckRealmPermRequest) (*proto.CheckRealmPermResponse, error) {
+func (v *App) CheckRealmMemberPerm(ctx context.Context, request *proto.CheckRealmPermRequest) (*proto.CheckRealmPermResponse, error) {
 	var member models.RealmMember
 	tx := database.C.
 		Where("realm_id = ?", request.GetRealmId()).

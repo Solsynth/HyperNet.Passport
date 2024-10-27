@@ -14,7 +14,7 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/proto"
 )
 
-func (v *Server) NotifyUser(_ context.Context, in *proto.NotifyUserRequest) (*proto.NotifyResponse, error) {
+func (v *App) NotifyUser(_ context.Context, in *proto.NotifyUserRequest) (*proto.NotifyResponse, error) {
 	var err error
 	var user models.Account
 	if user, err = services.GetAccount(uint(in.GetUserId())); err != nil {
@@ -52,7 +52,7 @@ func (v *Server) NotifyUser(_ context.Context, in *proto.NotifyUserRequest) (*pr
 	}, nil
 }
 
-func (v *Server) NotifyUserBatch(_ context.Context, in *proto.NotifyUserBatchRequest) (*proto.NotifyResponse, error) {
+func (v *App) NotifyUserBatch(_ context.Context, in *proto.NotifyUserBatchRequest) (*proto.NotifyResponse, error) {
 	var err error
 	var users []models.Account
 	if users, err = services.GetAccountList(lo.Map(in.GetUserId(), func(item uint64, index int) uint {
@@ -101,7 +101,7 @@ func (v *Server) NotifyUserBatch(_ context.Context, in *proto.NotifyUserBatchReq
 	}, nil
 }
 
-func (v *Server) NotifyAllUser(_ context.Context, in *proto.NotifyRequest) (*proto.NotifyResponse, error) {
+func (v *App) NotifyAllUser(_ context.Context, in *proto.NotifyRequest) (*proto.NotifyResponse, error) {
 	var users []models.Account
 	if err := database.C.Find(&users).Error; err != nil {
 		return nil, fmt.Errorf("unable to get account: %v", err)

@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/server/exts"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 )

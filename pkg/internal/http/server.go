@@ -1,11 +1,11 @@
-package server
+package http
 
 import (
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"strings"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/server/admin"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/server/api"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/admin"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/api"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/idempotency"
@@ -15,13 +15,13 @@ import (
 	"github.com/spf13/viper"
 )
 
-type HTTPApp struct {
+type App struct {
 	app *fiber.App
 }
 
 var IReader *sec.InternalTokenReader
 
-func NewServer() *HTTPApp {
+func NewServer() *App {
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
 		EnableIPValidation:    true,
@@ -60,11 +60,11 @@ func NewServer() *HTTPApp {
 	admin.MapAdminAPIs(app, "/api/admin")
 	api.MapAPIs(app, "/api")
 
-	return &HTTPApp{app}
+	return &App{app}
 }
 
-func (v *HTTPApp) Listen() {
+func (v *App) Listen() {
 	if err := v.app.Listen(viper.GetString("bind")); err != nil {
-		log.Fatal().Err(err).Msg("An error occurred when starting server...")
+		log.Fatal().Err(err).Msg("An error occurred when starting http...")
 	}
 }

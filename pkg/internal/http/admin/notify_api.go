@@ -2,8 +2,8 @@ package admin
 
 import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/server/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog/log"

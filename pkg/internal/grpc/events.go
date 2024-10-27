@@ -6,7 +6,7 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/proto"
 )
 
-func (v *Server) RecordEvent(ctx context.Context, request *proto.RecordEventRequest) (*proto.RecordEventResponse, error) {
+func (v *App) RecordEvent(ctx context.Context, request *proto.RecordEventRequest) (*proto.RecordEventResponse, error) {
 	services.AddEvent(
 		uint(request.GetUserId()),
 		request.GetAction(),

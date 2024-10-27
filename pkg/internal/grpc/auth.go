@@ -18,7 +18,7 @@ type authenticateServer struct {
 	proto.UnimplementedAuthServiceServer
 }
 
-func (v *Server) Authenticate(_ context.Context, in *proto.AuthRequest) (*proto.AuthReply, error) {
+func (v *App) Authenticate(_ context.Context, in *proto.AuthRequest) (*proto.AuthReply, error) {
 	ticket, perms, err := services.Authenticate(uint(in.GetSessionId()))
 	if err != nil {
 		return &proto.AuthReply{
@@ -43,7 +43,7 @@ func (v *Server) Authenticate(_ context.Context, in *proto.AuthRequest) (*proto.
 	}
 }
 
-func (v *Server) EnsurePermGranted(_ context.Context, in *proto.CheckPermRequest) (*proto.CheckPermResponse, error) {
+func (v *App) EnsurePermGranted(_ context.Context, in *proto.CheckPermRequest) (*proto.CheckPermResponse, error) {
 	ctx, err := services.GetAuthContext(uint(in.GetSessionId()))
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func (v *Server) EnsurePermGranted(_ context.Context, in *proto.CheckPermRequest
 	}, nil
 }
 
-func (v *Server) EnsureUserPermGranted(_ context.Context, in *proto.CheckUserPermRequest) (*proto.CheckUserPermResponse, error) {
+func (v *App) EnsureUserPermGranted(_ context.Context, in *proto.CheckUserPermRequest) (*proto.CheckUserPermResponse, error) {
 	relation, err := services.GetRelationWithTwoNode(uint(in.GetUserId()), uint(in.GetOtherId()))
 	if err != nil {
 		return &proto.CheckUserPermResponse{
@@ -82,7 +82,7 @@ func (v *Server) EnsureUserPermGranted(_ context.Context, in *proto.CheckUserPer
 	}, nil
 }
 
-func (v *Server) ListUserFriends(_ context.Context, in *proto.ListUserRelativeRequest) (*proto.ListUserRelativeResponse, error) {
+func (v *App) ListUserFriends(_ context.Context, in *proto.ListUserRelativeRequest) (*proto.ListUserRelativeResponse, error) {
 	tx := database.C.Preload("Account").Where("status = ?", models.RelationshipFriend)
 
 	if in.GetIsRelated() {
@@ -108,7 +108,7 @@ func (v *Server) ListUserFriends(_ context.Context, in *proto.ListUserRelativeRe
 	}, nil
 }
 
-func (v *Server) ListUserBlocklist(_ context.Context, in *proto.ListUserRelativeRequest) (*proto.ListUserRelativeResponse, error) {
+func (v *App) ListUserBlocklist(_ context.Context, in *proto.ListUserRelativeRequest) (*proto.ListUserRelativeResponse, error) {
 	tx := database.C.Preload("Account").Where("status = ?", models.RelationshipBlocked)
 
 	if in.GetIsRelated() {

@@ -119,7 +119,7 @@ func (c *realmClient) CheckRealmMemberPerm(ctx context.Context, in *CheckRealmPe
 	return out, nil
 }
 
-// RealmServer is the server API for Realm service.
+// RealmServer is the http API for Realm service.
 // All implementations must embed UnimplementedRealmServer
 // for forward compatibility.
 type RealmServer interface {

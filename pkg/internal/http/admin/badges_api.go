@@ -2,7 +2,7 @@ package admin
 
 import (
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/server/exts"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"

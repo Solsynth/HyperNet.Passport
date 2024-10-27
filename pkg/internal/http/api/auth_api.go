@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/server/exts"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 
 	"github.com/gofiber/fiber/v2"
 

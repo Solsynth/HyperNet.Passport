@@ -12,7 +12,7 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/gap"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/grpc"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/server"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/http"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"github.com/robfig/cron/v3"
 
@@ -55,7 +55,7 @@ func main() {
 	if reader, err := sec.NewInternalTokenReader(viper.GetString("security.internal_public_key")); err != nil {
 		log.Error().Err(err).Msg("An error occurred when reading internal public key for jwt. Authentication related features will be disabled.")
 	} else {
-		server.IReader = reader
+		http.IReader = reader
 		log.Info().Msg("Internal jwt public key loaded.")
 	}
 
@@ -71,10 +71,10 @@ func main() {
 		log.Fatal().Err(err).Msg("An error occurred when initializing cache.")
 	}
 
-	// Server
-	go server.NewServer().Listen()
+	// App
+	go http.NewServer().Listen()
 
-	// Grpc Server
+	// Grpc App
 	go grpc.NewServer().Listen()
 
 	// Configure timed tasks

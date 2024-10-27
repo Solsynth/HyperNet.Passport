@@ -71,7 +71,7 @@ func (c *notifierClient) NotifyAllUser(ctx context.Context, in *NotifyRequest, o
 	return out, nil
 }
 
-// NotifierServer is the server API for Notifier service.
+// NotifierServer is the http API for Notifier service.
 // All implementations must embed UnimplementedNotifierServer
 // for forward compatibility.
 type NotifierServer interface {
