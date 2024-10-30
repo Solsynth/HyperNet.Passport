@@ -60,7 +60,7 @@ func getUserinfo(c *fiber.Ctx) error {
 		First(&data).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		data.PermNodes = c.Locals("permissions").(map[string]any)
+		data.PermNodes = user.PermNodes
 	}
 
 	var resp fiber.Map

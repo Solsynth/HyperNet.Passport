@@ -19,7 +19,7 @@ func EnsureGrantedPerm(c *fiber.Ctx, key string, val any) error {
 	if err := EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	perms := c.Locals("permissions").(map[string]any)
+	perms := c.Locals("user").(*sec.UserInfo).PermNodes
 	if !services.HasPermNode(perms, key, val) {
 		return fiber.NewError(fiber.StatusForbidden, fmt.Sprintf("missing permission: %s", key))
 	}

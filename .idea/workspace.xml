@@ -4,45 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":truck: Move http server package">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":recycle: Move models.Account to sec.UserInfo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/gap/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/gap/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/realms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/realms.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/admin/notify_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/admin/notify_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/admin/permissions_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/admin/permissions_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/admin/users_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/admin/users_api.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/accounts_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/accounts_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/avatar_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/avatar_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/bot_token_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/bot_token_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/bots_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/bots_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/index.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/index.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/notifications_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/notifications_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/notify_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/notify_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/oauth_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/oauth_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/preferences_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/preferences_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/realm_members_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/realm_members_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/realms_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/realms_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/relationships_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/relationships_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/reports_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/reports_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/security_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/security_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/sign_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/sign_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/statuses_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/statuses_api.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/internal/http/exts/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/exts/auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/bots.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/bots.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/events.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/events.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/jwt.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/jwt.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/preferences.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/preferences.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/realms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/realms.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/relationships.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/relationships.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/reports.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/reports.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/sign.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/sign.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/statuses.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/statuses.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/ticket.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/ticket.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/ticket_token.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/ticket_token.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.toml" beforeDir="false" afterPath="$PROJECT_DIR$/settings.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,34 +42,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "Go Build.Backend.executor": "Debug",
-    "Go 构建.Backend.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "refactor/nexus",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/littlesheep/Documents/Projects/Hydrogen/Passport/keys",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.intentionPowerPack",
-    "ts.external.directory.path": "/Users/littlesheep/Documents/Projects/Hydrogen/Passport/web/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go Build.Backend.executor&quot;: &quot;Debug&quot;,
+    &quot;Go 构建.Backend.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;refactor/nexus&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/littlesheep/Documents/Projects/Hydrogen/Passport/keys&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.intentionPowerPack&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/littlesheep/Documents/Projects/Hydrogen/Passport/web/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/keys" />
@@ -189,7 +154,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value=":bug: Fix date formatting issue on daily signing" />
     <MESSAGE value=":bug: Fix daily sign batch list query issue" />
     <MESSAGE value=":bug: Fix daily sign random panic" />
     <MESSAGE value=":sparkles: Realm avatar, banner and access policy" />
@@ -214,7 +178,8 @@
     <MESSAGE value=":recycle: Refactored more modules into nexus" />
     <MESSAGE value=":recycle: All parts into nexus" />
     <MESSAGE value=":truck: Move http server package" />
-    <option name="LAST_COMMIT_MESSAGE" value=":truck: Move http server package" />
+    <MESSAGE value=":recycle: Move models.Account to sec.UserInfo" />
+    <option name="LAST_COMMIT_MESSAGE" value=":recycle: Move models.Account to sec.UserInfo" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
