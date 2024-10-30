@@ -1,6 +1,7 @@
 package http
 
 import (
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"strings"
 
@@ -56,6 +57,7 @@ func NewServer() *App {
 	}))
 
 	app.Use(sec.ContextMiddleware(IReader))
+	app.Use(authkit.ParseAccountMiddleware)
 
 	admin.MapAdminAPIs(app, "/api/admin")
 	api.MapAPIs(app, "/api")

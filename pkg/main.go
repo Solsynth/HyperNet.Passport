@@ -58,6 +58,18 @@ func main() {
 		http.IReader = reader
 		log.Info().Msg("Internal jwt public key loaded.")
 	}
+	if reader, err := sec.NewJwtReader(viper.GetString("security.public_key")); err != nil {
+		log.Error().Err(err).Msg("An error occurred when reading public key for jwt. Signing token may not work.")
+	} else {
+		services.EReader = reader
+		log.Info().Msg("Jwt public key loaded.")
+	}
+	if writer, err := sec.NewJwtWriter(viper.GetString("security.private_key")); err != nil {
+		log.Error().Err(err).Msg("An error occurred when reading private key for jwt. Signing token may not work.")
+	} else {
+		services.EWriter = writer
+		log.Info().Msg("Jwt private key loaded.")
+	}
 
 	// Connect to database
 	if err := database.NewGorm(); err != nil {

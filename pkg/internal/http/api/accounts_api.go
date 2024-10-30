@@ -2,14 +2,15 @@ package api
 
 import (
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"strconv"
 	"strings"
 	"time"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
@@ -59,7 +60,7 @@ func getUserinfo(c *fiber.Ctx) error {
 		First(&data).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		data.PermNodes = c.Locals("permissions").(map[string]any)
+		data.PermNodes = c.Locals("nex_user").(*sec.UserInfo).PermNodes
 	}
 
 	var resp fiber.Map

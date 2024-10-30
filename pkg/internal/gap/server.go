@@ -30,7 +30,7 @@ func InitializeToNexus() error {
 		Type:     nex.ServiceTypeAuth,
 		Label:    "Passport",
 		GrpcAddr: grpcOutbound,
-		HttpAddr: lo.ToPtr("http://" + httpOutbound),
+		HttpAddr: lo.ToPtr("http://" + httpOutbound + "/api"),
 	})
 	if err == nil {
 		go func() {
