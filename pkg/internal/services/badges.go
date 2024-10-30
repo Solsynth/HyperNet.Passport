@@ -1,8 +1,8 @@
 package services
 
 import (
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 )
 
 func GrantBadge(user models.Account, badge models.Badge) error {

@@ -2,12 +2,12 @@ package api
 
 import (
 	"fmt"
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 	"strings"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 )

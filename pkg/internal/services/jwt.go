@@ -1,10 +1,10 @@
 package services
 
 import (
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"time"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/spf13/viper"
 )

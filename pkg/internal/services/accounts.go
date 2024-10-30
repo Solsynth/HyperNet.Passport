@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"time"
@@ -17,7 +18,6 @@ import (
 	"gorm.io/datatypes"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 )

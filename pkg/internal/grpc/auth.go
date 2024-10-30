@@ -2,10 +2,10 @@ package grpc
 
 import (
 	"context"
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"github.com/samber/lo"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"

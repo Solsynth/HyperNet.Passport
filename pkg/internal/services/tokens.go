@@ -2,13 +2,13 @@ package services
 
 import (
 	"fmt"
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/gap"
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
 	"strings"
 	"time"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
 )

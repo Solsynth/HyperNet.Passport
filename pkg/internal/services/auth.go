@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"time"
 
@@ -12,7 +13,6 @@ import (
 	jsoniter "github.com/json-iterator/go"
 
 	localCache "git.solsynth.dev/hydrogen/passport/pkg/internal/cache"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog/log"
 )

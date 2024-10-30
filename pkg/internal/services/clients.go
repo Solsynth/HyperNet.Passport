@@ -2,9 +2,9 @@ package services
 
 import (
 	"fmt"
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 )
 
 func GetThirdClient(id string) (models.ThirdClient, error) {

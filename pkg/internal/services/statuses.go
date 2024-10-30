@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"time"
 
@@ -10,7 +11,6 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/gap"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/marshaler"
 	"github.com/eko/gocache/lib/v4/store"

@@ -3,8 +3,8 @@ package services
 import (
 	"errors"
 	"fmt"
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"gorm.io/gorm"
 	"math"
 	"math/rand"

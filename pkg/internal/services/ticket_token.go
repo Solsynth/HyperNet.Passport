@@ -2,12 +2,12 @@ package services
 
 import (
 	"fmt"
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"strconv"
 	"time"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
 )

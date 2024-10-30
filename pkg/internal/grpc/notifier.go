@@ -3,13 +3,13 @@ package grpc
 import (
 	"context"
 	"fmt"
+	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"github.com/rs/zerolog/log"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"github.com/samber/lo"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"git.solsynth.dev/hydrogen/passport/pkg/proto"
 )
