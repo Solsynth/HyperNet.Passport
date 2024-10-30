@@ -2,8 +2,8 @@ package api
 
 import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,9 +11,9 @@ func listAbuseReports(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
-	reports, err := services.ListAbuseReport(user)
+	reports, err := services.ListAbuseReport(user.ID)
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -58,7 +58,7 @@ func createAbuseReport(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var data struct {
 		Resource string `json:"resource" validate:"required"`
@@ -69,7 +69,7 @@ func createAbuseReport(c *fiber.Ctx) error {
 		return err
 	}
 
-	report, err := services.NewAbuseReport(data.Resource, data.Reason, user)
+	report, err := services.NewAbuseReport(data.Resource, data.Reason, user.ID)
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}

@@ -4,6 +4,7 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -11,7 +12,7 @@ func getTickets(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 	take := c.QueryInt("take", 0)
 	offset := c.QueryInt("offset", 0)
 
@@ -43,7 +44,7 @@ func killTicket(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 	id, _ := c.ParamsInt("ticketId", 0)
 
 	if err := database.C.Delete(&models.AuthTicket{}, &models.AuthTicket{

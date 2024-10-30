@@ -18,20 +18,20 @@ func ListCommunityRealm() ([]models.Realm, error) {
 	return realms, nil
 }
 
-func ListOwnedRealm(user models.Account) ([]models.Realm, error) {
+func ListOwnedRealm(user uint) ([]models.Realm, error) {
 	var realms []models.Realm
-	if err := database.C.Where(&models.Realm{AccountID: user.ID}).Find(&realms).Error; err != nil {
+	if err := database.C.Where(&models.Realm{AccountID: user}).Find(&realms).Error; err != nil {
 		return realms, err
 	}
 
 	return realms, nil
 }
 
-func ListAvailableRealm(user models.Account) ([]models.Realm, error) {
+func ListAvailableRealm(user uint) ([]models.Realm, error) {
 	var realms []models.Realm
 	var members []models.RealmMember
 	if err := database.C.Where(&models.RealmMember{
-		AccountID: user.ID,
+		AccountID: user,
 	}).Find(&members).Error; err != nil {
 		return realms, err
 	}
@@ -57,9 +57,9 @@ func GetRealmWithAlias(alias string) (models.Realm, error) {
 	return realm, nil
 }
 
-func NewRealm(realm models.Realm, user models.Account) (models.Realm, error) {
+func NewRealm(realm models.Realm, user uint) (models.Realm, error) {
 	realm.Members = []models.RealmMember{
-		{AccountID: user.ID, PowerLevel: 100},
+		{AccountID: user, PowerLevel: 100},
 	}
 
 	err := database.C.Save(&realm).Error
@@ -90,14 +90,14 @@ func GetRealmMember(userId uint, realmId uint) (models.RealmMember, error) {
 	return member, nil
 }
 
-func AddRealmMember(user models.Account, affected models.Account, target models.Realm) error {
+func AddRealmMember(user uint, affected models.Account, target models.Realm) error {
 	if !target.IsPublic && !target.IsCommunity {
-		if member, err := GetRealmMember(user.ID, target.ID); err != nil {
+		if member, err := GetRealmMember(user, target.ID); err != nil {
 			return fmt.Errorf("only realm member can add people: %v", err)
 		} else if member.PowerLevel < 50 {
 			return fmt.Errorf("only realm moderator can add people")
 		}
-		rel, err := GetRelationWithTwoNode(affected.ID, user.ID)
+		rel, err := GetRelationWithTwoNode(affected.ID, user)
 		if err != nil || HasPermNodeWithDefault(
 			rel.PermNodes,
 			"RealmAdd",
@@ -116,9 +116,9 @@ func AddRealmMember(user models.Account, affected models.Account, target models.
 	return err
 }
 
-func RemoveRealmMember(user models.Account, affected models.Account, target models.Realm) error {
-	if user.ID != affected.ID {
-		if member, err := GetRealmMember(user.ID, target.ID); err != nil {
+func RemoveRealmMember(user uint, affected models.Account, target models.Realm) error {
+	if user != affected.ID {
+		if member, err := GetRealmMember(user, target.ID); err != nil {
 			return fmt.Errorf("only realm member can remove other member: %v", err)
 		} else if member.PowerLevel < 50 {
 			return fmt.Errorf("only realm moderator can invite people")

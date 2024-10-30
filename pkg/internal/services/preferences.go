@@ -15,21 +15,21 @@ import (
 	"gorm.io/datatypes"
 )
 
-func GetAuthPreference(account models.Account) (models.PreferenceAuth, error) {
+func GetAuthPreference(account uint) (models.PreferenceAuth, error) {
 	var auth models.PreferenceAuth
-	if err := database.C.Where("account_id = ?", account.ID).First(&auth).Error; err != nil {
+	if err := database.C.Where("account_id = ?", account).First(&auth).Error; err != nil {
 		return auth, err
 	}
 
 	return auth, nil
 }
 
-func UpdateAuthPreference(account models.Account, config models.AuthConfig) (models.PreferenceAuth, error) {
+func UpdateAuthPreference(account uint, config models.AuthConfig) (models.PreferenceAuth, error) {
 	var auth models.PreferenceAuth
 	var err error
 	if auth, err = GetAuthPreference(account); err != nil {
 		auth = models.PreferenceAuth{
-			AccountID: account.ID,
+			AccountID: account,
 			Config:    datatypes.NewJSONType(config),
 		}
 	} else {
@@ -44,16 +44,16 @@ func GetNotificationPreferenceCacheKey(accountId uint) string {
 	return fmt.Sprintf("notification-preference#%d", accountId)
 }
 
-func GetNotificationPreference(account models.Account) (models.PreferenceNotification, error) {
+func GetNotificationPreference(account uint) (models.PreferenceNotification, error) {
 	var notification models.PreferenceNotification
 	cacheManager := cache.New[any](localCache.S)
 	marshal := marshaler.New(cacheManager)
 	contx := context.Background()
 
-	if val, err := marshal.Get(contx, GetNotificationPreferenceCacheKey(account.ID), new(models.PreferenceNotification)); err == nil {
+	if val, err := marshal.Get(contx, GetNotificationPreferenceCacheKey(account), new(models.PreferenceNotification)); err == nil {
 		notification = val.(models.PreferenceNotification)
 	} else {
-		if err := database.C.Where("account_id = ?", account.ID).First(&notification).Error; err != nil {
+		if err := database.C.Where("account_id = ?", account).First(&notification).Error; err != nil {
 			return notification, err
 		}
 		CacheNotificationPreference(notification)
@@ -76,12 +76,12 @@ func CacheNotificationPreference(prefs models.PreferenceNotification) {
 	)
 }
 
-func UpdateNotificationPreference(account models.Account, config map[string]bool) (models.PreferenceNotification, error) {
+func UpdateNotificationPreference(account uint, config map[string]bool) (models.PreferenceNotification, error) {
 	var notification models.PreferenceNotification
 	var err error
 	if notification, err = GetNotificationPreference(account); err != nil {
 		notification = models.PreferenceNotification{
-			AccountID: account.ID,
+			AccountID: account,
 			Config:    lo.MapValues(config, func(v bool, k string) any { return v }),
 		}
 	} else {

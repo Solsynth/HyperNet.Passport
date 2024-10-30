@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
@@ -13,7 +14,7 @@ func notifyUser(c *fiber.Ctx) error {
 	if err := exts.EnsureGrantedPerm(c, "DevNotifyUser", true); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var data struct {
 		ClientID   string         `json:"client_id" validate:"required"`

@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"strconv"
 	"time"
 
@@ -39,15 +40,22 @@ func getMyselfStatus(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	status, err := services.GetStatus(user.ID)
 	disturbable := services.GetStatusDisturbable(user.ID) == nil
 	online := services.GetStatusOnline(user.ID) == nil
 
+	var account models.Account
+	if err := database.C.Where(&models.Account{
+		BaseModel: models.BaseModel{ID: user.ID},
+	}).Preload("Profile").First(&account).Error; err != nil {
+		return fiber.NewError(fiber.StatusNotFound, err.Error())
+	}
+
 	return c.JSON(fiber.Map{
 		"status":         lo.Ternary(err == nil, &status, nil),
-		"last_seen_at":   user.Profile.LastSeenAt,
+		"last_seen_at":   account.Profile.LastSeenAt,
 		"is_disturbable": disturbable,
 		"is_online":      online,
 	})
@@ -57,7 +65,7 @@ func setStatus(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var req struct {
 		Type        string     `json:"type" validate:"required"`
@@ -88,7 +96,7 @@ func setStatus(c *fiber.Ctx) error {
 		AccountID:   user.ID,
 	}
 
-	if status, err := services.NewStatus(user, status); err != nil {
+	if status, err := services.NewStatus(user.ID, status); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		services.AddEvent(user.ID, "statuses.set", strconv.Itoa(int(status.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
@@ -100,7 +108,7 @@ func editStatus(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var req struct {
 		Type        string     `json:"type" validate:"required"`
@@ -127,7 +135,7 @@ func editStatus(c *fiber.Ctx) error {
 	status.IsInvisible = req.IsInvisible
 	status.ClearAt = req.ClearAt
 
-	if status, err := services.EditStatus(user, status); err != nil {
+	if status, err := services.EditStatus(user.ID, status); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		services.AddEvent(user.ID, "statuses.edit", strconv.Itoa(int(status.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
@@ -139,9 +147,9 @@ func clearStatus(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
-	if err := services.ClearStatus(user); err != nil {
+	if err := services.ClearStatus(user.ID); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
 		services.AddEvent(user.ID, "statuses.clear", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))

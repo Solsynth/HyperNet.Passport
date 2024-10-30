@@ -5,6 +5,7 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -25,7 +26,7 @@ func getMyRealmMember(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	if realm, err := services.GetRealmWithAlias(alias); err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
@@ -40,7 +41,7 @@ func addRealmMember(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 	alias := c.Params("realm")
 
 	var data struct {
@@ -63,7 +64,7 @@ func addRealmMember(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	if err := services.AddRealmMember(user, account, realm); err != nil {
+	if err := services.AddRealmMember(user.ID, account, realm); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		return c.SendStatus(fiber.StatusOK)
@@ -74,7 +75,7 @@ func removeRealmMember(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 	alias := c.Params("realm")
 
 	var data struct {
@@ -97,7 +98,7 @@ func removeRealmMember(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	if err := services.RemoveRealmMember(user, account, realm); err != nil {
+	if err := services.RemoveRealmMember(user.ID, account, realm); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		return c.SendStatus(fiber.StatusOK)
@@ -108,7 +109,7 @@ func leaveRealm(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 	alias := c.Params("realm")
 
 	realm, err := services.GetRealmWithAlias(alias)
@@ -125,7 +126,7 @@ func leaveRealm(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	if err := services.RemoveRealmMember(user, account, realm); err != nil {
+	if err := services.RemoveRealmMember(user.ID, account, realm); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		return c.SendStatus(fiber.StatusOK)

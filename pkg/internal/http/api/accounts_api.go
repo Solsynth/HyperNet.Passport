@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"strconv"
 	"strings"
 	"time"
@@ -48,7 +49,7 @@ func getUserinfo(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var data models.Account
 	if err := database.C.
@@ -84,7 +85,7 @@ func getEvents(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 	take := c.QueryInt("take", 0)
 	offset := c.QueryInt("offset", 0)
 
@@ -116,7 +117,7 @@ func editUserinfo(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var data struct {
 		Nick        string    `json:"nick" validate:"required"`
@@ -222,11 +223,16 @@ func requestDeleteAccount(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
-	if err := services.CheckAbleToDeleteAccount(user); err != nil {
+	var account models.Account
+	if err := database.C.Where("id = ?", user.ID).First(&account).Error; err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("account was not found: %v", err))
+	}
+
+	if err := services.CheckAbleToDeleteAccount(account); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	} else if err = services.RequestDeleteAccount(user); err != nil {
+	} else if err = services.RequestDeleteAccount(account); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 

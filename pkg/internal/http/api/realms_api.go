@@ -5,6 +5,7 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 	"strconv"
 )
@@ -31,8 +32,8 @@ func listOwnedRealm(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
-	if realms, err := services.ListOwnedRealm(user); err != nil {
+	user := c.Locals("user").(*sec.UserInfo)
+	if realms, err := services.ListOwnedRealm(user.ID); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		return c.JSON(realms)
@@ -43,8 +44,8 @@ func listAvailableRealm(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
-	if realms, err := services.ListAvailableRealm(user); err != nil {
+	user := c.Locals("user").(*sec.UserInfo)
+	if realms, err := services.ListAvailableRealm(user.ID); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		return c.JSON(realms)
@@ -55,7 +56,7 @@ func createRealm(c *fiber.Ctx) error {
 	if err := exts.EnsureGrantedPerm(c, "CreateRealms", true); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var data struct {
 		Alias        string         `json:"alias" validate:"required,lowercase,min=4,max=32"`
@@ -82,7 +83,7 @@ func createRealm(c *fiber.Ctx) error {
 		IsPublic:     data.IsPublic,
 		IsCommunity:  data.IsCommunity,
 		AccountID:    user.ID,
-	}, user)
+	}, user.ID)
 
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
@@ -97,7 +98,7 @@ func editRealm(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 	id, _ := c.ParamsInt("realmId", 0)
 
 	var data struct {
@@ -146,7 +147,7 @@ func deleteRealm(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 	id, _ := c.ParamsInt("realmId", 0)
 
 	var realm models.Realm

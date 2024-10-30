@@ -56,6 +56,12 @@ func NewServer() *App {
 	}))
 
 	app.Use(sec.ContextMiddleware(IReader))
+	app.Use(func(c *fiber.Ctx) error {
+		if user, ok := c.Locals("nex_user").(*sec.UserInfo); ok {
+			c.Locals("user", user)
+		}
+		return c.Next()
+	})
 
 	admin.MapAdminAPIs(app, "/api/admin")
 	api.MapAPIs(app, "/api")

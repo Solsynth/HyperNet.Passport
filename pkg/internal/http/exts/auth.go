@@ -2,13 +2,13 @@ package exts
 
 import (
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 )
 
 func EnsureAuthenticated(c *fiber.Ctx) error {
-	if _, ok := c.Locals("user").(models.Account); !ok {
+	if _, ok := c.Locals("user").(*sec.UserInfo); !ok {
 		return fiber.NewError(fiber.StatusUnauthorized)
 	}
 

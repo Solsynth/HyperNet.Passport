@@ -7,10 +7,10 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 )
 
-func ListAbuseReport(account models.Account) ([]models.AbuseReport, error) {
+func ListAbuseReport(account uint) ([]models.AbuseReport, error) {
 	var reports []models.AbuseReport
 	err := database.C.
-		Where("account_id = ?", account.ID).
+		Where("account_id = ?", account).
 		Find(&reports).Error
 	return reports, err
 }
@@ -53,13 +53,13 @@ func UpdateAbuseReportStatus(id uint, status, message string) error {
 	return nil
 }
 
-func NewAbuseReport(resource string, reason string, account models.Account) (models.AbuseReport, error) {
+func NewAbuseReport(resource string, reason string, account uint) (models.AbuseReport, error) {
 	var report models.AbuseReport
 	if err := database.C.
 		Where(
 			"resource = ? AND account_id = ? AND status IN ?",
 			resource,
-			account.ID,
+			account,
 			[]string{models.ReportStatusPending, models.ReportStatusReviewing},
 		).First(&report).Error; err == nil {
 		return report, fmt.Errorf("you already reported this resource and it still in process")
@@ -68,7 +68,7 @@ func NewAbuseReport(resource string, reason string, account models.Account) (mod
 	report = models.AbuseReport{
 		Resource:  resource,
 		Reason:    reason,
-		AccountID: account.ID,
+		AccountID: account,
 	}
 
 	err := database.C.Create(&report).Error

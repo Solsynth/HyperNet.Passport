@@ -57,7 +57,7 @@ func NewTicket(user models.Account, ip, ua string) (models.AuthTicket, error) {
 	} else {
 		steps = min(steps, int(count))
 
-		cfg, err := GetAuthPreference(user)
+		cfg, err := GetAuthPreference(user.ID)
 		if err == nil && cfg.Config.Data().MaximumAuthSteps >= 1 {
 			steps = min(steps, cfg.Config.Data().MaximumAuthSteps)
 		}

@@ -9,10 +9,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func ListAllRelationship(user models.Account) ([]models.AccountRelationship, error) {
+func ListAllRelationship(user uint) ([]models.AccountRelationship, error) {
 	var relationships []models.AccountRelationship
 	if err := database.C.
-		Where("account_id = ?", user.ID).
+		Where("account_id = ?", user).
 		Preload("Account").
 		Preload("Related").
 		Find(&relationships).Error; err != nil {
@@ -22,10 +22,10 @@ func ListAllRelationship(user models.Account) ([]models.AccountRelationship, err
 	return relationships, nil
 }
 
-func ListRelationshipWithFilter(user models.Account, status models.RelationshipStatus) ([]models.AccountRelationship, error) {
+func ListRelationshipWithFilter(user uint, status models.RelationshipStatus) ([]models.AccountRelationship, error) {
 	var relationships []models.AccountRelationship
 	if err := database.C.
-		Where("account_id = ? AND status = ?", user.ID, status).
+		Where("account_id = ? AND status = ?", user, status).
 		Preload("Account").
 		Preload("Related").
 		Find(&relationships).Error; err != nil {

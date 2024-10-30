@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"strconv"
 	"time"
 
@@ -102,7 +103,7 @@ func RefreshToken(token string) (atk, rtk string, err error) {
 
 	var ticket models.AuthTicket
 	var claims PayloadClaims
-	if claims, err = DecodeJwt(token); err != nil {
+	if claims, err = sec.ReadJwt[PayloadClaims](EReader, token); err != nil {
 		return
 	} else if claims.Type != JwtRefreshType {
 		err = fmt.Errorf("invalid token type, expected refresh token")

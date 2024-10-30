@@ -11,11 +11,11 @@ import (
 	"time"
 )
 
-func CheckDailyCanSign(user models.Account) error {
+func CheckDailyCanSign(user uint) error {
 	probe := time.Now().Format("2006-01-02")
 
 	var record models.SignRecord
-	if err := database.C.Where("account_id = ? AND created_at::date = ?", user.ID, probe).First(&record).Error; err != nil {
+	if err := database.C.Where("account_id = ? AND created_at::date = ?", user, probe).First(&record).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil
 		}
@@ -24,22 +24,22 @@ func CheckDailyCanSign(user models.Account) error {
 	return fmt.Errorf("daliy sign record exists")
 }
 
-func GetTodayDailySign(user models.Account) (models.SignRecord, error) {
+func GetTodayDailySign(user uint) (models.SignRecord, error) {
 	probe := time.Now().Format("2006-01-02")
 
 	var record models.SignRecord
-	if err := database.C.Where("account_id = ? AND created_at::date = ?", user.ID, probe).First(&record).Error; err != nil {
+	if err := database.C.Where("account_id = ? AND created_at::date = ?", user, probe).First(&record).Error; err != nil {
 		return record, fmt.Errorf("unable get daliy sign record: %v", err)
 	}
 	return record, nil
 }
 
-func DailySign(user models.Account) (models.SignRecord, error) {
+func DailySign(user uint) (models.SignRecord, error) {
 	tier := rand.Intn(5)
 	record := models.SignRecord{
 		ResultTier:       tier,
 		ResultExperience: rand.Intn(int(math.Max(float64(tier), 1)*100)+1-100) + 100,
-		AccountID:        user.ID,
+		AccountID:        user,
 	}
 
 	if err := CheckDailyCanSign(user); err != nil {
@@ -47,7 +47,7 @@ func DailySign(user models.Account) (models.SignRecord, error) {
 	}
 
 	var profile models.AccountProfile
-	if err := database.C.Where("account_id = ?", user.ID).First(&profile).Error; err != nil {
+	if err := database.C.Where("account_id = ?", user).First(&profile).Error; err != nil {
 		return record, fmt.Errorf("unable get account profile: %v", err)
 	} else {
 		profile.Experience += uint64(record.ResultExperience)

@@ -1,13 +1,16 @@
 package services
 
 import (
-	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"time"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/spf13/viper"
 )
+
+var EReader *sec.JwtReader
+var EWriter *sec.JwtWriter
 
 type PayloadClaims struct {
 	jwt.RegisteredClaims
@@ -66,26 +69,5 @@ func EncodeJwt(id string, typ, sub, sed string, nonce *string, aud []string, exp
 		claims.Nonce = *nonce
 	}
 
-	tk := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
-
-	return tk.SignedString([]byte(viper.GetString("secret")))
-}
-
-func DecodeJwt(str string) (PayloadClaims, error) {
-	var claims PayloadClaims
-	tk, err := jwt.ParseWithClaims(str, &claims, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(viper.GetString("secret")), nil
-	})
-	if err != nil {
-		return claims, err
-	}
-
-	if data, ok := tk.Claims.(*PayloadClaims); ok {
-		return *data, nil
-	} else {
-		return claims, fmt.Errorf("unexpected token payload: not payload claims type")
-	}
+	return sec.WriteJwt(EWriter, claims)
 }

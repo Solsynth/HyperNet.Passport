@@ -6,6 +6,7 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -14,7 +15,7 @@ func listBotKeys(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var tx *gorm.DB
 
@@ -50,7 +51,7 @@ func getBotKey(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	id, _ := c.ParamsInt("id", 0)
 
@@ -69,7 +70,7 @@ func createBotKey(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var data struct {
 		Name        string   `json:"name" validate:"required"`
@@ -82,7 +83,7 @@ func createBotKey(c *fiber.Ctx) error {
 		return err
 	}
 
-	target := user
+	var target models.Account
 
 	botId, _ := c.ParamsInt("botId", 0)
 	if botId > 0 {
@@ -91,6 +92,12 @@ func createBotKey(c *fiber.Ctx) error {
 			return fiber.NewError(fiber.StatusNotFound, fmt.Sprintf("bot not found: %v", err))
 		}
 		target = bot
+	} else {
+		var account models.Account
+		if err := database.C.Where("id = ?", user.ID).First(&account).Error; err != nil {
+			return fiber.NewError(fiber.StatusNotFound, fmt.Sprintf("account not found: %v", err))
+		}
+		target = account
 	}
 
 	key, err := services.NewApiKey(target, models.ApiKey{
@@ -109,7 +116,7 @@ func editBotKey(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var data struct {
 		Name        string `json:"name" validate:"required"`
@@ -156,7 +163,7 @@ func rollBotKey(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	id, _ := c.ParamsInt("id", 0)
 
@@ -189,7 +196,7 @@ func revokeBotKey(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	id, _ := c.ParamsInt("id", 0)
 

@@ -1,10 +1,12 @@
 package api
 
 import (
+	"fmt"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 	"strconv"
 )
@@ -13,7 +15,7 @@ func setAvatar(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var data struct {
 		AttachmentID string `json:"attachment" validate:"required"`
@@ -23,9 +25,7 @@ func setAvatar(c *fiber.Ctx) error {
 		return err
 	}
 
-	user.Avatar = &data.AttachmentID
-
-	if err := database.C.Save(&user).Error; err != nil {
+	if err := database.C.Where("id = ?", user.ID).Updates(&models.Account{Avatar: &data.AttachmentID}).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
 		services.AddEvent(user.ID, "profile.edit.avatar", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
@@ -39,7 +39,7 @@ func setBanner(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
 	var data struct {
 		AttachmentID string `json:"attachment" validate:"required"`
@@ -49,9 +49,7 @@ func setBanner(c *fiber.Ctx) error {
 		return err
 	}
 
-	user.Banner = &data.AttachmentID
-
-	if err := database.C.Save(&user).Error; err != nil {
+	if err := database.C.Where("id = ?", user.ID).Updates(&models.Account{Banner: &data.AttachmentID}).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
 		services.AddEvent(user.ID, "profile.edit.banner", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
@@ -65,9 +63,14 @@ func getAvatar(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
-	if content := user.GetAvatar(); content == nil {
+	var account models.Account
+	if err := database.C.Where("id = ?", user.ID).First(&account).Error; err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("account was not found: %v", err))
+	}
+
+	if content := account.GetAvatar(); content == nil {
 		return c.SendStatus(fiber.StatusNotFound)
 	} else {
 		return c.Redirect(*content, fiber.StatusFound)
@@ -78,9 +81,14 @@ func getBanner(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(models.Account)
+	user := c.Locals("user").(*sec.UserInfo)
 
-	if content := user.GetBanner(); content == nil {
+	var account models.Account
+	if err := database.C.Where("id = ?", user.ID).First(&account).Error; err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("account was not found: %v", err))
+	}
+
+	if content := account.GetBanner(); content == nil {
 		return c.SendStatus(fiber.StatusNotFound)
 	} else {
 		return c.Redirect(*content, fiber.StatusFound)

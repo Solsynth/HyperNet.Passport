@@ -21,13 +21,13 @@ func AddEvent(user uint, event, target, ip, ua string) {
 }
 
 // AddAuditRecord to keep logs to make administrators' operations clear to query
-func AddAuditRecord(operator models.Account, act, ip, ua string, metadata map[string]any) {
+func AddAuditRecord(operator uint, act, ip, ua string, metadata map[string]any) {
 	writeAuditQueue = append(writeAuditQueue, models.AuditRecord{
 		Action:    act,
 		Metadata:  metadata,
 		IpAddress: ip,
 		UserAgent: ua,
-		AccountID: operator.ID,
+		AccountID: operator,
 	})
 }
 
