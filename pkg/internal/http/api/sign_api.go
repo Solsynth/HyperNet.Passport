@@ -5,7 +5,6 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 	"strconv"
 )
@@ -17,7 +16,7 @@ func listDailySignRecord(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var count int64
 	if err := database.C.
@@ -82,9 +81,9 @@ func getTodayDailySign(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
-	if record, err := services.GetTodayDailySign(user.ID); err != nil {
+	if record, err := services.GetTodayDailySign(user); err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	} else {
 		return c.JSON(record)
@@ -95,9 +94,9 @@ func doDailySign(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
-	if record, err := services.DailySign(user.ID); err != nil {
+	if record, err := services.DailySign(user); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		services.AddEvent(user.ID, "dailySign", strconv.Itoa(int(record.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))

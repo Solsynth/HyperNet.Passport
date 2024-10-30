@@ -2,21 +2,18 @@ package gap
 
 import (
 	"fmt"
-	"strings"
-
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit/pushcon"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
+	"strings"
 
 	"github.com/spf13/viper"
 )
 
-var (
-	Nx *nex.Conn
-	Px *pushcon.Conn
-)
+var Nx *nex.Conn
+var Px *pushcon.Conn
 
 func InitializeToNexus() error {
 	grpcBind := strings.SplitN(viper.GetString("grpc_bind"), ":", 2)
@@ -33,7 +30,7 @@ func InitializeToNexus() error {
 		Type:     nex.ServiceTypeAuth,
 		Label:    "Passport",
 		GrpcAddr: grpcOutbound,
-		HttpAddr: lo.ToPtr("http://" + httpOutbound + "/api"),
+		HttpAddr: lo.ToPtr("http://" + httpOutbound),
 	})
 	if err == nil {
 		go func() {

@@ -45,7 +45,7 @@ func (v *App) ListAvailableRealm(ctx context.Context, request *proto.LookupUserR
 	if err != nil {
 		return nil, fmt.Errorf("unable to find target account: %v", err)
 	}
-	realms, err := services.ListAvailableRealm(account.ID)
+	realms, err := services.ListAvailableRealm(account)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (v *App) ListOwnedRealm(ctx context.Context, request *proto.LookupUserRealm
 	if err != nil {
 		return nil, fmt.Errorf("unable to find target account: %v", err)
 	}
-	realms, err := services.ListOwnedRealm(account.ID)
+	realms, err := services.ListOwnedRealm(account)
 	if err != nil {
 		return nil, err
 	}

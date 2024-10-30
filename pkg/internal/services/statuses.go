@@ -98,27 +98,27 @@ func GetStatusOnline(uid uint) error {
 	}
 }
 
-func NewStatus(user uint, status models.Status) (models.Status, error) {
+func NewStatus(user models.Account, status models.Status) (models.Status, error) {
 	if err := database.C.Save(&status).Error; err != nil {
 		return status, err
 	} else {
-		CacheUserStatus(user, status)
+		CacheUserStatus(user.ID, status)
 	}
 	return status, nil
 }
 
-func EditStatus(user uint, status models.Status) (models.Status, error) {
+func EditStatus(user models.Account, status models.Status) (models.Status, error) {
 	if err := database.C.Save(&status).Error; err != nil {
 		return status, err
 	} else {
-		CacheUserStatus(user, status)
+		CacheUserStatus(user.ID, status)
 	}
 	return status, nil
 }
 
-func ClearStatus(user uint) error {
+func ClearStatus(user models.Account) error {
 	if err := database.C.
-		Where("account_id = ?", user).
+		Where("account_id = ?", user.ID).
 		Where("clear_at > ?", time.Now()).
 		Updates(models.Status{ClearAt: lo.ToPtr(time.Now())}).Error; err != nil {
 		return err
@@ -127,7 +127,7 @@ func ClearStatus(user uint) error {
 		marshal := marshaler.New(cacheManager)
 		contx := context.Background()
 
-		marshal.Delete(contx, GetStatusCacheKey(user))
+		marshal.Delete(contx, GetStatusCacheKey(user.ID))
 	}
 
 	return nil

@@ -20,8 +20,9 @@ database = false
 print_routes = false
 
 [security]
-access_token_duration = 3000
+issuer = "https://solsynth.dev"
+cookie_domain = "localhost"
+cookie_samesite = "Lax"
+access_token_duration = 300
 refresh_token_duration = 2592000
-public_key = "keys/public_key.pem"
-private_key = "keys/private_key.pem"
 internal_public_key = "keys/internal_public_key.pem"

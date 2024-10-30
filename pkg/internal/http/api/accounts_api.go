@@ -2,8 +2,6 @@ package api
 
 import (
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"strconv"
 	"strings"
 	"time"
@@ -11,6 +9,7 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
@@ -49,7 +48,7 @@ func getUserinfo(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var data models.Account
 	if err := database.C.
@@ -60,7 +59,7 @@ func getUserinfo(c *fiber.Ctx) error {
 		First(&data).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		data.PermNodes = user.PermNodes
+		data.PermNodes = c.Locals("permissions").(map[string]any)
 	}
 
 	var resp fiber.Map
@@ -85,7 +84,7 @@ func getEvents(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 	take := c.QueryInt("take", 0)
 	offset := c.QueryInt("offset", 0)
 
@@ -117,7 +116,7 @@ func editUserinfo(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var data struct {
 		Nick        string    `json:"nick" validate:"required"`
@@ -223,16 +222,11 @@ func requestDeleteAccount(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
-	var account models.Account
-	if err := database.C.Where("id = ?", user.ID).First(&account).Error; err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("account was not found: %v", err))
-	}
-
-	if err := services.CheckAbleToDeleteAccount(account); err != nil {
+	if err := services.CheckAbleToDeleteAccount(user); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	} else if err = services.RequestDeleteAccount(account); err != nil {
+	} else if err = services.RequestDeleteAccount(user); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 

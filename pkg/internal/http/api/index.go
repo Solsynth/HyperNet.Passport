@@ -18,6 +18,9 @@ func MapAPIs(app *fiber.App, baseURL string) {
 
 		notify := api.Group("/notifications").Name("Notifications API")
 		{
+			// Deprecated, use /subscription instead, will be removed in the future
+			notify.Post("/subscribe", addNotifySubscriber)
+
 			notify.Get("/", getNotifications)
 			notify.Get("/subscription", getNotifySubscriber)
 			notify.Post("/subscription", addNotifySubscriber)

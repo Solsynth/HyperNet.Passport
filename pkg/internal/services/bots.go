@@ -5,9 +5,9 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 )
 
-func GetBotCount(user uint) (int64, error) {
+func GetBotCount(user models.Account) (int64, error) {
 	var count int64
-	if err := database.C.Where("automated_id = ?", user).Count(&count).Error; err != nil {
+	if err := database.C.Where("automated_id = ?", user.ID).Count(&count).Error; err != nil {
 		return 0, err
 	}
 	return count, nil

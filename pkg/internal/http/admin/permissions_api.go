@@ -2,11 +2,10 @@ package admin
 
 import (
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 )
@@ -17,7 +16,7 @@ func editUserPermission(c *fiber.Ctx) error {
 	if err := exts.EnsureGrantedPerm(c, "AdminUserPermission", true); err != nil {
 		return err
 	}
-	operator := c.Locals("user").(*sec.UserInfo)
+	operator := c.Locals("user").(models.Account)
 
 	var data struct {
 		PermNodes map[string]any `json:"perm_nodes" validate:"required"`
@@ -40,7 +39,7 @@ func editUserPermission(c *fiber.Ctx) error {
 	if err := database.C.Save(&user).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		services.AddAuditRecord(operator.ID, "user.permissions.edit", c.IP(), c.Get(fiber.HeaderUserAgent), map[string]any{
+		services.AddAuditRecord(operator, "user.permissions.edit", c.IP(), c.Get(fiber.HeaderUserAgent), map[string]any{
 			"user_id":              user.ID,
 			"previous_permissions": prev,
 			"new_permissions":      data.PermNodes,

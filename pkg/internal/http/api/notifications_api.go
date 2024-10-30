@@ -1,12 +1,10 @@
 package api
 
 import (
-	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
 	"strconv"
@@ -20,7 +18,7 @@ func getNotifications(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	tx := database.C.Where(&models.Notification{AccountID: user.ID}).Model(&models.Notification{})
 
@@ -49,7 +47,7 @@ func markNotificationRead(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 	id, _ := c.ParamsInt("notificationId", 0)
 
 	if err := exts.EnsureAuthenticated(c); err != nil {
@@ -78,7 +76,7 @@ func markNotificationReadBatch(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var data struct {
 		MessageIDs []uint `json:"messages"`
@@ -102,7 +100,7 @@ func getNotifySubscriber(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var subscribers []models.NotificationSubscriber
 	if err := database.C.Where(&models.NotificationSubscriber{
@@ -118,7 +116,7 @@ func addNotifySubscriber(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var data struct {
 		Provider    string `json:"provider" validate:"required"`
@@ -139,13 +137,8 @@ func addNotifySubscriber(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusOK)
 	}
 
-	var account models.Account
-	if err := database.C.Where("id = ?", user.ID).First(&account).Error; err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("account was not found: %v", err))
-	}
-
 	subscriber, err := services.AddNotifySubscriber(
-		account,
+		user,
 		data.Provider,
 		data.DeviceID,
 		data.DeviceToken,
@@ -163,7 +156,7 @@ func removeNotifySubscriber(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	device := c.Params("deviceId")
 

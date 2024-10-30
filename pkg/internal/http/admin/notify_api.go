@@ -5,7 +5,6 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog/log"
 )
@@ -28,13 +27,13 @@ func notifyAllUser(c *fiber.Ctx) error {
 	if err := exts.EnsureGrantedPerm(c, "AdminNotifyAll", true); err != nil {
 		return err
 	}
-	operator := c.Locals("user").(*sec.UserInfo)
+	operator := c.Locals("user").(models.Account)
 
 	var users []models.Account
 	if err := database.C.Find(&users).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		services.AddAuditRecord(operator.ID, "notify.all", c.IP(), c.Get(fiber.HeaderUserAgent), map[string]any{
+		services.AddAuditRecord(operator, "notify.all", c.IP(), c.Get(fiber.HeaderUserAgent), map[string]any{
 			"payload": data,
 		})
 	}
@@ -86,13 +85,13 @@ func notifyOneUser(c *fiber.Ctx) error {
 	if err := exts.EnsureGrantedPerm(c, "AdminNotifyAll", true); err != nil {
 		return err
 	}
-	operator := c.Locals("user").(*sec.UserInfo)
+	operator := c.Locals("user").(models.Account)
 
 	var user models.Account
 	if err := database.C.Where("id = ?", data.UserID).First(&user).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		services.AddAuditRecord(operator.ID, "notify.one", c.IP(), c.Get(fiber.HeaderUserAgent), map[string]any{
+		services.AddAuditRecord(operator, "notify.one", c.IP(), c.Get(fiber.HeaderUserAgent), map[string]any{
 			"user_id": user.ID,
 			"payload": data,
 		})

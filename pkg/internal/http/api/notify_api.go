@@ -2,10 +2,9 @@ package api
 
 import (
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 )
@@ -14,7 +13,7 @@ func notifyUser(c *fiber.Ctx) error {
 	if err := exts.EnsureGrantedPerm(c, "DevNotifyUser", true); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var data struct {
 		ClientID   string         `json:"client_id" validate:"required"`

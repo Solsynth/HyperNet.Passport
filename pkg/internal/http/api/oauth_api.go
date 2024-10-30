@@ -1,15 +1,13 @@
 package api
 
 import (
-	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"strings"
 	"time"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
@@ -33,7 +31,7 @@ func tryAuthorizeThirdClient(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var ticket models.AuthTicket
 	if err := database.C.Where(&models.AuthTicket{
@@ -74,23 +72,18 @@ func authorizeThirdClient(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var client models.ThirdClient
 	if err := database.C.Where(&models.ThirdClient{Alias: id}).First(&client).Error; err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	var account models.Account
-	if err := database.C.Where("id = ?", user.ID).First(&account).Error; err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("account was not found: %v", err))
-	}
-
 	switch response {
 	case "code":
 		// OAuth Authorization Mode
 		ticket, err := services.NewOauthTicket(
-			account,
+			user,
 			client,
 			strings.Split(scope, " "),
 			[]string{services.InternalTokenAudience, client.Alias},
@@ -111,7 +104,7 @@ func authorizeThirdClient(c *fiber.Ctx) error {
 	case "token":
 		// OAuth Implicit Mode
 		ticket, err := services.NewOauthTicket(
-			account,
+			user,
 			client,
 			strings.Split(scope, " "),
 			[]string{services.InternalTokenAudience, client.Alias},

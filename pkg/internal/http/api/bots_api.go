@@ -1,12 +1,10 @@
 package api
 
 import (
-	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
+	"git.solsynth.dev/hydrogen/passport/pkg/internal/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
 	"gorm.io/datatypes"
@@ -18,7 +16,7 @@ func listBots(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	tx := database.C.Where("automated_id = ?", user.ID)
 
@@ -43,9 +41,9 @@ func createBot(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
-	cnt, _ := services.GetBotCount(user.ID)
+	cnt, _ := services.GetBotCount(user)
 	if err := exts.EnsureGrantedPerm(c, "CreateBots", cnt+1); err != nil {
 		return err
 	}
@@ -67,14 +65,7 @@ func createBot(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "invalid bot nick, length requires 4 to 24")
 	}
 
-	var account models.Account
-	if err := database.C.Where(&models.Account{
-		Name: data.Name,
-	}).First(&account).Error; err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("account was not found: %v", err))
-	}
-
-	bot, err := services.NewBot(account, models.Account{
+	bot, err := services.NewBot(user, models.Account{
 		Name:        data.Name,
 		Nick:        data.Nick,
 		Description: data.Description,
@@ -93,7 +84,7 @@ func deleteBot(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	id, _ := c.ParamsInt("botId", 0)
 

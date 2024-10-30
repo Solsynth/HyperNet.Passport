@@ -4,7 +4,6 @@ import (
 	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -12,9 +11,9 @@ func getAuthPreference(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
-	cfg, err := services.GetAuthPreference(user.ID)
+	cfg, err := services.GetAuthPreference(user)
 	if err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
@@ -26,14 +25,14 @@ func updateAuthPreference(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var data models.AuthConfig
 	if err := exts.BindAndValidate(c, &data); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	cfg, err := services.UpdateAuthPreference(user.ID, data)
+	cfg, err := services.UpdateAuthPreference(user, data)
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
@@ -47,8 +46,8 @@ func getNotificationPreference(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
-	notification, err := services.GetNotificationPreference(user.ID)
+	user := c.Locals("user").(models.Account)
+	notification, err := services.GetNotificationPreference(user)
 	if err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
@@ -60,7 +59,7 @@ func updateNotificationPreference(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
-	user := c.Locals("user").(*sec.UserInfo)
+	user := c.Locals("user").(models.Account)
 
 	var data struct {
 		Config map[string]bool `json:"config"`
@@ -70,7 +69,7 @@ func updateNotificationPreference(c *fiber.Ctx) error {
 		return err
 	}
 
-	notification, err := services.UpdateNotificationPreference(user.ID, data.Config)
+	notification, err := services.UpdateNotificationPreference(user, data.Config)
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
