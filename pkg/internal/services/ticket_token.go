@@ -102,10 +102,12 @@ func RefreshToken(token string) (atk, rtk string, err error) {
 	}
 
 	var ticket models.AuthTicket
-	var claims PayloadClaims
-	if claims, err = sec.ReadJwt[PayloadClaims](EReader, token); err != nil {
+	var claims *PayloadClaims
+	if claims, err = sec.ReadJwt(EReader, token, &PayloadClaims{}); err != nil {
 		return
-	} else if claims.Type != JwtRefreshType {
+	}
+
+	if claims.Type != JwtRefreshType {
 		err = fmt.Errorf("invalid token type, expected refresh token")
 		return
 	} else if err = database.C.Where(models.AuthTicket{

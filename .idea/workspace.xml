@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":recycle: Move models.Account to sec.UserInfo">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Fix check perm panic">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/accounts_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/accounts_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/exts/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/exts/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/ticket_token.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/ticket_token.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +155,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value=":bug: Fix daily sign batch list query issue" />
     <MESSAGE value=":bug: Fix daily sign random panic" />
     <MESSAGE value=":sparkles: Realm avatar, banner and access policy" />
     <MESSAGE value=":sparkles: Account deletion" />
@@ -179,9 +179,21 @@
     <MESSAGE value=":recycle: All parts into nexus" />
     <MESSAGE value=":truck: Move http server package" />
     <MESSAGE value=":recycle: Move models.Account to sec.UserInfo" />
-    <option name="LAST_COMMIT_MESSAGE" value=":recycle: Move models.Account to sec.UserInfo" />
+    <MESSAGE value=":bug: Fix check perm panic" />
+    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix check perm panic" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/internal/services/ticket_token.go</url>
+          <line>105</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
