@@ -4,18 +4,18 @@ option go_package = ".;proto";
 
 package proto;
 
-service EventRecorder {
-    rpc RecordEvent(RecordEventRequest) returns (RecordEventResponse) {}
+service AuditService {
+  rpc RecordEvent(RecordEventRequest) returns (RecordEventResponse) {}
 }
 
 message RecordEventRequest {
-    uint64 user_id = 1;
-    string action = 2;
-    string target = 3;
-    string ip = 4;
-    string user_agent = 5;
+  uint64 user_id = 1;
+  string action = 2;
+  string target = 3;
+  string ip = 4;
+  string user_agent = 5;
 }
 
 message RecordEventResponse {
-    bool is_success = 1;
+  bool is_success = 1;
 }

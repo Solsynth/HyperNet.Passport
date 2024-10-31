@@ -4,7 +4,7 @@ option go_package = ".;proto";
 
 package proto;
 
-service Notifier {
+service NotifyService {
   rpc NotifyUser(NotifyUserRequest) returns (NotifyResponse) {}
   rpc NotifyUserBatch(NotifyUserBatchRequest) returns (NotifyResponse) {}
   rpc NotifyAllUser(NotifyRequest) returns(NotifyResponse) {}

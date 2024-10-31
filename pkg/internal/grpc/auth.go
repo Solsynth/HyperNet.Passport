@@ -5,18 +5,11 @@ import (
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 
-	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
-	"github.com/samber/lo"
-
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	jsoniter "github.com/json-iterator/go"
 
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 )
-
-type authenticateServer struct {
-	proto.UnimplementedAuthServiceServer
-}
 
 func (v *App) Authenticate(_ context.Context, in *proto.AuthRequest) (*proto.AuthReply, error) {
 	ticket, perms, err := services.Authenticate(uint(in.GetSessionId()))
@@ -79,57 +72,5 @@ func (v *App) EnsureUserPermGranted(_ context.Context, in *proto.CheckUserPermRe
 
 	return &proto.CheckUserPermResponse{
 		IsValid: valid,
-	}, nil
-}
-
-func (v *App) ListUserFriends(_ context.Context, in *proto.ListUserRelativeRequest) (*proto.ListUserRelativeResponse, error) {
-	tx := database.C.Preload("Account").Where("status = ?", models.RelationshipFriend)
-
-	if in.GetIsRelated() {
-		tx = tx.Where("related_id = ?", in.GetUserId())
-	} else {
-		tx = tx.Where("account_id = ?", in.GetUserId())
-	}
-
-	var data []models.AccountRelationship
-	if err := tx.Find(&data).Error; err != nil {
-		return nil, err
-	}
-
-	return &proto.ListUserRelativeResponse{
-		Data: lo.Map(data, func(item models.AccountRelationship, index int) *proto.UserInfo {
-			val := &proto.UserInfo{
-				Id:   uint64(item.AccountID),
-				Name: item.Account.Name,
-			}
-
-			return val
-		}),
-	}, nil
-}
-
-func (v *App) ListUserBlocklist(_ context.Context, in *proto.ListUserRelativeRequest) (*proto.ListUserRelativeResponse, error) {
-	tx := database.C.Preload("Account").Where("status = ?", models.RelationshipBlocked)
-
-	if in.GetIsRelated() {
-		tx = tx.Where("related_id = ?", in.GetUserId())
-	} else {
-		tx = tx.Where("account_id = ?", in.GetUserId())
-	}
-
-	var data []models.AccountRelationship
-	if err := tx.Find(&data).Error; err != nil {
-		return nil, err
-	}
-
-	return &proto.ListUserRelativeResponse{
-		Data: lo.Map(data, func(item models.AccountRelationship, index int) *proto.UserInfo {
-			val := &proto.UserInfo{
-				Id:   uint64(item.AccountID),
-				Name: item.Account.Name,
-			}
-
-			return val
-		}),
 	}, nil
 }

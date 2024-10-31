@@ -16,9 +16,10 @@ import (
 type App struct {
 	nroto.UnimplementedAuthServiceServer
 	nroto.UnimplementedDirectoryServiceServer
-	proto.UnimplementedNotifierServer
-	proto.UnimplementedRealmServer
-	proto.UnimplementedEventRecorderServer
+	nroto.UnimplementedUserServiceServer
+	proto.UnimplementedRealmServiceServer
+	proto.UnimplementedAuditServiceServer
+	proto.UnimplementedNotifyServiceServer
 	health.UnimplementedHealthServer
 
 	srv *grpc.Server
@@ -30,9 +31,10 @@ func NewServer() *App {
 	}
 
 	nroto.RegisterAuthServiceServer(server.srv, server)
-	proto.RegisterNotifierServer(server.srv, server)
-	proto.RegisterRealmServer(server.srv, server)
-	proto.RegisterEventRecorderServer(server.srv, server)
+	nroto.RegisterUserServiceServer(server.srv, server)
+	proto.RegisterNotifyServiceServer(server.srv, server)
+	proto.RegisterRealmServiceServer(server.srv, server)
+	proto.RegisterAuditServiceServer(server.srv, server)
 	health.RegisterHealthServer(server.srv, server)
 
 	reflection.Register(server.srv)

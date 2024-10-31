@@ -2,6 +2,8 @@ package models
 
 import (
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex"
+	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"gorm.io/datatypes"
 	"time"
 
@@ -56,6 +58,15 @@ func (v Account) GetPrimaryEmail() AccountContact {
 		return item.Type == EmailAccountContact && item.IsPrimary
 	})
 	return val
+}
+
+func (v Account) EncodeToUserInfo() *proto.UserInfo {
+	return &proto.UserInfo{
+		Id:        uint64(v.ID),
+		Name:      v.Name,
+		PermNodes: nex.EncodeMap(v.PermNodes),
+		Metadata:  nex.EncodeMap(v),
+	}
 }
 
 type AccountContactType = int8

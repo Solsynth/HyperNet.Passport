@@ -4,7 +4,7 @@ option go_package = ".;proto";
 
 package proto;
 
-service Realm {
+service RealmService {
   rpc ListCommunityRealm(ListRealmRequest) returns (ListRealmResponse) {}
   rpc ListAvailableRealm(LookupUserRealmRequest) returns (ListRealmResponse) {}
   rpc ListOwnedRealm(LookupUserRealmRequest) returns (ListRealmResponse) {}
