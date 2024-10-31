@@ -7,30 +7,26 @@ package proto;
 service NotifyService {
   rpc NotifyUser(NotifyUserRequest) returns (NotifyResponse) {}
   rpc NotifyUserBatch(NotifyUserBatchRequest) returns (NotifyResponse) {}
-  rpc NotifyAllUser(NotifyRequest) returns(NotifyResponse) {}
+  rpc NotifyAllUser(NotifyInfo) returns(NotifyResponse) {}
+}
+
+message NotifyInfo {
+  // This bytes is directly encoded from pushkit.Notification
+  // Which is passed to the pusher service, we don't need to care about the content
+  bytes data = 1;
+  bool unsaved = 2;
 }
 
 message NotifyUserRequest {
   uint64 user_id = 1;
-  NotifyRequest notify = 2;
+  NotifyInfo notify = 2;
 }
 
 message NotifyUserBatchRequest {
   repeated uint64 user_id = 1;
-  NotifyRequest notify = 2;
-}
-
-message NotifyRequest {
-  string topic = 1;
-  string title = 2;
-  optional string subtitle = 3;
-  string body = 4;
-  bytes metadata = 5;
-  int64 priority = 6;
-  bool is_realtime = 8;
+  NotifyInfo notify = 2;
 }
 
 message NotifyResponse {
   bool is_success = 1;
-  int64 affected_count = 2;
 }

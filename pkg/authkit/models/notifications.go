@@ -1,6 +1,7 @@
 package models
 
 import (
+	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
 	"gorm.io/datatypes"
 	"time"
 )
@@ -20,8 +21,29 @@ type Notification struct {
 	AccountID uint    `json:"account_id"`
 
 	ReadAt *time.Time `json:"read_at"`
+}
 
-	IsRealtime bool `json:"is_realtime" gorm:"-"`
+func (v Notification) EncodeToPushkit() pushkit.Notification {
+	return pushkit.Notification{
+		Topic:    v.Topic,
+		Title:    v.Title,
+		Subtitle: v.Subtitle,
+		Body:     v.Body,
+		Metadata: v.Metadata,
+		Priority: v.Priority,
+	}
+}
+
+func NewNotificationFromPushkit(pk pushkit.Notification) Notification {
+	return Notification{
+		Topic:    pk.Topic,
+		Title:    pk.Title,
+		Subtitle: pk.Subtitle,
+		Body:     pk.Body,
+		Metadata: pk.Metadata,
+		Priority: pk.Priority,
+		SenderID: nil,
+	}
 }
 
 const (

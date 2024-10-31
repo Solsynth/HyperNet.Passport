@@ -3,8 +3,9 @@ package grpc
 import (
 	"context"
 	"fmt"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
+	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
+	"github.com/goccy/go-json"
 	"github.com/rs/zerolog/log"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
@@ -21,23 +22,18 @@ func (v *App) NotifyUser(_ context.Context, in *proto.NotifyUserRequest) (*proto
 		return nil, fmt.Errorf("unable to get account: %v", err)
 	}
 
-	metadata := nex.DecodeMap(in.GetNotify().GetMetadata())
-
-	notification := models.Notification{
-		Topic:      in.GetNotify().GetTopic(),
-		Title:      in.GetNotify().GetTitle(),
-		Subtitle:   in.GetNotify().GetSubtitle(),
-		Body:       in.GetNotify().GetBody(),
-		Metadata:   metadata,
-		Priority:   int(in.GetNotify().GetPriority()),
-		IsRealtime: in.GetNotify().GetIsRealtime(),
-		Account:    user,
-		AccountID:  user.ID,
+	var nty pushkit.Notification
+	if err = json.Unmarshal(in.GetNotify().GetData(), &nty); err != nil {
+		return nil, fmt.Errorf("unable to unmarshal notification: %v", err)
 	}
+
+	notification := models.NewNotificationFromPushkit(nty)
+	notification.Account = user
+	notification.AccountID = user.ID
 
 	log.Debug().Str("topic", notification.Topic).Uint("uid", notification.AccountID).Msg("Notifying user...")
 
-	if notification.IsRealtime {
+	if in.GetNotify().GetUnsaved() {
 		if err := services.PushNotification(notification); err != nil {
 			return nil, err
 		}
@@ -61,7 +57,10 @@ func (v *App) NotifyUserBatch(_ context.Context, in *proto.NotifyUserBatchReques
 		return nil, fmt.Errorf("unable to get account: %v", err)
 	}
 
-	metadata := nex.DecodeMap(in.GetNotify().GetMetadata())
+	var nty pushkit.Notification
+	if err = json.Unmarshal(in.GetNotify().GetData(), &nty); err != nil {
+		return nil, fmt.Errorf("unable to unmarshal notification: %v", err)
+	}
 
 	var checklist = make(map[uint]bool, len(users))
 	var notifications []models.Notification
@@ -70,17 +69,9 @@ func (v *App) NotifyUserBatch(_ context.Context, in *proto.NotifyUserBatchReques
 			continue
 		}
 
-		notification := models.Notification{
-			Topic:      in.GetNotify().GetTopic(),
-			Title:      in.GetNotify().GetTitle(),
-			Subtitle:   in.GetNotify().GetSubtitle(),
-			Body:       in.GetNotify().GetBody(),
-			Metadata:   metadata,
-			Priority:   int(in.GetNotify().GetPriority()),
-			IsRealtime: in.GetNotify().GetIsRealtime(),
-			Account:    user,
-			AccountID:  user.ID,
-		}
+		notification := models.NewNotificationFromPushkit(nty)
+		notification.Account = user
+		notification.AccountID = user.ID
 		checklist[user.ID] = true
 
 		notifications = append(notifications, notification)
@@ -88,7 +79,7 @@ func (v *App) NotifyUserBatch(_ context.Context, in *proto.NotifyUserBatchReques
 
 	log.Debug().Str("topic", notifications[0].Topic).Any("uid", lo.Keys(checklist)).Msg("Notifying users...")
 
-	if in.GetNotify().GetIsRealtime() {
+	if in.GetNotify().GetUnsaved() {
 		services.PushNotificationBatch(notifications)
 	} else {
 		if err := services.NewNotificationBatch(notifications); err != nil {
@@ -101,13 +92,16 @@ func (v *App) NotifyUserBatch(_ context.Context, in *proto.NotifyUserBatchReques
 	}, nil
 }
 
-func (v *App) NotifyAllUser(_ context.Context, in *proto.NotifyRequest) (*proto.NotifyResponse, error) {
+func (v *App) NotifyAllUser(_ context.Context, in *proto.NotifyInfo) (*proto.NotifyResponse, error) {
 	var users []models.Account
 	if err := database.C.Find(&users).Error; err != nil {
 		return nil, fmt.Errorf("unable to get account: %v", err)
 	}
 
-	metadata := nex.DecodeMap(in.GetMetadata())
+	var nty pushkit.Notification
+	if err := json.Unmarshal(in.GetData(), &nty); err != nil {
+		return nil, fmt.Errorf("unable to unmarshal notification: %v", err)
+	}
 
 	var checklist = make(map[uint]bool, len(users))
 	var notifications []models.Notification
@@ -116,17 +110,9 @@ func (v *App) NotifyAllUser(_ context.Context, in *proto.NotifyRequest) (*proto.
 			continue
 		}
 
-		notification := models.Notification{
-			Topic:      in.GetTopic(),
-			Title:      in.GetTitle(),
-			Subtitle:   in.GetSubtitle(),
-			Body:       in.GetBody(),
-			Metadata:   metadata,
-			Priority:   int(in.GetPriority()),
-			IsRealtime: in.GetIsRealtime(),
-			Account:    user,
-			AccountID:  user.ID,
-		}
+		notification := models.NewNotificationFromPushkit(nty)
+		notification.Account = user
+		notification.AccountID = user.ID
 		checklist[user.ID] = true
 
 		notifications = append(notifications, notification)
@@ -134,7 +120,7 @@ func (v *App) NotifyAllUser(_ context.Context, in *proto.NotifyRequest) (*proto.
 
 	log.Debug().Str("topic", notifications[0].Topic).Any("uid", lo.Keys(checklist)).Msg("Notifying users...")
 
-	if in.GetIsRealtime() {
+	if in.GetUnsaved() {
 		services.PushNotificationBatch(notifications)
 	} else {
 		if err := services.NewNotificationBatch(notifications); err != nil {

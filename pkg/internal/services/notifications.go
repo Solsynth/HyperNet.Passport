@@ -132,15 +132,9 @@ func PushNotification(notification models.Notification, skipNotifiableCheck ...b
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	err = gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
-		Providers: providers,
-		Tokens:    tokens,
-		Notification: pushkit.Notification{
-			Topic:    notification.Topic,
-			Title:    notification.Title,
-			Subtitle: notification.Subtitle,
-			Body:     notification.Body,
-			Metadata: notification.Metadata,
-		},
+		Providers:    providers,
+		Tokens:       tokens,
+		Notification: notification.EncodeToPushkit(),
 	})
 
 	return err
@@ -208,15 +202,9 @@ func PushNotificationBatch(notifications []models.Notification, skipNotifiableCh
 
 		ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 		_ = gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
-			Providers: providers,
-			Tokens:    tokens,
-			Notification: pushkit.Notification{
-				Topic:    notification.Topic,
-				Title:    notification.Title,
-				Subtitle: notification.Subtitle,
-				Body:     notification.Body,
-				Metadata: notification.Metadata,
-			},
+			Providers:    providers,
+			Tokens:       tokens,
+			Notification: notification.EncodeToPushkit(),
 		})
 		cancel()
 	}

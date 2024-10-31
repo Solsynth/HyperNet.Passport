@@ -4,23 +4,19 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":truck: Update package name from Hypdrogen to Hypernet">
-      <change afterPath="$PROJECT_DIR$/pkg/internal/grpc/user.go" afterDir="false" />
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Support users related rpc calls">
+      <change afterPath="$PROJECT_DIR$/pkg/authkit/audit.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/authkit/notify.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/authkit/models/accounts.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/models/accounts.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/notifier.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/notify.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/authkit/models/notifications.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/models/notifications.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/notify.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/notify.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/notifications.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/notifications.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/proto/notify.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/notify.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/proto/notify.proto" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/notify.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/proto/notify_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/notify_grpc.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/proto/realm.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/realm.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/realm.proto" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/realm.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/proto/realm_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/realm_grpc.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/proto/record.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/record.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/record.proto" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/record.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/proto/record_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/record_grpc.pb.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -169,7 +165,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":bug: Trying to prevent send same notification to the same user in batch" />
     <MESSAGE value=":sparkles: Allow user view and remove notification subscriptions" />
     <MESSAGE value=":recycle: Improve notifications mark read system" />
     <MESSAGE value=":bug: Bug fixes on multi-factors based authentication" />
@@ -194,7 +189,8 @@
     <MESSAGE value="Revert &quot;:recycle: Move models.Account to sec.UserInfo&quot;&#10;&#10;This reverts commit 8fbb7960" />
     <MESSAGE value=":rewind: Revert &quot;:recycle: Move models.Account to sec.UserInfo&quot; for a better solution&#10;&#10;This reverts commit 8fbb7960" />
     <MESSAGE value=":truck: Update package name from Hypdrogen to Hypernet" />
-    <option name="LAST_COMMIT_MESSAGE" value=":truck: Update package name from Hypdrogen to Hypernet" />
+    <MESSAGE value=":sparkles: Support users related rpc calls" />
+    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Support users related rpc calls" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
