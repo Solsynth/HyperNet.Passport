@@ -1,9 +1,9 @@
 package api
 
 import (
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 	"strconv"
 )

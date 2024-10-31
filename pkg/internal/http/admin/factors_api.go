@@ -1,9 +1,9 @@
 package admin
 
 import (
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/samber/lo"

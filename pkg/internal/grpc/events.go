@@ -2,8 +2,8 @@ package grpc
 
 import (
 	"context"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
-	"git.solsynth.dev/hydrogen/passport/pkg/proto"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/passport/pkg/proto"
 )
 
 func (v *App) RecordEvent(ctx context.Context, request *proto.RecordEventRequest) (*proto.RecordEventResponse, error) {

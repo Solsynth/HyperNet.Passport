@@ -8,16 +8,16 @@ import (
 	"os/signal"
 	"syscall"
 
-	pkg "git.solsynth.dev/hydrogen/passport/pkg/internal"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/gap"
+	pkg "git.solsynth.dev/hypernet/passport/pkg/internal"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/grpc"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/http"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/grpc"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/http"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/robfig/cron/v3"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/cache"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/cache"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"

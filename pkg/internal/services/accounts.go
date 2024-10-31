@@ -3,13 +3,13 @@ package services
 import (
 	"context"
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"time"
 	"unicode"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/gap"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 
 	"gorm.io/gorm/clause"
 
@@ -17,7 +17,7 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/datatypes"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 )

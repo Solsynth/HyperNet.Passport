@@ -2,7 +2,7 @@ package services
 
 import (
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"gorm.io/datatypes"
 	"time"
 
@@ -10,7 +10,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"github.com/samber/lo"
 )
 

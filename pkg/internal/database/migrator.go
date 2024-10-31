@@ -1,7 +1,7 @@
 package database
 
 import (
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"gorm.io/gorm"
 )
 

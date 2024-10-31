@@ -5,8 +5,8 @@ import (
 
 	"google.golang.org/grpc/reflection"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/proto"
 	nroto "git.solsynth.dev/hypernet/nexus/pkg/proto"
+	"git.solsynth.dev/hypernet/passport/pkg/proto"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 

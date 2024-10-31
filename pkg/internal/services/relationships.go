@@ -3,9 +3,9 @@ package services
 import (
 	"errors"
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"gorm.io/gorm"
 )
 

@@ -2,9 +2,9 @@ package grpc
 
 import (
 	"context"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 )
 
 func (v *App) BroadcastEvent(ctx context.Context, request *proto.EventInfo) (*proto.EventResponse, error) {

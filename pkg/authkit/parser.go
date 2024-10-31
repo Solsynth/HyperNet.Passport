@@ -1,8 +1,8 @@
 package authkit
 
 import (
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 )

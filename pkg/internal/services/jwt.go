@@ -1,8 +1,8 @@
 package services
 
 import (
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

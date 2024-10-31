@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/exts"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
 
 	"github.com/gofiber/fiber/v2"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 )
 
 func getTicket(c *fiber.Ctx) error {

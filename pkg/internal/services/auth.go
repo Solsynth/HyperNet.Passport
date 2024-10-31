@@ -3,8 +3,8 @@ package services
 import (
 	"context"
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit/models"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"time"
 
 	"github.com/eko/gocache/lib/v4/cache"
@@ -12,7 +12,7 @@ import (
 	"github.com/eko/gocache/lib/v4/store"
 	jsoniter "github.com/json-iterator/go"
 
-	localCache "git.solsynth.dev/hydrogen/passport/pkg/internal/cache"
+	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog/log"
 )

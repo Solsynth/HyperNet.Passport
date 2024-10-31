@@ -2,8 +2,8 @@ package exts
 
 import (
 	"fmt"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/services"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 )
 

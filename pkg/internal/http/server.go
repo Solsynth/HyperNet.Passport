@@ -1,12 +1,12 @@
 package http
 
 import (
-	"git.solsynth.dev/hydrogen/passport/pkg/authkit"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit"
 	"strings"
 
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/admin"
-	"git.solsynth.dev/hydrogen/passport/pkg/internal/http/api"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/http/admin"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/http/api"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/idempotency"
