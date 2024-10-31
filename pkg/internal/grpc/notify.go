@@ -92,7 +92,7 @@ func (v *App) NotifyUserBatch(_ context.Context, in *proto.NotifyUserBatchReques
 	}, nil
 }
 
-func (v *App) NotifyAllUser(_ context.Context, in *proto.NotifyInfo) (*proto.NotifyResponse, error) {
+func (v *App) NotifyAllUser(_ context.Context, in *proto.NotifyInfoPayload) (*proto.NotifyResponse, error) {
 	var users []models.Account
 	if err := database.C.Find(&users).Error; err != nil {
 		return nil, fmt.Errorf("unable to get account: %v", err)

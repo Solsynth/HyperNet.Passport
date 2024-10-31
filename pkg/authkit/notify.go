@@ -19,7 +19,7 @@ func NotifyUser(nx *nex.Conn, userId uint64, notify pushkit.Notification, unsave
 	}
 	_, err = proto.NewNotifyServiceClient(conn).NotifyUser(nil, &proto.NotifyUserRequest{
 		UserId: userId,
-		Notify: &proto.NotifyInfo{
+		Notify: &proto.NotifyInfoPayload{
 			Unsaved: unsaved[0],
 			Data:    raw,
 		},
@@ -38,7 +38,7 @@ func NotifyUserBatch(nx *nex.Conn, userId []uint64, notify pushkit.Notification,
 	}
 	_, err = proto.NewNotifyServiceClient(conn).NotifyUserBatch(nil, &proto.NotifyUserBatchRequest{
 		UserId: userId,
-		Notify: &proto.NotifyInfo{
+		Notify: &proto.NotifyInfoPayload{
 			Unsaved: unsaved[0],
 			Data:    raw,
 		},

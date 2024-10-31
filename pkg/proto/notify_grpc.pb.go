@@ -30,7 +30,7 @@ const (
 type NotifyServiceClient interface {
 	NotifyUser(ctx context.Context, in *NotifyUserRequest, opts ...grpc.CallOption) (*NotifyResponse, error)
 	NotifyUserBatch(ctx context.Context, in *NotifyUserBatchRequest, opts ...grpc.CallOption) (*NotifyResponse, error)
-	NotifyAllUser(ctx context.Context, in *NotifyInfo, opts ...grpc.CallOption) (*NotifyResponse, error)
+	NotifyAllUser(ctx context.Context, in *NotifyInfoPayload, opts ...grpc.CallOption) (*NotifyResponse, error)
 }
 
 type notifyServiceClient struct {
@@ -61,7 +61,7 @@ func (c *notifyServiceClient) NotifyUserBatch(ctx context.Context, in *NotifyUse
 	return out, nil
 }
 
-func (c *notifyServiceClient) NotifyAllUser(ctx context.Context, in *NotifyInfo, opts ...grpc.CallOption) (*NotifyResponse, error) {
+func (c *notifyServiceClient) NotifyAllUser(ctx context.Context, in *NotifyInfoPayload, opts ...grpc.CallOption) (*NotifyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(NotifyResponse)
 	err := c.cc.Invoke(ctx, NotifyService_NotifyAllUser_FullMethodName, in, out, cOpts...)
@@ -77,7 +77,7 @@ func (c *notifyServiceClient) NotifyAllUser(ctx context.Context, in *NotifyInfo,
 type NotifyServiceServer interface {
 	NotifyUser(context.Context, *NotifyUserRequest) (*NotifyResponse, error)
 	NotifyUserBatch(context.Context, *NotifyUserBatchRequest) (*NotifyResponse, error)
-	NotifyAllUser(context.Context, *NotifyInfo) (*NotifyResponse, error)
+	NotifyAllUser(context.Context, *NotifyInfoPayload) (*NotifyResponse, error)
 	mustEmbedUnimplementedNotifyServiceServer()
 }
 
@@ -94,7 +94,7 @@ func (UnimplementedNotifyServiceServer) NotifyUser(context.Context, *NotifyUserR
 func (UnimplementedNotifyServiceServer) NotifyUserBatch(context.Context, *NotifyUserBatchRequest) (*NotifyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NotifyUserBatch not implemented")
 }
-func (UnimplementedNotifyServiceServer) NotifyAllUser(context.Context, *NotifyInfo) (*NotifyResponse, error) {
+func (UnimplementedNotifyServiceServer) NotifyAllUser(context.Context, *NotifyInfoPayload) (*NotifyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NotifyAllUser not implemented")
 }
 func (UnimplementedNotifyServiceServer) mustEmbedUnimplementedNotifyServiceServer() {}
@@ -155,7 +155,7 @@ func _NotifyService_NotifyUserBatch_Handler(srv interface{}, ctx context.Context
 }
 
 func _NotifyService_NotifyAllUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NotifyInfo)
+	in := new(NotifyInfoPayload)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func _NotifyService_NotifyAllUser_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: NotifyService_NotifyAllUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotifyServiceServer).NotifyAllUser(ctx, req.(*NotifyInfo))
+		return srv.(NotifyServiceServer).NotifyAllUser(ctx, req.(*NotifyInfoPayload))
 	}
 	return interceptor(ctx, in, info, handler)
 }
