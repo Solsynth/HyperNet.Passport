@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":technologist: Improve DX by extending authkit">
-      <change afterPath="$PROJECT_DIR$/pkg/authkit/relative.go" afterDir="false" />
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Add list relative method into authkit">
+      <change afterPath="$PROJECT_DIR$/pkg/authkit/realm.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/authkit/models/realms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/models/realms.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/realms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/realms.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/proto/realm.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/realm.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/proto/realm.proto" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/realm.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/proto/realm_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/realm_grpc.pb.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,7 +145,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="refactor/nexus" />
+                        <option value="master" />
                       </list>
                     </value>
                   </entry>
@@ -154,7 +159,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":recycle: Improve notifications mark read system" />
     <MESSAGE value=":bug: Bug fixes on multi-factors based authentication" />
     <MESSAGE value=":bug: Bug fixes on settings auth preferences" />
     <MESSAGE value=":sparkles: Implement event recorder grpc" />
@@ -179,7 +183,8 @@
     <MESSAGE value=":truck: Update package name from Hypdrogen to Hypernet" />
     <MESSAGE value=":sparkles: Support users related rpc calls" />
     <MESSAGE value=":technologist: Improve DX by extending authkit" />
-    <option name="LAST_COMMIT_MESSAGE" value=":technologist: Improve DX by extending authkit" />
+    <MESSAGE value=":sparkles: Add list relative method into authkit" />
+    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Add list relative method into authkit" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">

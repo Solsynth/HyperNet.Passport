@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RealmService_ListCommunityRealm_FullMethodName   = "/proto.RealmService/ListCommunityRealm"
 	RealmService_ListAvailableRealm_FullMethodName   = "/proto.RealmService/ListAvailableRealm"
 	RealmService_ListOwnedRealm_FullMethodName       = "/proto.RealmService/ListOwnedRealm"
+	RealmService_ListRealm_FullMethodName            = "/proto.RealmService/ListRealm"
 	RealmService_GetRealm_FullMethodName             = "/proto.RealmService/GetRealm"
 	RealmService_ListRealmMember_FullMethodName      = "/proto.RealmService/ListRealmMember"
 	RealmService_GetRealmMember_FullMethodName       = "/proto.RealmService/GetRealmMember"
@@ -32,9 +32,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RealmServiceClient interface {
-	ListCommunityRealm(ctx context.Context, in *ListRealmRequest, opts ...grpc.CallOption) (*ListRealmResponse, error)
 	ListAvailableRealm(ctx context.Context, in *LookupUserRealmRequest, opts ...grpc.CallOption) (*ListRealmResponse, error)
 	ListOwnedRealm(ctx context.Context, in *LookupUserRealmRequest, opts ...grpc.CallOption) (*ListRealmResponse, error)
+	ListRealm(ctx context.Context, in *ListRealmRequest, opts ...grpc.CallOption) (*ListRealmResponse, error)
 	GetRealm(ctx context.Context, in *LookupRealmRequest, opts ...grpc.CallOption) (*RealmInfo, error)
 	ListRealmMember(ctx context.Context, in *RealmMemberLookupRequest, opts ...grpc.CallOption) (*ListRealmMemberResponse, error)
 	GetRealmMember(ctx context.Context, in *RealmMemberLookupRequest, opts ...grpc.CallOption) (*RealmMemberInfo, error)
@@ -47,16 +47,6 @@ type realmServiceClient struct {
 
 func NewRealmServiceClient(cc grpc.ClientConnInterface) RealmServiceClient {
 	return &realmServiceClient{cc}
-}
-
-func (c *realmServiceClient) ListCommunityRealm(ctx context.Context, in *ListRealmRequest, opts ...grpc.CallOption) (*ListRealmResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListRealmResponse)
-	err := c.cc.Invoke(ctx, RealmService_ListCommunityRealm_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *realmServiceClient) ListAvailableRealm(ctx context.Context, in *LookupUserRealmRequest, opts ...grpc.CallOption) (*ListRealmResponse, error) {
@@ -73,6 +63,16 @@ func (c *realmServiceClient) ListOwnedRealm(ctx context.Context, in *LookupUserR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListRealmResponse)
 	err := c.cc.Invoke(ctx, RealmService_ListOwnedRealm_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *realmServiceClient) ListRealm(ctx context.Context, in *ListRealmRequest, opts ...grpc.CallOption) (*ListRealmResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListRealmResponse)
+	err := c.cc.Invoke(ctx, RealmService_ListRealm_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -123,9 +123,9 @@ func (c *realmServiceClient) CheckRealmMemberPerm(ctx context.Context, in *Check
 // All implementations must embed UnimplementedRealmServiceServer
 // for forward compatibility.
 type RealmServiceServer interface {
-	ListCommunityRealm(context.Context, *ListRealmRequest) (*ListRealmResponse, error)
 	ListAvailableRealm(context.Context, *LookupUserRealmRequest) (*ListRealmResponse, error)
 	ListOwnedRealm(context.Context, *LookupUserRealmRequest) (*ListRealmResponse, error)
+	ListRealm(context.Context, *ListRealmRequest) (*ListRealmResponse, error)
 	GetRealm(context.Context, *LookupRealmRequest) (*RealmInfo, error)
 	ListRealmMember(context.Context, *RealmMemberLookupRequest) (*ListRealmMemberResponse, error)
 	GetRealmMember(context.Context, *RealmMemberLookupRequest) (*RealmMemberInfo, error)
@@ -140,14 +140,14 @@ type RealmServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRealmServiceServer struct{}
 
-func (UnimplementedRealmServiceServer) ListCommunityRealm(context.Context, *ListRealmRequest) (*ListRealmResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListCommunityRealm not implemented")
-}
 func (UnimplementedRealmServiceServer) ListAvailableRealm(context.Context, *LookupUserRealmRequest) (*ListRealmResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAvailableRealm not implemented")
 }
 func (UnimplementedRealmServiceServer) ListOwnedRealm(context.Context, *LookupUserRealmRequest) (*ListRealmResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOwnedRealm not implemented")
+}
+func (UnimplementedRealmServiceServer) ListRealm(context.Context, *ListRealmRequest) (*ListRealmResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRealm not implemented")
 }
 func (UnimplementedRealmServiceServer) GetRealm(context.Context, *LookupRealmRequest) (*RealmInfo, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRealm not implemented")
@@ -182,24 +182,6 @@ func RegisterRealmServiceServer(s grpc.ServiceRegistrar, srv RealmServiceServer)
 	s.RegisterService(&RealmService_ServiceDesc, srv)
 }
 
-func _RealmService_ListCommunityRealm_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRealmRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RealmServiceServer).ListCommunityRealm(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: RealmService_ListCommunityRealm_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RealmServiceServer).ListCommunityRealm(ctx, req.(*ListRealmRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _RealmService_ListAvailableRealm_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LookupUserRealmRequest)
 	if err := dec(in); err != nil {
@@ -232,6 +214,24 @@ func _RealmService_ListOwnedRealm_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RealmServiceServer).ListOwnedRealm(ctx, req.(*LookupUserRealmRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RealmService_ListRealm_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRealmRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RealmServiceServer).ListRealm(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RealmService_ListRealm_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RealmServiceServer).ListRealm(ctx, req.(*ListRealmRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -316,16 +316,16 @@ var RealmService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*RealmServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListCommunityRealm",
-			Handler:    _RealmService_ListCommunityRealm_Handler,
-		},
-		{
 			MethodName: "ListAvailableRealm",
 			Handler:    _RealmService_ListAvailableRealm_Handler,
 		},
 		{
 			MethodName: "ListOwnedRealm",
 			Handler:    _RealmService_ListOwnedRealm_Handler,
+		},
+		{
+			MethodName: "ListRealm",
+			Handler:    _RealmService_ListRealm_Handler,
 		},
 		{
 			MethodName: "GetRealm",

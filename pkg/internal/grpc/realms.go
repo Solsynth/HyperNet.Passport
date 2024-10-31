@@ -12,34 +12,6 @@ import (
 	"github.com/samber/lo"
 )
 
-func (v *App) ListCommunityRealm(ctx context.Context, empty *proto.ListRealmRequest) (*proto.ListRealmResponse, error) {
-	realms, err := services.ListCommunityRealm()
-	if err != nil {
-		return nil, err
-	}
-
-	return &proto.ListRealmResponse{
-		Data: lo.Map(realms, func(item models.Realm, index int) *proto.RealmInfo {
-			info := &proto.RealmInfo{
-				Id:           uint64(item.ID),
-				Alias:        item.Alias,
-				Name:         item.Name,
-				Description:  item.Description,
-				IsPublic:     item.IsPublic,
-				IsCommunity:  item.IsCommunity,
-				AccessPolicy: nex.EncodeMap(item.AccessPolicy),
-			}
-			if item.Avatar != nil {
-				info.Avatar = *item.Avatar
-			}
-			if item.Banner != nil {
-				info.Banner = *item.Banner
-			}
-			return info
-		}),
-	}, nil
-}
-
 func (v *App) ListAvailableRealm(ctx context.Context, request *proto.LookupUserRealmRequest) (*proto.ListRealmResponse, error) {
 	account, err := services.GetAccount(uint(request.GetUserId()))
 	if err != nil {
@@ -79,6 +51,34 @@ func (v *App) ListOwnedRealm(ctx context.Context, request *proto.LookupUserRealm
 	}
 	realms, err := services.ListOwnedRealm(account)
 	if err != nil {
+		return nil, err
+	}
+
+	return &proto.ListRealmResponse{
+		Data: lo.Map(realms, func(item models.Realm, index int) *proto.RealmInfo {
+			info := &proto.RealmInfo{
+				Id:           uint64(item.ID),
+				Alias:        item.Alias,
+				Name:         item.Name,
+				Description:  item.Description,
+				IsPublic:     item.IsPublic,
+				IsCommunity:  item.IsCommunity,
+				AccessPolicy: nex.EncodeMap(item.AccessPolicy),
+			}
+			if item.Avatar != nil {
+				info.Avatar = *item.Avatar
+			}
+			if item.Banner != nil {
+				info.Banner = *item.Banner
+			}
+			return info
+		}),
+	}, nil
+}
+
+func (v *App) ListRealm(ctx context.Context, request *proto.ListRealmRequest) (*proto.ListRealmResponse, error) {
+	var realms []models.Realm
+	if err := database.C.Where("id IN ?", request.GetId()).Find(&realms).Error; err != nil {
 		return nil, err
 	}
 
@@ -163,6 +163,7 @@ func (v *App) ListRealmMember(ctx context.Context, request *proto.RealmMemberLoo
 	return &proto.ListRealmMemberResponse{
 		Data: lo.Map(members, func(item models.RealmMember, index int) *proto.RealmMemberInfo {
 			return &proto.RealmMemberInfo{
+				Id:         uint64(item.ID),
 				RealmId:    uint64(item.RealmID),
 				UserId:     uint64(item.AccountID),
 				PowerLevel: int32(item.PowerLevel),
@@ -189,6 +190,7 @@ func (v *App) GetRealmMember(ctx context.Context, request *proto.RealmMemberLook
 	}
 
 	return &proto.RealmMemberInfo{
+		Id:         uint64(member.ID),
 		RealmId:    uint64(member.RealmID),
 		UserId:     uint64(member.AccountID),
 		PowerLevel: int32(member.PowerLevel),
