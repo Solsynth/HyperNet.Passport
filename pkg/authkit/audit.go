@@ -1,6 +1,7 @@
 package authkit
 
 import (
+	"context"
 	"fmt"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
@@ -13,7 +14,7 @@ func AddEvent(nx *nex.Conn, userId uint, action, target, ip, ua string) error {
 	if err != nil {
 		return fmt.Errorf("failed to get auth service client: %v", err)
 	}
-	_, err = proto.NewAuditServiceClient(conn).RecordEvent(nil, &proto.RecordEventRequest{
+	_, err = proto.NewAuditServiceClient(conn).RecordEvent(context.Background(), &proto.RecordEventRequest{
 		UserId:    uint64(userId),
 		Action:    action,
 		Target:    target,
@@ -33,7 +34,7 @@ func AddEventExt(nx *nex.Conn, action, target string, c *fiber.Ctx) error {
 	if err != nil {
 		return fmt.Errorf("failed to get auth service client: %v", err)
 	}
-	_, err = proto.NewAuditServiceClient(conn).RecordEvent(nil, &proto.RecordEventRequest{
+	_, err = proto.NewAuditServiceClient(conn).RecordEvent(context.Background(), &proto.RecordEventRequest{
 		UserId:    uint64(user.ID),
 		Action:    action,
 		Target:    target,

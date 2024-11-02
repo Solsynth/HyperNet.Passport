@@ -1,6 +1,7 @@
 package authkit
 
 import (
+	"context"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/proto"
@@ -13,7 +14,7 @@ func GetRealm(nx *nex.Conn, id uint) (models.Realm, error) {
 	if err != nil {
 		return realm, err
 	}
-	resp, err := proto.NewRealmServiceClient(conn).GetRealm(nil, &proto.LookupRealmRequest{
+	resp, err := proto.NewRealmServiceClient(conn).GetRealm(context.Background(), &proto.LookupRealmRequest{
 		Id: lo.ToPtr(uint64(id)),
 	})
 	if err != nil {
@@ -28,7 +29,7 @@ func GetRealmByAlias(nx *nex.Conn, alias string) (models.Realm, error) {
 	if err != nil {
 		return realm, err
 	}
-	resp, err := proto.NewRealmServiceClient(conn).GetRealm(nil, &proto.LookupRealmRequest{
+	resp, err := proto.NewRealmServiceClient(conn).GetRealm(context.Background(), &proto.LookupRealmRequest{
 		Alias: &alias,
 	})
 	if err != nil {
@@ -43,7 +44,7 @@ func ListRealm(nx *nex.Conn, id []uint) ([]models.Realm, error) {
 	if err != nil {
 		return realms, err
 	}
-	resp, err := proto.NewRealmServiceClient(conn).ListRealm(nil, &proto.ListRealmRequest{
+	resp, err := proto.NewRealmServiceClient(conn).ListRealm(context.Background(), &proto.ListRealmRequest{
 		Id: lo.Map(id, func(item uint, _ int) uint64 {
 			return uint64(item)
 		}),
@@ -63,7 +64,7 @@ func GetRealmMember(nx *nex.Conn, realmID, userID uint) (models.RealmMember, err
 	if err != nil {
 		return member, err
 	}
-	resp, err := proto.NewRealmServiceClient(conn).GetRealmMember(nil, &proto.RealmMemberLookupRequest{
+	resp, err := proto.NewRealmServiceClient(conn).GetRealmMember(context.Background(), &proto.RealmMemberLookupRequest{
 		RealmId: lo.ToPtr(uint64(realmID)),
 		UserId:  lo.ToPtr(uint64(userID)),
 	})
@@ -79,7 +80,7 @@ func ListRealmMember(nx *nex.Conn, realmID uint) ([]models.RealmMember, error) {
 	if err != nil {
 		return members, err
 	}
-	resp, err := proto.NewRealmServiceClient(conn).ListRealmMember(nil, &proto.RealmMemberLookupRequest{
+	resp, err := proto.NewRealmServiceClient(conn).ListRealmMember(context.Background(), &proto.RealmMemberLookupRequest{
 		RealmId: lo.ToPtr(uint64(realmID)),
 	})
 	if err != nil {
@@ -96,7 +97,7 @@ func CheckRealmMemberPerm(nx *nex.Conn, realmID uint, userID, power int) bool {
 	if err != nil {
 		return false
 	}
-	resp, err := proto.NewRealmServiceClient(conn).CheckRealmMemberPerm(nil, &proto.CheckRealmPermRequest{
+	resp, err := proto.NewRealmServiceClient(conn).CheckRealmMemberPerm(context.Background(), &proto.CheckRealmPermRequest{
 		RealmId:    uint64(realmID),
 		UserId:     uint64(userID),
 		PowerLevel: int32(power),

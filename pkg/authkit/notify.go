@@ -1,6 +1,7 @@
 package authkit
 
 import (
+	"context"
 	"fmt"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/passport/pkg/proto"
@@ -17,7 +18,7 @@ func NotifyUser(nx *nex.Conn, userId uint64, notify pushkit.Notification, unsave
 	if len(unsaved) == 0 {
 		unsaved = append(unsaved, false)
 	}
-	_, err = proto.NewNotifyServiceClient(conn).NotifyUser(nil, &proto.NotifyUserRequest{
+	_, err = proto.NewNotifyServiceClient(conn).NotifyUser(context.Background(), &proto.NotifyUserRequest{
 		UserId: userId,
 		Notify: &proto.NotifyInfoPayload{
 			Unsaved: unsaved[0],
@@ -36,7 +37,7 @@ func NotifyUserBatch(nx *nex.Conn, userId []uint64, notify pushkit.Notification,
 	if len(unsaved) == 0 {
 		unsaved = append(unsaved, false)
 	}
-	_, err = proto.NewNotifyServiceClient(conn).NotifyUserBatch(nil, &proto.NotifyUserBatchRequest{
+	_, err = proto.NewNotifyServiceClient(conn).NotifyUserBatch(context.Background(), &proto.NotifyUserBatchRequest{
 		UserId: userId,
 		Notify: &proto.NotifyInfoPayload{
 			Unsaved: unsaved[0],

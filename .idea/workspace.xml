@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Realm operations now available in authkit">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Fix grpc namespace conflict">
+      <change afterPath="$PROJECT_DIR$/pkg/authkit/auth.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/authkit/audit.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/audit.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/authkit/notify.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/notify.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/notify.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/notify.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/notify.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/notify.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/notify.proto" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/notify.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/notify_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/notify_grpc.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/authkit/realm.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/realm.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/authkit/relative.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/relative.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,10 +33,10 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="ProjectErrors" />
   </component>
@@ -162,7 +162,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":bug: Bug fixes on settings auth preferences" />
     <MESSAGE value=":sparkles: Implement event recorder grpc" />
     <MESSAGE value=":sparkles: More event logs point" />
     <MESSAGE value=":sparkles: New login alert" />
@@ -187,7 +186,8 @@
     <MESSAGE value=":technologist: Improve DX by extending authkit" />
     <MESSAGE value=":sparkles: Add list relative method into authkit" />
     <MESSAGE value=":sparkles: Realm operations now available in authkit" />
-    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Realm operations now available in authkit" />
+    <MESSAGE value=":bug: Fix grpc namespace conflict" />
+    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix grpc namespace conflict" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
