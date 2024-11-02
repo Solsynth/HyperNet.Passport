@@ -37,6 +37,8 @@ git.solsynth.dev/hypernet/nexus v0.0.0-20241030155904-3f6ea11d2297 h1:g9huTJFUKP
 git.solsynth.dev/hypernet/nexus v0.0.0-20241030155904-3f6ea11d2297/go.mod h1:fXQsHXGio+7/0U95IitKF07wS4yTdCMp5ms8wpFBwVI=
 git.solsynth.dev/hypernet/nexus v0.0.0-20241031125727-aa624ee45428 h1:1TnXLOzZZKwdneKHynK1qJ/3UL4r/f5Pp3EM+qdL1n4=
 git.solsynth.dev/hypernet/nexus v0.0.0-20241031125727-aa624ee45428/go.mod h1:fXQsHXGio+7/0U95IitKF07wS4yTdCMp5ms8wpFBwVI=
+git.solsynth.dev/hypernet/nexus v0.0.0-20241102174036-194d27090415 h1:7K6rv7fLgT1KQptFHJPp6+fHITLdl3Or3uT7cl8fnOM=
+git.solsynth.dev/hypernet/nexus v0.0.0-20241102174036-194d27090415/go.mod h1:fXQsHXGio+7/0U95IitKF07wS4yTdCMp5ms8wpFBwVI=
 git.solsynth.dev/hypernet/pusher v0.0.0-20241026153052-cd2c326efa4e h1:DtHhMjgxS/spUt/KEdbRFtaVnepI6Vx8pbHdJaNH1hs=
 git.solsynth.dev/hypernet/pusher v0.0.0-20241026153052-cd2c326efa4e/go.mod h1:XHTqFU/vBe4JiuAjl87GUcL8+w/IizSNoqH6n3WkQFc=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=

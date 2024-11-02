@@ -77,6 +77,12 @@ func (v *App) NotifyUserBatch(_ context.Context, in *proto.NotifyUserBatchReques
 		notifications = append(notifications, notification)
 	}
 
+	if len(notifications) == 0 {
+		return &proto.NotifyResponse{
+			IsSuccess: true,
+		}, nil
+	}
+
 	log.Debug().Str("topic", notifications[0].Topic).Any("uid", lo.Keys(checklist)).Msg("Notifying users...")
 
 	if in.GetNotify().GetUnsaved() {

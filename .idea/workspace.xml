@@ -4,13 +4,15 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Fix grpc namespace conflict">
-      <change afterPath="$PROJECT_DIR$/pkg/authkit/auth.go" afterDir="false" />
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Authkit support check user related permission">
+      <change afterPath="$PROJECT_DIR$/pkg/authkit/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/74bcf3ef-a2b9-435b-b9e5-f32902a33b25.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/74bcf3ef-a2b9-435b-b9e5-f32902a33b25.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/authkit/audit.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/audit.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/authkit/notify.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/notify.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/authkit/realm.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/realm.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/authkit/relative.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/relative.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/notify.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/notify.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/user.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,34 +51,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;Go Build.Backend.executor&quot;: &quot;Run&quot;,
-    &quot;Go 构建.Backend.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/littlesheep/Documents/Projects/Hypernet/Passport&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.intentionPowerPack&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/littlesheep/Documents/Projects/Hydrogen/Passport/web/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go Build.Backend.executor": "Debug",
+    "Go 构建.Backend.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "master",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/Users/littlesheep/Documents/Projects/Hypernet/Passport",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.intentionPowerPack",
+    "ts.external.directory.path": "/Users/littlesheep/Documents/Projects/Hydrogen/Passport/web/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/keys" />
@@ -162,8 +164,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":sparkles: Implement event recorder grpc" />
-    <MESSAGE value=":sparkles: More event logs point" />
     <MESSAGE value=":sparkles: New login alert" />
     <MESSAGE value=":bug: Bug fixes in non-cached notification preferences" />
     <MESSAGE value=":alien: Support better metadata encoder / decoder" />
@@ -187,7 +187,9 @@
     <MESSAGE value=":sparkles: Add list relative method into authkit" />
     <MESSAGE value=":sparkles: Realm operations now available in authkit" />
     <MESSAGE value=":bug: Fix grpc namespace conflict" />
-    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix grpc namespace conflict" />
+    <MESSAGE value=":recycle: Replace nil context with context.Background in authkit" />
+    <MESSAGE value=":sparkles: Authkit support check user related permission" />
+    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Authkit support check user related permission" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">

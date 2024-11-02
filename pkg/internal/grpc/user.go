@@ -12,8 +12,16 @@ import (
 )
 
 func (v *App) GetUser(ctx context.Context, request *proto.GetUserRequest) (*proto.UserInfo, error) {
+	tx := database.C
+	if request.UserId != nil {
+		tx = tx.Where("id = ?", uint(request.GetUserId()))
+	}
+	if request.Name != nil {
+		tx = tx.Where("name = ?", request.GetName())
+	}
+
 	var account models.Account
-	if err := database.C.Where("id = ?", uint(request.GetUserId())).First(&account).Error; err != nil {
+	if err := tx.First(&account).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, fmt.Sprintf("requested user with id %d was not found", request.GetUserId()))
 	}
 	return account.EncodeToUserInfo(), nil

@@ -3,7 +3,7 @@ module git.solsynth.dev/hypernet/passport
 go 1.23.2
 
 require (
-	git.solsynth.dev/hypernet/nexus v0.0.0-20241031125727-aa624ee45428
+	git.solsynth.dev/hypernet/nexus v0.0.0-20241102174036-194d27090415
 	git.solsynth.dev/hypernet/pusher v0.0.0-20241026153052-cd2c326efa4e
 	github.com/dgraph-io/ristretto v0.1.1
 	github.com/eko/gocache/lib/v4 v4.1.6
