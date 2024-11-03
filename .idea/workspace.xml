@@ -4,15 +4,13 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Authkit support check user related permission">
-      <change afterPath="$PROJECT_DIR$/pkg/authkit/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Authkit can get user">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/74bcf3ef-a2b9-435b-b9e5-f32902a33b25.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/74bcf3ef-a2b9-435b-b9e5-f32902a33b25.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/notify.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/notify.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/cache/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/cache/store.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/auth.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +52,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultGoTemplateProperty": "Go File",
-    "Go Build.Backend.executor": "Debug",
+    "Go Build.Backend.executor": "Run",
     "Go 构建.Backend.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
@@ -164,7 +162,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":sparkles: New login alert" />
     <MESSAGE value=":bug: Bug fixes in non-cached notification preferences" />
     <MESSAGE value=":alien: Support better metadata encoder / decoder" />
     <MESSAGE value=":bug: Bug fixes on compile time" />
@@ -189,10 +186,32 @@
     <MESSAGE value=":bug: Fix grpc namespace conflict" />
     <MESSAGE value=":recycle: Replace nil context with context.Background in authkit" />
     <MESSAGE value=":sparkles: Authkit support check user related permission" />
-    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Authkit support check user related permission" />
+    <MESSAGE value=":sparkles: Authkit can get user" />
+    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Authkit can get user" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/internal/services/auth.go</url>
+          <line>105</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/internal/services/auth.go</url>
+          <line>90</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/internal/services/auth.go</url>
+          <line>45</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

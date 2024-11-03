@@ -9,16 +9,16 @@ import (
 var S store.StoreInterface
 
 func NewStore() error {
-	ristretto, err := ristretto.NewCache(&ristretto.Config{
-		NumCounters: 1000,
-		MaxCost:     100,
+	ris, err := ristretto.NewCache(&ristretto.Config{
+		NumCounters: 1e7,
+		MaxCost:     1 << 27,
 		BufferItems: 64,
 	})
 	if err != nil {
 		return err
 	}
 
-	S = ristrettoCache.NewRistretto(ristretto)
+	S = ristrettoCache.NewRistretto(ris)
 
 	return nil
 }

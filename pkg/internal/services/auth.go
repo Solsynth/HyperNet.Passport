@@ -41,10 +41,11 @@ func GetAuthContext(sessionId uint) (models.AuthTicket, error) {
 
 	cacheManager := cache.New[any](localCache.S)
 	marshal := marshaler.New(cacheManager)
-	contx := context.Background()
 
-	if val, err := marshal.Get(contx, GetAuthContextCacheKey(sessionId), new(models.AuthTicket)); err == nil {
+	key := GetAuthContextCacheKey(sessionId)
+	if val, err := marshal.Get(context.Background(), key, new(models.AuthTicket)); err == nil {
 		ctx = *val.(*models.AuthTicket)
+		// log.Debug().Uint("session", sessionId).Msg("Hint auth context cache once")
 	} else {
 		ctx, err = CacheAuthContext(sessionId)
 		log.Debug().Uint("session", sessionId).Msg("Created a new auth context cache")
@@ -85,13 +86,13 @@ func CacheAuthContext(sessionId uint) (models.AuthTicket, error) {
 	// Put the data into the cache
 	cacheManager := cache.New[any](localCache.S)
 	marshal := marshaler.New(cacheManager)
-	ctx := context.Background()
 
-	_ = marshal.Set(
-		ctx,
-		GetAuthContextCacheKey(sessionId),
+	key := GetAuthContextCacheKey(sessionId)
+	err = marshal.Set(
+		context.Background(),
+		key,
 		ticket,
-		store.WithExpiration(3*time.Minute),
+		store.WithExpiration(10*time.Minute),
 		store.WithTags([]string{"auth-context", fmt.Sprintf("user#%d", user.ID)}),
 	)
 
