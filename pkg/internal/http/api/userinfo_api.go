@@ -15,11 +15,11 @@ import (
 func getOtherUserinfo(c *fiber.Ctx) error {
 	alias := c.Params("alias")
 
-	tx := database.C.Where("name = ?")
+	tx := database.C.Where("name = ?", alias)
 
 	numericId, err := strconv.Atoi(alias)
 	if err == nil {
-		tx = tx.Where("id = ?", numericId)
+		tx = tx.Or("id = ?", numericId)
 	}
 
 	var account models.Account
