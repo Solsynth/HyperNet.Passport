@@ -3,8 +3,8 @@ package api
 import (
 	"fmt"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
-	"github.com/spf13/viper"
 	"gorm.io/gorm"
+	"strconv"
 	"strings"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
@@ -15,13 +15,18 @@ import (
 func getOtherUserinfo(c *fiber.Ctx) error {
 	alias := c.Params("alias")
 
+	tx := database.C.Where("name = ?")
+
+	numericId, err := strconv.Atoi(alias)
+	if err == nil {
+		tx = tx.Where("id = ?", numericId)
+	}
+
 	var account models.Account
-	if err := database.C.
-		Where(&models.Account{Name: alias}).
+	if err := tx.
 		Preload("Profile").
 		Preload("Badges", func(db *gorm.DB) *gorm.DB {
-			prefix := viper.GetString("database.prefix")
-			return db.Order(fmt.Sprintf("%sbadges.type DESC", prefix))
+			return db.Order("badges.type DESC")
 		}).
 		First(&account).Error; err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
