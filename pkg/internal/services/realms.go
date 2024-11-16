@@ -5,6 +5,7 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"github.com/samber/lo"
+	"strconv"
 )
 
 func ListCommunityRealm() ([]models.Realm, error) {
@@ -48,10 +49,15 @@ func ListAvailableRealm(user models.Account) ([]models.Realm, error) {
 }
 
 func GetRealmWithAlias(alias string) (models.Realm, error) {
+	tx := database.C.Where("alias = ?", alias)
+
+	numericId, err := strconv.Atoi(alias)
+	if err == nil {
+		tx.Or("id = ?", numericId)
+	}
+
 	var realm models.Realm
-	if err := database.C.Where(&models.Realm{
-		Alias: alias,
-	}).First(&realm).Error; err != nil {
+	if err := tx.First(&realm).Error; err != nil {
 		return realm, err
 	}
 	return realm, nil
