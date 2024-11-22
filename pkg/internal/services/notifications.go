@@ -129,6 +129,8 @@ func PushNotification(notification models.Notification, skipNotifiableCheck ...b
 		tokens = append(tokens, subscriber.DeviceToken)
 	}
 
+	log.Debug().Str("topic", notification.Topic).Any("uid", notification.AccountID).Msg("Pushing notify to user...")
+
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	err = gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
@@ -136,6 +138,9 @@ func PushNotification(notification models.Notification, skipNotifiableCheck ...b
 		Tokens:       tokens,
 		Notification: notification.EncodeToPushkit(),
 	})
+	if err != nil {
+		log.Warn().Err(err).Str("topic", notification.Topic).Msg("Failed to push notification to Pusher")
+	}
 
 	return err
 }
@@ -166,6 +171,8 @@ func PushNotificationBatch(notifications []models.Notification, skipNotifiableCh
 			},
 		)
 	}
+
+	log.Debug().Str("topic", notifications[0].Topic).Any("uid", accountIdx).Msg("Pushing notify to users...")
 
 	if len(accountIdx) == 0 {
 		return
@@ -201,11 +208,13 @@ func PushNotificationBatch(notifications []models.Notification, skipNotifiableCh
 		}
 
 		ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
-		_ = gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
+		if err := gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
 			Providers:    providers,
 			Tokens:       tokens,
 			Notification: notification.EncodeToPushkit(),
-		})
+		}); err != nil {
+			log.Warn().Err(err).Str("topic", notification.Topic).Msg("Failed to push notification to Pusher")
+		}
 		cancel()
 	}
 }
