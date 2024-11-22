@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Allow access user info via numeric id">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Fix get user info query statement bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/userinfo_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/userinfo_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/index.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/index.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +159,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":bug: Fix notification order" />
     <MESSAGE value=":bug: Fix notification order... again" />
     <MESSAGE value=":bug: Trying to fix panic" />
     <MESSAGE value=":recycle: Remove most of the dealer deps and move to nexus" />
@@ -184,7 +183,8 @@
     <MESSAGE value=":bug: Fix auth cache" />
     <MESSAGE value=":sparkles: Allow get realm by numeric auto increment id" />
     <MESSAGE value=":sparkles: Allow access user info via numeric id" />
-    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Allow access user info via numeric id" />
+    <MESSAGE value=":bug: Fix get user info query statement bug" />
+    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix get user info query statement bug" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
