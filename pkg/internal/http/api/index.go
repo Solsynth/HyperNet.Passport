@@ -6,6 +6,7 @@ import (
 
 func MapAPIs(app *fiber.App, baseURL string) {
 	app.Get("/.well-known/openid-configuration", getOidcConfiguration)
+	app.Get("/.well-known/jwks", getJwk)
 
 	api := app.Group(baseURL).Name("API")
 	{

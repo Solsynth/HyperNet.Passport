@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-
+	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 )
@@ -22,5 +22,14 @@ func getOidcConfiguration(c *fiber.Ctx) error {
 		"token_endpoint_auth_methods_supported":            []string{"client_secret_post"},
 		"id_token_signing_alg_values_supported":            []string{"HS512"},
 		"token_endpoint_auth_signing_alg_values_supported": []string{"HS512"},
+		"jwks_uri":                                         fmt.Sprintf("%s/.well-known/jwks", basepath),
+	})
+}
+
+func getJwk(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"keys": []fiber.Map{
+			services.EReader.BuildJwk(viper.GetString("id")),
+		},
 	})
 }

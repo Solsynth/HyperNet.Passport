@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Fix notifiable is empty when user do not set">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Fix notification push batch emitted twice">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/notifications.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/notifications.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/index.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/index.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/well_known_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/well_known_api.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +162,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":recycle: All parts into nexus" />
     <MESSAGE value=":truck: Move http server package" />
     <MESSAGE value=":recycle: Move models.Account to sec.UserInfo" />
     <MESSAGE value=":bug: Fix check perm panic" />
@@ -184,7 +186,8 @@
     <MESSAGE value=":loud_sound: Verbose notifying logging" />
     <MESSAGE value=":loud_sound: Verbose notifying check logging" />
     <MESSAGE value=":bug: Fix notifiable is empty when user do not set" />
-    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix notifiable is empty when user do not set" />
+    <MESSAGE value=":bug: Fix notification push batch emitted twice" />
+    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix notification push batch emitted twice" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
