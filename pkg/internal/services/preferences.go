@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
+	"github.com/rs/zerolog/log"
 	"time"
 
 	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
@@ -122,26 +123,18 @@ func CheckNotificationNotifiable(account models.Account, topic string) bool {
 func CheckNotificationNotifiableBatch(accounts []models.Account, topic string) []bool {
 	cacheManager := cache.New[any](localCache.S)
 	marshal := marshaler.New(cacheManager)
-	contx := context.Background()
+	ctx := context.Background()
 
 	var notifiable = make([]bool, len(accounts))
 	var queryNeededIdx []uint
 	notificationMap := make(map[uint]models.PreferenceNotification)
 
 	// Check cache for each account
-	for idx, account := range accounts {
+	for _, account := range accounts {
 		cacheKey := GetNotificationPreferenceCacheKey(account.ID)
-		if val, err := marshal.Get(contx, cacheKey, new(models.PreferenceNotification)); err == nil {
-			notification := val.(models.PreferenceNotification)
-			notificationMap[account.ID] = notification
-			// Determine if the account is notifiable based on the topic config
-			if val, ok := notification.Config[topic]; ok {
-				if status, ok := val.(bool); ok {
-					notifiable[idx] = status
-					continue
-				}
-			}
-			notifiable[idx] = true
+		if val, err := marshal.Get(ctx, cacheKey, new(models.PreferenceNotification)); err == nil {
+			notification := val.(*models.PreferenceNotification)
+			notificationMap[account.ID] = *notification
 		} else {
 			// Add to the list of accounts that need to be queried
 			queryNeededIdx = append(queryNeededIdx, account.ID)
@@ -163,18 +156,20 @@ func CheckNotificationNotifiableBatch(accounts []models.Account, topic string) [
 			notificationMap[notification.AccountID] = notification
 			CacheNotificationPreference(notification) // Cache the result
 		}
+	}
 
-		// Process the notifiable status for the fetched notifications
-		for idx, account := range accounts {
-			if notification, exists := notificationMap[account.ID]; exists {
-				if val, ok := notification.Config[topic]; ok {
-					if status, ok := val.(bool); ok {
-						notifiable[idx] = status
-						continue
-					}
+	log.Debug().Any("notifiable", notificationMap).Msg("Fetched notifiable status...")
+
+	// Process the notifiable status for the fetched notifications
+	for idx, account := range accounts {
+		if notification, exists := notificationMap[account.ID]; exists {
+			if val, ok := notification.Config[topic]; ok {
+				if status, ok := val.(bool); ok {
+					notifiable[idx] = status
+					continue
 				}
-				notifiable[idx] = true
 			}
+			notifiable[idx] = true
 		}
 	}
 

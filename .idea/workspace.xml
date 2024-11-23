@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":boom: Remove deprecated subscription API">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":loud_sound: Verbose notifying logging">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/internal/services/notifications.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/notifications.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/preferences.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/preferences.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +160,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":bug: Trying to fix panic" />
     <MESSAGE value=":recycle: Remove most of the dealer deps and move to nexus" />
     <MESSAGE value=":recycle: Refactored more modules into nexus" />
     <MESSAGE value=":recycle: All parts into nexus" />
@@ -184,7 +184,8 @@
     <MESSAGE value=":sparkles: Allow access user info via numeric id" />
     <MESSAGE value=":bug: Fix get user info query statement bug" />
     <MESSAGE value=":boom: Remove deprecated subscription API" />
-    <option name="LAST_COMMIT_MESSAGE" value=":boom: Remove deprecated subscription API" />
+    <MESSAGE value=":loud_sound: Verbose notifying logging" />
+    <option name="LAST_COMMIT_MESSAGE" value=":loud_sound: Verbose notifying logging" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
@@ -199,9 +200,19 @@
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/pkg/internal/http/api/factors_api.go</url>
-          <line>35</line>
-          <option name="timeStamp" value="2" />
+          <url>file://$PROJECT_DIR$/pkg/internal/services/notifications.go</url>
+          <line>93</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/internal/services/notifications.go</url>
+          <line>73</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/internal/services/notifications.go</url>
+          <line>135</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
