@@ -82,6 +82,7 @@ func CacheAuthContext(sessionId uint) (models.AuthTicket, error) {
 			}
 		}
 	}
+	ticket.Account = user
 
 	// Put the data into the cache
 	cacheManager := cache.New[any](localCache.S)
