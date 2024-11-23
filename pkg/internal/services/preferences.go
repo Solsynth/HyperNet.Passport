@@ -170,6 +170,8 @@ func CheckNotificationNotifiableBatch(accounts []models.Account, topic string) [
 				}
 			}
 			notifiable[idx] = true
+		} else {
+			notifiable[idx] = true
 		}
 	}
 
