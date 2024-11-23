@@ -6,6 +6,7 @@ import (
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/samber/lo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,6 +25,20 @@ func (v *App) GetUser(ctx context.Context, request *proto.GetUserRequest) (*prot
 	if err := tx.First(&account).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, fmt.Sprintf("requested user with id %d was not found", request.GetUserId()))
 	}
+
+	groups, err := services.GetUserAccountGroup(account)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, fmt.Sprintf("unable to get user %d groups: %v", request.GetUserId(), err))
+	}
+
+	for _, group := range groups {
+		for k, v := range group.PermNodes {
+			if _, ok := account.PermNodes[k]; !ok {
+				account.PermNodes[k] = v
+			}
+		}
+	}
+
 	return account.EncodeToUserInfo(), nil
 }
 
