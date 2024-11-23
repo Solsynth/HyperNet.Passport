@@ -4,6 +4,7 @@ import (
 	"context"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
+	"github.com/rs/zerolog/log"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	jsoniter "github.com/json-iterator/go"
@@ -13,13 +14,13 @@ import (
 
 func (v *App) Authenticate(_ context.Context, in *proto.AuthRequest) (*proto.AuthReply, error) {
 	ticket, perms, err := services.Authenticate(uint(in.GetSessionId()))
+	log.Debug().Uint64("session", in.GetSessionId()).Any("permissions", perms).Msg("Authenticated session...")
 	if err != nil {
 		return &proto.AuthReply{
 			IsValid: false,
 		}, nil
 	} else {
 		user := ticket.Account
-		user.PermNodes = perms
 		userinfo := &proto.UserInfo{
 			Id:        uint64(user.ID),
 			Name:      user.Name,

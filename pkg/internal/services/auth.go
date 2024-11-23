@@ -24,6 +24,7 @@ func Authenticate(sessionId uint) (ctx models.AuthTicket, perms map[string]any, 
 		_ = jsoniter.Unmarshal(rawHeldPerms, &heldPerms)
 
 		perms = FilterPermNodes(heldPerms, ctx.Claims)
+		ctx.Account.PermNodes = perms
 		return
 	}
 
@@ -45,7 +46,6 @@ func GetAuthContext(sessionId uint) (models.AuthTicket, error) {
 	key := GetAuthContextCacheKey(sessionId)
 	if val, err := marshal.Get(context.Background(), key, new(models.AuthTicket)); err == nil {
 		ctx = *val.(*models.AuthTicket)
-		// log.Debug().Uint("session", sessionId).Msg("Hint auth context cache once")
 	} else {
 		ctx, err = CacheAuthContext(sessionId)
 		log.Debug().Uint("session", sessionId).Msg("Created a new auth context cache")
