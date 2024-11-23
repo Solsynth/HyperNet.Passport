@@ -19,6 +19,7 @@ func (v *App) Authenticate(_ context.Context, in *proto.AuthRequest) (*proto.Aut
 		}, nil
 	} else {
 		user := ticket.Account
+		user.PermNodes = perms
 		userinfo := &proto.UserInfo{
 			Id:        uint64(user.ID),
 			Name:      user.Name,
