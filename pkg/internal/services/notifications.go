@@ -145,6 +145,9 @@ func PushNotification(notification models.Notification, skipNotifiableCheck ...b
 	return err
 }
 
+// PushNotificationBatch will push a notification to the user
+// The notification should be the same for all users except the account id field
+// For the notification push, the method will only use the first notification as template
 func PushNotificationBatch(notifications []models.Notification, skipNotifiableCheck ...bool) {
 	if len(notifications) == 0 {
 		return
@@ -179,8 +182,12 @@ func PushNotificationBatch(notifications []models.Notification, skipNotifiableCh
 	}
 
 	var subscribers []models.NotificationSubscriber
-	database.C.Where("account_id IN ?", accountIdx).Find(&subscribers)
+	if err := database.C.Where("account_id IN ?", accountIdx).Find(&subscribers).Error; err != nil {
+		log.Error().Err(err).Msg("Failed to fetch subscribers, unable to push notifications")
+	}
 
+	var providers []string
+	var tokens []string
 	stream := proto.NewStreamServiceClient(gap.Nx.GetNexusGrpcConn())
 	for _, notification := range notifications {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -198,23 +205,19 @@ func PushNotificationBatch(notifications []models.Notification, skipNotifiableCh
 			continue
 		}
 
-		var providers []string
-		var tokens []string
 		for _, subscriber := range lo.Filter(subscribers, func(item models.NotificationSubscriber, index int) bool {
 			return item.AccountID == notification.AccountID
 		}) {
 			providers = append(providers, subscriber.Provider)
 			tokens = append(tokens, subscriber.DeviceToken)
 		}
+	}
 
-		ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
-		if err := gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
-			Providers:    providers,
-			Tokens:       tokens,
-			Notification: notification.EncodeToPushkit(),
-		}); err != nil {
-			log.Warn().Err(err).Str("topic", notification.Topic).Msg("Failed to push notification to Pusher")
-		}
-		cancel()
+	if err := gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
+		Providers:    providers,
+		Tokens:       tokens,
+		Notification: notifications[0].EncodeToPushkit(),
+	}); err != nil {
+		log.Warn().Err(err).Str("topic", notifications[0].Topic).Msg("Failed to push notification to Pusher")
 	}
 }
