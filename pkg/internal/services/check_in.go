@@ -19,9 +19,9 @@ func CheckCanCheckIn(user models.Account) error {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil
 		}
-		return fmt.Errorf("unable check daliy sign record: %v", err)
+		return fmt.Errorf("unable get check in record: %v", err)
 	}
-	return fmt.Errorf("daliy sign record exists")
+	return fmt.Errorf("today's check in record exists")
 }
 
 func GetTodayCheckIn(user models.Account) (models.CheckInRecord, error) {
@@ -29,10 +29,12 @@ func GetTodayCheckIn(user models.Account) (models.CheckInRecord, error) {
 
 	var record models.CheckInRecord
 	if err := database.C.Where("account_id = ? AND created_at::date = ?", user.ID, probe).First(&record).Error; err != nil {
-		return record, fmt.Errorf("unable get daliy sign record: %v", err)
+		return record, fmt.Errorf("unable get check in record: %v", err)
 	}
 	return record, nil
 }
+
+const CheckInResultModifiersLength = 4
 
 func CheckIn(user models.Account) (models.CheckInRecord, error) {
 	tier := rand.Intn(5)
@@ -42,21 +44,34 @@ func CheckIn(user models.Account) (models.CheckInRecord, error) {
 		AccountID:        user.ID,
 	}
 
+	modifiers := make([]int, CheckInResultModifiersLength)
+	for i := 0; i < CheckInResultModifiersLength; i++ {
+		modifiers[i] = rand.Intn(1025) // from 0 to 1024 as the comment said
+	}
+	record.ResultModifiers = modifiers
+
 	if err := CheckCanCheckIn(user); err != nil {
 		return record, fmt.Errorf("today already signed")
 	}
+
+	tx := database.C.Begin()
 
 	var profile models.AccountProfile
 	if err := database.C.Where("account_id = ?", user.ID).First(&profile).Error; err != nil {
 		return record, fmt.Errorf("unable get account profile: %v", err)
 	} else {
 		profile.Experience += uint64(record.ResultExperience)
-		database.C.Save(&profile)
+		if err := tx.Save(&profile).Error; err != nil {
+			tx.Rollback()
+			return record, fmt.Errorf("unable update account profile: %v", err)
+		}
 	}
 
-	if err := database.C.Save(&record).Error; err != nil {
-		return record, fmt.Errorf("unable do daliy sign: %v", err)
+	if err := tx.Save(&record).Error; err != nil {
+		return record, fmt.Errorf("unable do check in: %v", err)
 	}
+
+	tx.Commit()
 
 	return record, nil
 }
