@@ -1,6 +1,6 @@
 package models
 
-type SignRecord struct {
+type CheckInRecord struct {
 	BaseModel
 
 	ResultTier       int     `json:"result_tier"`

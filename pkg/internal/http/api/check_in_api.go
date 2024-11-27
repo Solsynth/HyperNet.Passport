@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func listDailySignRecord(c *fiber.Ctx) error {
+func listCheckInRecord(c *fiber.Ctx) error {
 	take := c.QueryInt("take", 0)
 	offset := c.QueryInt("offset", 0)
 
@@ -20,13 +20,13 @@ func listDailySignRecord(c *fiber.Ctx) error {
 
 	var count int64
 	if err := database.C.
-		Model(&models.SignRecord{}).
+		Model(&models.CheckInRecord{}).
 		Where("account_id = ?", user.ID).
 		Count(&count).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var records []models.SignRecord
+	var records []models.CheckInRecord
 	if err := database.C.
 		Where("account_id = ?", user.ID).
 		Limit(take).Offset(offset).
@@ -41,7 +41,7 @@ func listDailySignRecord(c *fiber.Ctx) error {
 	})
 }
 
-func listOtherUserDailySignRecord(c *fiber.Ctx) error {
+func listOtherUserCheckInRecord(c *fiber.Ctx) error {
 	take := c.QueryInt("take", 0)
 	offset := c.QueryInt("offset", 0)
 
@@ -56,13 +56,13 @@ func listOtherUserDailySignRecord(c *fiber.Ctx) error {
 
 	var count int64
 	if err := database.C.
-		Model(&models.SignRecord{}).
+		Model(&models.CheckInRecord{}).
 		Where("account_id = ?", account.ID).
 		Count(&count).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var records []models.SignRecord
+	var records []models.CheckInRecord
 	if err := database.C.
 		Where("account_id = ?", account.ID).
 		Limit(take).Offset(offset).
@@ -77,26 +77,26 @@ func listOtherUserDailySignRecord(c *fiber.Ctx) error {
 	})
 }
 
-func getTodayDailySign(c *fiber.Ctx) error {
+func getTodayCheckIn(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
 	user := c.Locals("user").(models.Account)
 
-	if record, err := services.GetTodayDailySign(user); err != nil {
+	if record, err := services.GetTodayCheckIn(user); err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	} else {
 		return c.JSON(record)
 	}
 }
 
-func doDailySign(c *fiber.Ctx) error {
+func doCheckIn(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}
 	user := c.Locals("user").(models.Account)
 
-	if record, err := services.DailySign(user); err != nil {
+	if record, err := services.CheckIn(user); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		services.AddEvent(user.ID, "dailySign", strconv.Itoa(int(record.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))

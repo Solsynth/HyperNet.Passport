@@ -11,10 +11,10 @@ import (
 	"time"
 )
 
-func CheckDailyCanSign(user models.Account) error {
+func CheckCanCheckIn(user models.Account) error {
 	probe := time.Now().Format("2006-01-02")
 
-	var record models.SignRecord
+	var record models.CheckInRecord
 	if err := database.C.Where("account_id = ? AND created_at::date = ?", user.ID, probe).First(&record).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil
@@ -24,25 +24,25 @@ func CheckDailyCanSign(user models.Account) error {
 	return fmt.Errorf("daliy sign record exists")
 }
 
-func GetTodayDailySign(user models.Account) (models.SignRecord, error) {
+func GetTodayCheckIn(user models.Account) (models.CheckInRecord, error) {
 	probe := time.Now().Format("2006-01-02")
 
-	var record models.SignRecord
+	var record models.CheckInRecord
 	if err := database.C.Where("account_id = ? AND created_at::date = ?", user.ID, probe).First(&record).Error; err != nil {
 		return record, fmt.Errorf("unable get daliy sign record: %v", err)
 	}
 	return record, nil
 }
 
-func DailySign(user models.Account) (models.SignRecord, error) {
+func CheckIn(user models.Account) (models.CheckInRecord, error) {
 	tier := rand.Intn(5)
-	record := models.SignRecord{
+	record := models.CheckInRecord{
 		ResultTier:       tier,
 		ResultExperience: rand.Intn(int(math.Max(float64(tier), 1)*100)+1-100) + 100,
 		AccountID:        user.ID,
 	}
 
-	if err := CheckDailyCanSign(user); err != nil {
+	if err := CheckCanCheckIn(user); err != nil {
 		return record, fmt.Errorf("today already signed")
 	}
 

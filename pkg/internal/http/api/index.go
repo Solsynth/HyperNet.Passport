@@ -10,11 +10,11 @@ func MapAPIs(app *fiber.App, baseURL string) {
 
 	api := app.Group(baseURL).Name("API")
 	{
-		daily := api.Group("/daily").Name("Daily Sign API")
+		checkIn := api.Group("/check-in").Name("Daily Check In API")
 		{
-			daily.Get("/", listDailySignRecord)
-			daily.Get("/today", getTodayDailySign)
-			daily.Post("/", doDailySign)
+			checkIn.Get("/", listCheckInRecord)
+			checkIn.Get("/today", getTodayCheckIn)
+			checkIn.Post("/", doCheckIn)
 		}
 
 		notify := api.Group("/notifications").Name("Notifications API")
@@ -97,7 +97,7 @@ func MapAPIs(app *fiber.App, baseURL string) {
 			directory.Get("/", getOtherUserinfo)
 			directory.Get("/status", getStatus)
 
-			directory.Get("/daily", listOtherUserDailySignRecord)
+			directory.Get("/check-in", listOtherUserCheckInRecord)
 		}
 
 		api.Get("/users", getOtherUserinfoBatch)

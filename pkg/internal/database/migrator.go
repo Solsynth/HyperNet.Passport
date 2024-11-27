@@ -25,7 +25,7 @@ var AutoMaintainRange = []any{
 	&models.NotificationSubscriber{},
 	&models.AuditRecord{},
 	&models.ApiKey{},
-	&models.SignRecord{},
+	&models.CheckInRecord{},
 	&models.PreferenceNotification{},
 	&models.PreferenceAuth{},
 	&models.AbuseReport{},
