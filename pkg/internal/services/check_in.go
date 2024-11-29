@@ -6,7 +6,6 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"gorm.io/gorm"
-	"math"
 	"math/rand"
 	"time"
 )
@@ -38,9 +37,11 @@ const CheckInResultModifiersLength = 4
 
 func CheckIn(user models.Account) (models.CheckInRecord, error) {
 	tier := rand.Intn(5)
+	expMax := 100 * (tier + 1)
+	expMin := 100
 	record := models.CheckInRecord{
 		ResultTier:       tier,
-		ResultExperience: rand.Intn(int(math.Max(float64(tier), 1)*100)+1-100) + 100,
+		ResultExperience: rand.Intn(expMax-expMin) + expMin,
 		AccountID:        user.ID,
 	}
 

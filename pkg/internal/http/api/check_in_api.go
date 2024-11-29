@@ -99,7 +99,7 @@ func doCheckIn(c *fiber.Ctx) error {
 	if record, err := services.CheckIn(user); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "dailySign", strconv.Itoa(int(record.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "checkIn", strconv.Itoa(int(record.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.JSON(record)
 	}
 }
