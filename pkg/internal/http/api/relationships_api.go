@@ -112,30 +112,33 @@ func makeFriendship(c *fiber.Ctx) error {
 		return err
 	}
 	user := c.Locals("user").(models.Account)
-	relatedName := c.Query("related")
-	relatedId, _ := c.ParamsInt("relatedId", 0)
+
+	var data struct {
+		Related string `json:"related" validate:"required"`
+	}
+	if err := exts.BindAndValidate(c, &data); err != nil {
+		return err
+	}
 
 	var err error
 	var related models.Account
-	if relatedId > 0 {
-		related, err = services.GetAccount(uint(relatedId))
-		if err != nil {
-			return fiber.NewError(fiber.StatusNotFound, err.Error())
-		}
-	} else if len(relatedName) > 0 {
-		related, err = services.LookupAccount(relatedName)
+	if numericId, err := strconv.Atoi(data.Related); err == nil {
+		related, err = services.GetAccount(uint(numericId))
 		if err != nil {
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}
 	} else {
-		return fiber.NewError(fiber.StatusBadRequest, "must one of username or user id")
+		related, err = services.LookupAccount(data.Related)
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
 	}
 
 	friend, err := services.NewFriend(user, related)
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "relationships.friends.new", strconv.Itoa(relatedId), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "relationships.friends.new", strconv.Itoa(int(related.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.JSON(friend)
 	}
 }
@@ -145,30 +148,33 @@ func makeBlockship(c *fiber.Ctx) error {
 		return err
 	}
 	user := c.Locals("user").(models.Account)
-	relatedName := c.Query("related")
-	relatedId, _ := c.ParamsInt("relatedId", 0)
+
+	var data struct {
+		Related string `json:"related" validate:"required"`
+	}
+	if err := exts.BindAndValidate(c, &data); err != nil {
+		return err
+	}
 
 	var err error
 	var related models.Account
-	if relatedId > 0 {
-		related, err = services.GetAccount(uint(relatedId))
-		if err != nil {
-			return fiber.NewError(fiber.StatusNotFound, err.Error())
-		}
-	} else if len(relatedName) > 0 {
-		related, err = services.LookupAccount(relatedName)
+	if numericId, err := strconv.Atoi(data.Related); err == nil {
+		related, err = services.GetAccount(uint(numericId))
 		if err != nil {
 			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}
 	} else {
-		return fiber.NewError(fiber.StatusBadRequest, "must one of username or user id")
+		related, err = services.LookupAccount(data.Related)
+		if err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
 	}
 
 	friend, err := services.NewBlockship(user, related)
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "relationships.blocks.new", strconv.Itoa(relatedId), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "relationships.blocks.new", strconv.Itoa(int(related.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.JSON(friend)
 	}
 }

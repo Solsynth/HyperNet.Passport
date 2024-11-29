@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":truck: Rename daily-sign to check-in">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Result modifiers in check-in">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/authkit/models/check_in.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/authkit/models/check_in.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/check_in.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/check_in.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/relationships_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/relationships_api.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,7 +159,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":truck: Update package name from Hypdrogen to Hypernet" />
     <MESSAGE value=":sparkles: Support users related rpc calls" />
     <MESSAGE value=":technologist: Improve DX by extending authkit" />
     <MESSAGE value=":sparkles: Add list relative method into authkit" />
@@ -185,7 +183,8 @@
     <MESSAGE value=":bug: Fix group permission didn't extend properly" />
     <MESSAGE value=":mute: Remove authenticate result logging" />
     <MESSAGE value=":truck: Rename daily-sign to check-in" />
-    <option name="LAST_COMMIT_MESSAGE" value=":truck: Rename daily-sign to check-in" />
+    <MESSAGE value=":sparkles: Result modifiers in check-in" />
+    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Result modifiers in check-in" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
