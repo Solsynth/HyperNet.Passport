@@ -76,6 +76,7 @@ func removeRealmMember(c *fiber.Ctx) error {
 	}
 	user := c.Locals("user").(models.Account)
 	alias := c.Params("realm")
+	memberId, _ := c.ParamsInt("memberId", 0)
 
 	realm, err := services.GetRealmWithAlias(alias)
 	if err != nil {
@@ -84,7 +85,7 @@ func removeRealmMember(c *fiber.Ctx) error {
 
 	var account models.Account
 	if err := database.C.Where(&models.Account{
-		Name: data.Target,
+		BaseModel: models.BaseModel{ID: uint(memberId)},
 	}).First(&account).Error; err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}

@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":truck: Move make friendship api">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":boom: Move remove member api arguments from body to querystring just as messaging">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/index.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/index.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/realm_members_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/realm_members_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/realms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/realms.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +159,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":bug: Fix grpc namespace conflict" />
     <MESSAGE value=":recycle: Replace nil context with context.Background in authkit" />
     <MESSAGE value=":sparkles: Authkit support check user related permission" />
     <MESSAGE value=":sparkles: Authkit can get user" />
@@ -186,7 +183,8 @@
     <MESSAGE value=":sparkles: Better check in experience random algorithm" />
     <MESSAGE value=":sparkles: Better relationships stauts query" />
     <MESSAGE value=":truck: Move make friendship api" />
-    <option name="LAST_COMMIT_MESSAGE" value=":truck: Move make friendship api" />
+    <MESSAGE value=":boom: Move remove member api arguments from body to querystring just as messaging" />
+    <option name="LAST_COMMIT_MESSAGE" value=":boom: Move remove member api arguments from body to querystring just as messaging" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
