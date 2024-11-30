@@ -5,7 +5,9 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
+	"github.com/samber/lo"
 	"strconv"
+	"strings"
 )
 
 func listRelationship(c *fiber.Ctx) error {
@@ -13,16 +15,24 @@ func listRelationship(c *fiber.Ctx) error {
 		return err
 	}
 	user := c.Locals("user").(models.Account)
-	status := c.QueryInt("status", -1)
+	statusQuery := c.Query("status")
+
+	status := lo.Map(strings.Split(statusQuery, ","), func(s string, _ int) models.RelationshipStatus {
+		num, err := strconv.Atoi(s)
+		if err != nil {
+			return 0
+		}
+		return models.RelationshipStatus(num)
+	})
 
 	var err error
 	var friends []models.AccountRelationship
-	if status < 0 {
+	if len(status) < 0 {
 		if friends, err = services.ListAllRelationship(user); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
 	} else {
-		if friends, err = services.ListRelationshipWithFilter(user, models.RelationshipStatus(status)); err != nil {
+		if friends, err = services.ListRelationshipWithFilter(user, status...); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
 	}
