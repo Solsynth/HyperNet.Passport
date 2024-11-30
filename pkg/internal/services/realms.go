@@ -1,10 +1,12 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"github.com/samber/lo"
+	"gorm.io/gorm"
 	"strconv"
 )
 
@@ -97,6 +99,14 @@ func GetRealmMember(userId uint, realmId uint) (models.RealmMember, error) {
 }
 
 func AddRealmMember(user models.Account, affected models.Account, target models.Realm) error {
+	var member models.RealmMember
+	if err := database.C.Where(&models.RealmMember{
+		AccountID: affected.ID,
+		RealmID:   target.ID,
+	}).First(&member).Error; err == nil || errors.Is(err, gorm.ErrRecordNotFound) {
+		return fmt.Errorf("the user is already in the realm")
+	}
+
 	if !target.IsPublic && !target.IsCommunity {
 		if member, err := GetRealmMember(user.ID, target.ID); err != nil {
 			return fmt.Errorf("only realm member can add people: %v", err)
@@ -114,7 +124,7 @@ func AddRealmMember(user models.Account, affected models.Account, target models.
 		}
 	}
 
-	member := models.RealmMember{
+	member = models.RealmMember{
 		RealmID:   target.ID,
 		AccountID: affected.ID,
 	}
