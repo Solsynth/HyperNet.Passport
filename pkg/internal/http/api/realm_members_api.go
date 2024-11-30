@@ -6,6 +6,7 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
+	"strconv"
 )
 
 func listRealmMembers(c *fiber.Ctx) error {
@@ -44,7 +45,7 @@ func addRealmMember(c *fiber.Ctx) error {
 	alias := c.Params("realm")
 
 	var data struct {
-		Target string `json:"target" validate:"required"`
+		Related string `json:"related" validate:"required"`
 	}
 
 	if err := exts.BindAndValidate(c, &data); err != nil {
@@ -57,9 +58,17 @@ func addRealmMember(c *fiber.Ctx) error {
 	}
 
 	var account models.Account
-	if err := database.C.Where(&models.Account{
-		Name: data.Target,
-	}).First(&account).Error; err != nil {
+	var numericId int
+	if numericId, err = strconv.Atoi(data.Related); err == nil {
+		err = database.C.Where(&models.Account{
+			BaseModel: models.BaseModel{ID: uint(numericId)},
+		}).First(&account).Error
+	} else {
+		err = database.C.Where(&models.Account{
+			Name: data.Related,
+		}).First(&account).Error
+	}
+	if err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
