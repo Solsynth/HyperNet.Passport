@@ -77,14 +77,6 @@ func removeRealmMember(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.Account)
 	alias := c.Params("realm")
 
-	var data struct {
-		Target string `json:"target" validate:"required"`
-	}
-
-	if err := exts.BindAndValidate(c, &data); err != nil {
-		return err
-	}
-
 	realm, err := services.GetRealmWithAlias(alias)
 	if err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
@@ -97,7 +89,15 @@ func removeRealmMember(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	if err := services.RemoveRealmMember(user, account, realm); err != nil {
+	var member models.RealmMember
+	if err := database.C.Where(&models.RealmMember{
+		RealmID:   realm.ID,
+		AccountID: account.ID,
+	}).First(&member).Error; err != nil {
+		return fiber.NewError(fiber.StatusNotFound, err.Error())
+	}
+
+	if err := services.RemoveRealmMember(user, member, realm); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		return c.SendStatus(fiber.StatusOK)
@@ -118,14 +118,15 @@ func leaveRealm(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "you cannot leave your own realm")
 	}
 
-	var account models.Account
-	if err := database.C.Where(&models.Account{
-		BaseModel: models.BaseModel{ID: user.ID},
-	}).First(&account).Error; err != nil {
+	var member models.RealmMember
+	if err := database.C.Where(&models.RealmMember{
+		RealmID:   realm.ID,
+		AccountID: user.ID,
+	}).First(&member).Error; err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	if err := services.RemoveRealmMember(user, account, realm); err != nil {
+	if err := services.RemoveRealmMember(user, member, realm); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		return c.SendStatus(fiber.StatusOK)

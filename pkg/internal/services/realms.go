@@ -101,7 +101,7 @@ func AddRealmMember(user models.Account, affected models.Account, target models.
 		if member, err := GetRealmMember(user.ID, target.ID); err != nil {
 			return fmt.Errorf("only realm member can add people: %v", err)
 		} else if member.PowerLevel < 50 {
-			return fmt.Errorf("only realm moderator can add people")
+			return fmt.Errorf("only realm moderator can add member")
 		}
 		rel, err := GetRelationWithTwoNode(affected.ID, user.ID)
 		if err != nil || HasPermNodeWithDefault(
@@ -122,24 +122,16 @@ func AddRealmMember(user models.Account, affected models.Account, target models.
 	return err
 }
 
-func RemoveRealmMember(user models.Account, affected models.Account, target models.Realm) error {
-	if user.ID != affected.ID {
+func RemoveRealmMember(user models.Account, affected models.RealmMember, target models.Realm) error {
+	if user.ID != affected.AccountID {
 		if member, err := GetRealmMember(user.ID, target.ID); err != nil {
 			return fmt.Errorf("only realm member can remove other member: %v", err)
 		} else if member.PowerLevel < 50 {
-			return fmt.Errorf("only realm moderator can invite people")
+			return fmt.Errorf("only realm moderator can kick member")
 		}
 	}
 
-	var member models.RealmMember
-	if err := database.C.Where(&models.RealmMember{
-		RealmID:   target.ID,
-		AccountID: affected.ID,
-	}).First(&member).Error; err != nil {
-		return err
-	}
-
-	return database.C.Delete(&member).Error
+	return database.C.Delete(&affected).Error
 }
 
 func EditRealm(realm models.Realm) (models.Realm, error) {

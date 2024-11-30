@@ -124,7 +124,7 @@ func MapAPIs(app *fiber.App, baseURL string) {
 			realms.Get("/me", listOwnedRealm)
 			realms.Get("/me/available", listAvailableRealm)
 			realms.Get("/:realm", getRealm)
-			realms.Get("/:realm/members", listRealmMembers)
+			realms.Get("/:realm/members/:memberId", listRealmMembers)
 			realms.Get("/:realm/members/me", getMyRealmMember)
 			realms.Post("/", createRealm)
 			realms.Put("/:realmId", editRealm)
