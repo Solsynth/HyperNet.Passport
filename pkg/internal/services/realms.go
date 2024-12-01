@@ -115,7 +115,7 @@ func AddRealmMember(user models.Account, affected models.Account, target models.
 	if err := database.C.Where(&models.RealmMember{
 		AccountID: affected.ID,
 		RealmID:   target.ID,
-	}).First(&member).Error; err == nil || errors.Is(err, gorm.ErrRecordNotFound) {
+	}).First(&member).Error; err == nil || !errors.Is(err, gorm.ErrRecordNotFound) {
 		return fmt.Errorf("the user is already in the realm")
 	}
 

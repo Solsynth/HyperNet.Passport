@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Prevent user adding a user twice into a realm">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":boom: Pagination fetching realm member api&#10;:bug: Fix remove realm member has no memberId path param">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/index.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/index.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/realm_members_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/realm_members_api.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/internal/services/realms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/realms.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -161,7 +159,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":bug: Fix auth cache" />
     <MESSAGE value=":sparkles: Allow get realm by numeric auto increment id" />
     <MESSAGE value=":sparkles: Allow access user info via numeric id" />
     <MESSAGE value=":bug: Fix get user info query statement bug" />
@@ -186,7 +183,8 @@
     <MESSAGE value=":bug: Hotfix previous commit compile issue" />
     <MESSAGE value=":sparkles: Add realm member support both account name and id" />
     <MESSAGE value=":bug: Prevent user adding a user twice into a realm" />
-    <option name="LAST_COMMIT_MESSAGE" value=":bug: Prevent user adding a user twice into a realm" />
+    <MESSAGE value=":boom: Pagination fetching realm member api&#10;:bug: Fix remove realm member has no memberId path param" />
+    <option name="LAST_COMMIT_MESSAGE" value=":boom: Pagination fetching realm member api&#10;:bug: Fix remove realm member has no memberId path param" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
