@@ -11,13 +11,20 @@ import (
 
 func listRealmMembers(c *fiber.Ctx) error {
 	alias := c.Params("realm")
+	take := c.QueryInt("take", 0)
+	offset := c.QueryInt("offset", 0)
 
 	if realm, err := services.GetRealmWithAlias(alias); err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
-	} else if members, err := services.ListRealmMember(realm.ID); err != nil {
+	} else if count, err := services.CountRealmMember(realm.ID); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	} else if members, err := services.ListRealmMember(realm.ID, take, offset); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		return c.JSON(members)
+		return c.JSON(fiber.Map{
+			"count": count,
+			"data":  members,
+		})
 	}
 }
 

@@ -74,10 +74,22 @@ func NewRealm(realm models.Realm, user models.Account) (models.Realm, error) {
 	return realm, err
 }
 
-func ListRealmMember(realmId uint) ([]models.RealmMember, error) {
+func CountRealmMember(realmId uint) (int64, error) {
+	var count int64
+	if err := database.C.Where(&models.RealmMember{
+		RealmID: realmId,
+	}).Model(&models.RealmMember{}).Count(&count).Error; err != nil {
+		return 0, err
+	} else {
+		return count, nil
+	}
+}
+
+func ListRealmMember(realmId uint, take int, offset int) ([]models.RealmMember, error) {
 	var members []models.RealmMember
 
 	if err := database.C.
+		Limit(take).Offset(offset).
 		Where(&models.RealmMember{RealmID: realmId}).
 		Preload("Account").
 		Find(&members).Error; err != nil {
