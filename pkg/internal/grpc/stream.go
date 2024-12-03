@@ -5,6 +5,7 @@ import (
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
+	"github.com/rs/zerolog/log"
 )
 
 func (v *App) BroadcastEvent(ctx context.Context, request *proto.EventInfo) (*proto.EventResponse, error) {
@@ -16,7 +17,8 @@ func (v *App) BroadcastEvent(ctx context.Context, request *proto.EventInfo) (*pr
 	case "ws.client.unregister":
 		// Update user last seen at
 		data := nex.DecodeMap(request.GetData())
-		_ = services.SetAccountLastSeen(uint(data["user"].(float64)))
+		err := services.SetAccountLastSeen(uint(data["user"].(float64)))
+		log.Debug().Err(err).Any("event", data).Msg("Setting account last seen...")
 	}
 
 	return &proto.EventResponse{}, nil
