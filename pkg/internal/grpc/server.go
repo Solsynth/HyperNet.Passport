@@ -32,6 +32,7 @@ func NewServer() *App {
 
 	nroto.RegisterAuthServiceServer(server.srv, server)
 	nroto.RegisterUserServiceServer(server.srv, server)
+	nroto.RegisterDirectoryServiceServer(server.srv, server)
 	proto.RegisterNotifyServiceServer(server.srv, server)
 	proto.RegisterRealmServiceServer(server.srv, server)
 	proto.RegisterAuditServiceServer(server.srv, server)
