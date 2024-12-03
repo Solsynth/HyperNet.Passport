@@ -9,6 +9,8 @@ import (
 )
 
 func (v *App) BroadcastEvent(ctx context.Context, request *proto.EventInfo) (*proto.EventResponse, error) {
+	log.Debug().Str("event", request.GetEvent()).
+		Msg("Got a broadcasting event...")
 	switch request.GetEvent() {
 	case "ws.client.register":
 		// No longer need update user online status
