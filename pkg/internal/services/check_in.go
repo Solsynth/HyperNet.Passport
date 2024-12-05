@@ -41,7 +41,7 @@ func CheckIn(user models.Account) (models.CheckInRecord, error) {
 	expMin := 100
 	record := models.CheckInRecord{
 		ResultTier:       tier,
-		ResultExperience: rand.Intn(expMax-expMin) + expMin,
+		ResultExperience: rand.Intn(expMax+1-expMin) + expMin,
 		AccountID:        user.ID,
 	}
 
