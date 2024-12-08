@@ -49,10 +49,10 @@ func GetNotificationPreference(account models.Account) (models.PreferenceNotific
 	var notification models.PreferenceNotification
 	cacheManager := cache.New[any](localCache.S)
 	marshal := marshaler.New(cacheManager)
-	contx := context.Background()
+	ctx := context.Background()
 
-	if val, err := marshal.Get(contx, GetNotificationPreferenceCacheKey(account.ID), new(models.PreferenceNotification)); err == nil {
-		notification = val.(models.PreferenceNotification)
+	if val, err := marshal.Get(ctx, GetNotificationPreferenceCacheKey(account.ID), new(models.PreferenceNotification)); err == nil {
+		notification = *val.(*models.PreferenceNotification)
 	} else {
 		if err := database.C.Where("account_id = ?", account.ID).First(&notification).Error; err != nil {
 			return notification, err

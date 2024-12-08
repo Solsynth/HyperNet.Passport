@@ -1,8 +1,12 @@
 package api
 
 import (
+	"context"
 	"fmt"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
+	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
+	"github.com/eko/gocache/lib/v4/cache"
+	"github.com/eko/gocache/lib/v4/marshaler"
 	"gorm.io/gorm"
 	"strconv"
 	"strings"
@@ -15,10 +19,21 @@ import (
 func getOtherUserinfo(c *fiber.Ctx) error {
 	alias := c.Params("alias")
 
+	cacheManager := cache.New[any](localCache.S)
+	marshal := marshaler.New(cacheManager)
+	ctx := context.Background()
+
+	if val, err := marshal.Get(ctx, services.GetAccountCacheKey(alias), new(models.Account)); err == nil {
+		return c.JSON(*val.(*models.Account))
+	}
+
 	tx := database.C.Where("name = ?", alias)
 
 	numericId, err := strconv.Atoi(alias)
 	if err == nil {
+		if val, err := marshal.Get(ctx, services.GetAccountCacheKey(numericId), new(models.Account)); err == nil {
+			return c.JSON(*val.(*models.Account))
+		}
 		tx = tx.Or("id = ?", numericId)
 	}
 
@@ -43,6 +58,8 @@ func getOtherUserinfo(c *fiber.Ctx) error {
 			}
 		}
 	}
+
+	services.CacheAccount(account)
 
 	return c.JSON(account)
 }

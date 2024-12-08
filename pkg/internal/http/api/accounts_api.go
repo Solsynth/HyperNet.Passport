@@ -65,8 +65,9 @@ func getUserinfo(c *fiber.Ctx) error {
 
 	var resp fiber.Map
 	raw, _ := jsoniter.Marshal(data)
-	jsoniter.Unmarshal(raw, &resp)
+	_ = jsoniter.Unmarshal(raw, &resp)
 
+	// Used to support OIDC standard
 	resp["sub"] = strconv.Itoa(int(data.ID))
 	resp["family_name"] = data.Profile.FirstName
 	resp["given_name"] = data.Profile.LastName

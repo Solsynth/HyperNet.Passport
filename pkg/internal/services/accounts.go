@@ -6,6 +6,10 @@ import (
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
+	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
+	"github.com/eko/gocache/lib/v4/cache"
+	"github.com/eko/gocache/lib/v4/marshaler"
+	"github.com/eko/gocache/lib/v4/store"
 	"time"
 	"unicode"
 
@@ -21,6 +25,31 @@ import (
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 )
+
+func GetAccountCacheKey(query any) string {
+	return fmt.Sprintf("account-query#%v", query)
+}
+
+func CacheAccount(account models.Account) {
+	cacheManager := cache.New[any](localCache.S)
+	marshal := marshaler.New(cacheManager)
+	ctx := context.Background()
+
+	_ = marshal.Set(
+		ctx,
+		GetAccountCacheKey(account.Name),
+		account,
+		store.WithExpiration(30*time.Minute),
+		store.WithTags([]string{"account", fmt.Sprintf("user#%d", account.ID)}),
+	)
+	_ = marshal.Set(
+		ctx,
+		GetAccountCacheKey(account.ID),
+		account,
+		store.WithExpiration(30*time.Minute),
+		store.WithTags([]string{"account", fmt.Sprintf("user#%d", account.ID)}),
+	)
+}
 
 func ValidateAccountName(val string, min, max int) bool {
 	actualLength := 0
