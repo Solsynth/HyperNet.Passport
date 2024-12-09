@@ -20,6 +20,7 @@ func MapAPIs(app *fiber.App, baseURL string) {
 		notify := api.Group("/notifications").Name("Notifications API")
 		{
 			notify.Get("/", getNotifications)
+			notify.Get("/count", getNotificationCount)
 			notify.Get("/subscription", getNotifySubscriber)
 			notify.Post("/subscription", addNotifySubscriber)
 			notify.Delete("/subscription/:deviceId", removeNotifySubscriber)

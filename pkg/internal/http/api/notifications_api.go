@@ -43,6 +43,25 @@ func getNotifications(c *fiber.Ctx) error {
 	})
 }
 
+func getNotificationCount(c *fiber.Ctx) error {
+	if err := exts.EnsureAuthenticated(c); err != nil {
+		return err
+	}
+	user := c.Locals("user").(models.Account)
+
+	tx := database.C.Where(&models.Notification{AccountID: user.ID}).Model(&models.Notification{})
+
+	var count int64
+	if err := tx.
+		Count(&count).Error; err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(fiber.Map{
+		"count": count,
+	})
+}
+
 func markNotificationRead(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err

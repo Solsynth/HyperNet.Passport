@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":zap: Add cache into querying user">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Fix missing api endpoint">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/index.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/index.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/notifications_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/notifications_api.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +160,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":bug: Fix notifiable is empty when user do not set" />
     <MESSAGE value=":bug: Fix notification push batch emitted twice" />
     <MESSAGE value=":sparkles: Support jwks.json according OIDC stranded" />
     <MESSAGE value=":bug: Fix get user grpc method didn't extend group's permission" />
@@ -184,7 +184,8 @@
     <MESSAGE value=":bug: Bug fix directory service wasn't registered" />
     <MESSAGE value=":bug: Fix random panic" />
     <MESSAGE value=":zap: Add cache into querying user" />
-    <option name="LAST_COMMIT_MESSAGE" value=":zap: Add cache into querying user" />
+    <MESSAGE value=":bug: Fix missing api endpoint" />
+    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix missing api endpoint" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
