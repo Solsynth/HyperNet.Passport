@@ -32,7 +32,7 @@ func getNotifications(c *fiber.Ctx) error {
 	if err := tx.
 		Limit(take).
 		Offset(offset).
-		Order("read_at DESC, created_at DESC").
+		Order("created_at DESC").
 		Find(&notifications).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
@@ -49,7 +49,7 @@ func getNotificationCount(c *fiber.Ctx) error {
 	}
 	user := c.Locals("user").(models.Account)
 
-	tx := database.C.Where(&models.Notification{AccountID: user.ID}).Model(&models.Notification{})
+	tx := database.C.Where("account_id = ? AND read_at IS NULL", user.ID).Model(&models.Notification{})
 
 	var count int64
 	if err := tx.
