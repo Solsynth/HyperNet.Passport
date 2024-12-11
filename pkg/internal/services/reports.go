@@ -67,6 +67,7 @@ func NewAbuseReport(resource string, reason string, account models.Account) (mod
 	report = models.AbuseReport{
 		Resource:  resource,
 		Reason:    reason,
+		Status:    models.ReportStatusPending,
 		AccountID: account.ID,
 	}
 

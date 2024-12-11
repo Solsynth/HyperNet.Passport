@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Bug fixes on notifications">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Fix list user relative return wrong data">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/reports.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/reports.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +159,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":bug: Fix get user grpc method didn't extend group's permission" />
     <MESSAGE value=":bug: Fix unable get user full perm node" />
     <MESSAGE value=":loud_sound: Add verbose permission logging" />
     <MESSAGE value=":bug: Fix group permission didn't extend properly" />
@@ -184,7 +183,8 @@
     <MESSAGE value=":bug: Fix missing api endpoint" />
     <MESSAGE value=":zap: A separate API to only get notification count" />
     <MESSAGE value=":bug: Bug fixes on notifications" />
-    <option name="LAST_COMMIT_MESSAGE" value=":bug: Bug fixes on notifications" />
+    <MESSAGE value=":bug: Fix list user relative return wrong data" />
+    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix list user relative return wrong data" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
