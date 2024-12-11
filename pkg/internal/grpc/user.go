@@ -91,7 +91,7 @@ func (v *App) ListUser(ctx context.Context, request *proto.ListUserRequest) (*pr
 }
 
 func (v *App) ListUserRelative(ctx context.Context, request *proto.ListUserRelativeRequest) (*proto.ListUserRelativeResponse, error) {
-	tx := database.C.Preload("Account").Where("status = ?", request.GetStatus())
+	tx := database.C.Preload("Account").Preload("Related").Where("status = ?", request.GetStatus())
 
 	if request.GetIsRelated() {
 		tx = tx.Where("related_id = ?", request.GetUserId())
@@ -106,9 +106,10 @@ func (v *App) ListUserRelative(ctx context.Context, request *proto.ListUserRelat
 
 	return &proto.ListUserRelativeResponse{
 		Data: lo.Map(data, func(item models.AccountRelationship, index int) *proto.UserInfo {
+			account := lo.Ternary(request.GetIsRelated(), item.Account, item.Related)
 			val := &proto.UserInfo{
-				Id:   uint64(item.AccountID),
-				Name: item.Account.Name,
+				Id:   uint64(account.ID),
+				Name: account.Name,
 			}
 
 			return val
