@@ -2,11 +2,13 @@ package services
 
 import (
 	"fmt"
-	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
-	"gorm.io/datatypes"
 	"time"
 
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
+	"gorm.io/datatypes"
+
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 
 	"github.com/google/uuid"
 
@@ -214,7 +216,7 @@ func RotateTicket(ticket models.AuthTicket, fullyRestart ...bool) (models.AuthTi
 }
 
 func DoAutoSignoff() {
-	duration := 7 * 24 * time.Hour
+	duration := viper.GetDuration("security.auto_signoff") * time.Second
 	deadline := time.Now().Add(-duration)
 
 	log.Debug().Time("before", deadline).Msg("Now signing off tickets...")
