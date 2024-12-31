@@ -3,6 +3,9 @@ package services
 import (
 	"context"
 	"fmt"
+	"time"
+	"unicode"
+
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
@@ -10,8 +13,6 @@ import (
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/marshaler"
 	"github.com/eko/gocache/lib/v4/store"
-	"time"
-	"unicode"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 
@@ -22,7 +23,6 @@ import (
 	"gorm.io/datatypes"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
-	"github.com/google/uuid"
 	"github.com/samber/lo"
 )
 
@@ -133,10 +133,6 @@ func CreateAccount(name, nick, email, password string) (models.Account, error) {
 			{
 				Type:   models.PasswordAuthFactor,
 				Secret: HashPassword(password),
-			},
-			{
-				Type:   models.EmailPasswordFactor,
-				Secret: uuid.NewString()[:8],
 			},
 		},
 		Contacts: []models.AccountContact{
