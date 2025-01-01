@@ -25,6 +25,7 @@ func MapAPIs(app *fiber.App, baseURL string) {
 			notify.Post("/subscription", addNotifySubscriber)
 			notify.Delete("/subscription/:deviceId", removeNotifySubscriber)
 			notify.Put("/read", markNotificationReadBatch)
+			notify.Put("/read/all", markNotificationAllRead)
 			notify.Put("/read/:notificationId", markNotificationRead)
 		}
 

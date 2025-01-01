@@ -1,14 +1,15 @@
 package api
 
 import (
+	"strconv"
+	"time"
+
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
-	"strconv"
-	"time"
 )
 
 func getNotifications(c *fiber.Ctx) error {
@@ -110,8 +111,26 @@ func markNotificationReadBatch(c *fiber.Ctx) error {
 		Updates(&models.Notification{ReadAt: lo.ToPtr(time.Now())}).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		services.AddEvent(user.ID, "notifications.markAll.read", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "notifications.markBatch.read", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.SendStatus(fiber.StatusOK)
+	}
+}
+
+func markNotificationAllRead(c *fiber.Ctx) error {
+	if err := exts.EnsureAuthenticated(c); err != nil {
+		return err
+	}
+	user := c.Locals("user").(models.Account)
+
+	if tx := database.C.Model(&models.Notification{}).
+		Where("account_id = ? AND read_at IS NULL", user.ID).
+		Updates(&models.Notification{ReadAt: lo.ToPtr(time.Now())}); tx.Error != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, tx.Error.Error())
+	} else {
+		services.AddEvent(user.ID, "notifications.markAll.read", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		return c.JSON(fiber.Map{
+			"count": tx.RowsAffected,
+		})
 	}
 }
 
