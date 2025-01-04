@@ -2,11 +2,12 @@ package services
 
 import (
 	"fmt"
+	"strings"
+	"time"
+
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
-	"strings"
-	"time"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"github.com/google/uuid"
@@ -129,7 +130,7 @@ func NotifyMagicToken(token models.MagicToken) error {
 			viper.GetString("maintainer"),
 		)
 	case models.DeleteAccountMagicToken:
-		link := fmt.Sprintf("%s/flow/accounts/account-delete?code=%s", viper.GetString("frontend_app"), token.Code)
+		link := fmt.Sprintf("%s/flow/accounts/deletion?code=%s", viper.GetString("frontend_app"), token.Code)
 		subject = fmt.Sprintf("[%s] Confirm your account deletion", viper.GetString("name"))
 		content = fmt.Sprintf(
 			DeleteAccountTemplate,
