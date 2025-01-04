@@ -5,11 +5,11 @@ import (
 )
 
 func MapAPIs(app *fiber.App, baseURL string) {
-	app.Get("/.well-known/openid-configuration", getOidcConfiguration)
-	app.Get("/.well-known/jwks", getJwk)
-
 	api := app.Group(baseURL).Name("API")
 	{
+		api.Get("/well-known/openid-configuration", getOidcConfiguration)
+		api.Get("/well-known/jwks", getJwk)
+
 		checkIn := api.Group("/check-in").Name("Daily Check In API")
 		{
 			checkIn.Get("/", listCheckInRecord)
