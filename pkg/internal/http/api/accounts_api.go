@@ -75,7 +75,6 @@ func getUserinfo(c *fiber.Ctx) error {
 	resp["name"] = data.Name
 	resp["email"] = data.GetPrimaryEmail().Content
 	resp["preferred_username"] = data.Nick
-	resp["profile"] = data.Name
 
 	if data.Avatar != nil {
 		resp["picture"] = *data.GetAvatar()
