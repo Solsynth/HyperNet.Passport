@@ -1,19 +1,32 @@
 package gap
 
 import (
+	"errors"
 	"fmt"
+	"strings"
+	"time"
+
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/rx"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit/pushcon"
+	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
-	"strings"
 
 	"github.com/spf13/viper"
 )
 
-var Nx *nex.Conn
-var Px *pushcon.Conn
+var (
+	Nx *nex.Conn
+	Px *pushcon.Conn
+	Rx *rx.MqConn
+	Jt nats.JetStreamContext
+)
+
+const (
+	FactorOtpPrefix = "passport.otp."
+)
 
 func InitializeToNexus() error {
 	grpcBind := strings.SplitN(viper.GetString("grpc_bind"), ":", 2)
@@ -44,6 +57,26 @@ func InitializeToNexus() error {
 	Px, err = pushcon.NewConn(Nx)
 	if err != nil {
 		return fmt.Errorf("error during initialize pushcon: %v", err)
+	}
+
+	Rx, err = rx.NewMqConn(Nx)
+	if err != nil {
+		return fmt.Errorf("error during initialize nexus rx module: %v", err)
+	}
+	Jt, err = Rx.Nt.JetStream()
+	if err != nil {
+		return fmt.Errorf("error during initialize nats jetstream: %v", err)
+	}
+
+	jetstreamCfg := &nats.StreamConfig{
+		Name:     "Passport OTPs",
+		Subjects: []string{FactorOtpPrefix + ">"},
+		Storage:  nats.MemoryStorage,
+		MaxAge:   5 * time.Minute,
+	}
+	_, err = Jt.AddStream(jetstreamCfg)
+	if err != nil && !errors.Is(err, nats.ErrStreamNameAlreadyInUse) {
+		return fmt.Errorf("error during initialize jetstream stream: %v", err)
 	}
 
 	return err

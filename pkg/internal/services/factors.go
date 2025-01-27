@@ -2,15 +2,18 @@ package services
 
 import (
 	"fmt"
+	"strings"
+	"time"
+
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
 	"github.com/google/uuid"
+	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
-	"strings"
 )
 
 const EmailPasswordTemplate = `Dear %s,
@@ -75,15 +78,20 @@ func GetFactorCode(factor models.AuthFactor) (bool, error) {
 			return true, err
 		}
 
-		factor.Secret = uuid.NewString()[:6]
-		if err := database.C.Save(&factor).Error; err != nil {
-			return true, err
+		secret := uuid.NewString()[:6]
+
+		identifier := fmt.Sprintf("%s%d", gap.FactorOtpPrefix, factor.ID)
+		_, err := gap.Jt.Publish(identifier, []byte(secret))
+		if err != nil {
+			return true, fmt.Errorf("error during publish message: %v", err)
+		} else {
+			log.Info().Uint("factor", factor.ID).Str("secret", secret).Msg("Published one-time-password to JetStream...")
 		}
 
 		subject := fmt.Sprintf("[%s] Login verification code", viper.GetString("name"))
-		content := fmt.Sprintf(EmailPasswordTemplate, user.Name, factor.Secret, viper.GetString("maintainer"))
+		content := fmt.Sprintf(EmailPasswordTemplate, user.Name, secret, viper.GetString("maintainer"))
 
-		err := gap.Px.PushEmail(pushkit.EmailDeliverRequest{
+		err = gap.Px.PushEmail(pushkit.EmailDeliverRequest{
 			To: user.GetPrimaryEmail().Content,
 			Email: pushkit.EmailData{
 				Subject: subject,
@@ -110,11 +118,30 @@ func CheckFactor(factor models.AuthFactor, code string) error {
 			fmt.Errorf("invalid password"),
 		)
 	case models.EmailPasswordFactor:
-		return lo.Ternary(
-			strings.ToUpper(code) == strings.ToUpper(factor.Secret),
-			nil,
-			fmt.Errorf("invalid verification code"),
-		)
+		identifier := fmt.Sprintf("%s%d", gap.FactorOtpPrefix, factor.ID)
+		sub, err := gap.Jt.PullSubscribe(identifier, "otp_consumer", nats.Durable("otp_consumer"))
+		if err != nil {
+			log.Error().Err(err).Msg("Error subscribing to subject when validating factor code...")
+			return fmt.Errorf("error subscribing to subject: %v", err)
+		}
+
+		msgs, err := sub.Fetch(1, nats.MaxWait(2*time.Second))
+		if err != nil {
+			log.Error().Err(err).Msg("Error fetching message when validating factor code...")
+			return fmt.Errorf("error fetching message: %v", err)
+		}
+
+		if len(msgs) > 0 {
+			msg := msgs[0]
+			if !strings.EqualFold(code, string(msg.Data)) {
+				return fmt.Errorf("invalid verification code")
+			}
+			log.Info().Uint("factor", factor.ID).Str("secret", code).Msg("Verified one-time-password...")
+			msg.Ack()
+			return nil
+		}
+
+		return fmt.Errorf("one-time-password not found or expired")
 	}
 
 	return nil
