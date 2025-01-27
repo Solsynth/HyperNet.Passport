@@ -138,7 +138,9 @@ func CheckFactor(factor models.AuthFactor, code string) error {
 				return fmt.Errorf("invalid verification code")
 			}
 			log.Info().Uint("factor", factor.ID).Str("secret", code).Msg("Verified one-time-password...")
-			msg.Ack()
+			if err := msg.AckSync(); err != nil {
+				log.Warn().Err(err).Uint("factor", factor.ID).Msg("Failed to acknowledge message when validating factor code...")
+			}
 			return nil
 		}
 
