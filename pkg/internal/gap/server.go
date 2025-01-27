@@ -72,7 +72,7 @@ func InitializeToNexus() error {
 		Name:     "OTPs",
 		Subjects: []string{FactorOtpPrefix + ">"},
 		Storage:  nats.MemoryStorage,
-		MaxAge:   5 * time.Minute,
+		MaxAge:   30 * time.Minute,
 	}
 	_, err = Jt.AddStream(jetstreamCfg)
 	if err != nil && !errors.Is(err, nats.ErrStreamNameAlreadyInUse) {

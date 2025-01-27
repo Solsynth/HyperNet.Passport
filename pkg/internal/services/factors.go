@@ -119,11 +119,13 @@ func CheckFactor(factor models.AuthFactor, code string) error {
 		)
 	case models.EmailPasswordFactor:
 		identifier := fmt.Sprintf("%s%d", gap.FactorOtpPrefix, factor.ID)
-		sub, err := gap.Jt.PullSubscribe(identifier, "otp_validator")
+		sub, err := gap.Jt.PullSubscribe(identifier, "otp_validator", nats.BindStream("OTPs"))
 		if err != nil {
 			log.Error().Err(err).Msg("Error subscribing to subject when validating factor code...")
 			return fmt.Errorf("error subscribing to subject: %v", err)
 		}
+		// ChatGPT said the subscription will be reused, so we don't need to unsubscribe
+		// defer sub.Unsubscribe()
 
 		msgs, err := sub.Fetch(1, nats.MaxWait(3*time.Second))
 		if err != nil {
