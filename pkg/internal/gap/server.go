@@ -25,7 +25,7 @@ var (
 )
 
 const (
-	FactorOtpPrefix = "passport.otp."
+	FactorOtpPrefix = "otp."
 )
 
 func InitializeToNexus() error {
@@ -70,7 +70,7 @@ func InitializeToNexus() error {
 
 	jetstreamCfg := &nats.StreamConfig{
 		Name:     "OTPs",
-		Subjects: []string{FactorOtpPrefix + ">"},
+		Subjects: []string{fmt.Sprintf("%s>", FactorOtpPrefix)},
 		Storage:  nats.MemoryStorage,
 		MaxAge:   30 * time.Minute,
 	}

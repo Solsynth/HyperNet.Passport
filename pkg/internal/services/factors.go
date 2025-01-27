@@ -124,8 +124,7 @@ func CheckFactor(factor models.AuthFactor, code string) error {
 			log.Error().Err(err).Msg("Error subscribing to subject when validating factor code...")
 			return fmt.Errorf("error subscribing to subject: %v", err)
 		}
-		// ChatGPT said the subscription will be reused, so we don't need to unsubscribe
-		// defer sub.Unsubscribe()
+		defer sub.Unsubscribe()
 
 		msgs, err := sub.Fetch(1, nats.MaxWait(3*time.Second))
 		if err != nil {
