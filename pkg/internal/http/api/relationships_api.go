@@ -1,13 +1,14 @@
 package api
 
 import (
+	"strconv"
+	"strings"
+
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
-	"strconv"
-	"strings"
 )
 
 func listRelationship(c *fiber.Ctx) error {
@@ -27,7 +28,7 @@ func listRelationship(c *fiber.Ctx) error {
 
 	var err error
 	var friends []models.AccountRelationship
-	if len(status) < 0 {
+	if len(status) == 0 {
 		if friends, err = services.ListAllRelationship(user); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
