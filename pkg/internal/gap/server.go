@@ -69,7 +69,7 @@ func InitializeToNexus() error {
 	}
 
 	jetstreamCfg := &nats.StreamConfig{
-		Name:     "Passport OTPs",
+		Name:     "OTPs",
 		Subjects: []string{FactorOtpPrefix + ">"},
 		Storage:  nats.MemoryStorage,
 		MaxAge:   5 * time.Minute,
