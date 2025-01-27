@@ -68,18 +68,6 @@ func getUserinfo(c *fiber.Ctx) error {
 	raw, _ := jsoniter.Marshal(data)
 	_ = jsoniter.Unmarshal(raw, &resp)
 
-	// Used to support OIDC standard
-	resp["sub"] = strconv.Itoa(int(data.ID))
-	resp["family_name"] = data.Profile.FirstName
-	resp["given_name"] = data.Profile.LastName
-	resp["name"] = data.Name
-	resp["email"] = data.GetPrimaryEmail().Content
-	resp["preferred_username"] = data.Nick
-
-	if data.Avatar != nil {
-		resp["picture"] = *data.GetAvatar()
-	}
-
 	return c.JSON(resp)
 }
 

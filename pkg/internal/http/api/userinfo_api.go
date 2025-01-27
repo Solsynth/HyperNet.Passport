@@ -3,13 +3,16 @@ package api
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
+
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/marshaler"
 	"gorm.io/gorm"
-	"strconv"
-	"strings"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
@@ -91,4 +94,36 @@ func getOtherUserinfoBatch(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(accounts)
+}
+
+func getUserinfoForOidc(c *fiber.Ctx) error {
+	if err := exts.EnsureAuthenticated(c); err != nil {
+		return err
+	}
+	user := c.Locals("user").(models.Account)
+
+	var data models.Account
+	if err := database.C.
+		Where(&models.Account{BaseModel: models.BaseModel{ID: user.ID}}).
+		Preload("Profile").
+		Preload("Contacts").
+		Preload("Badges").
+		First(&data).Error; err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	} else {
+		data.PermNodes = c.Locals("nex_user").(*sec.UserInfo).PermNodes
+	}
+
+	return c.JSON(fiber.Map{
+		"sub":                fmt.Sprintf("%d", data.ID),
+		"family_name":        data.Profile.FirstName,
+		"given_name":         data.Profile.LastName,
+		"name":               data.Name,
+		"email":              data.GetPrimaryEmail().Content,
+		"email_verified":     data.GetPrimaryEmail().VerifiedAt != nil,
+		"preferred_username": data.Nick,
+		"picture":            data.GetAvatar(),
+		"birthdate":          data.Profile.Birthday,
+		"updated_at":         data.UpdatedAt,
+	})
 }

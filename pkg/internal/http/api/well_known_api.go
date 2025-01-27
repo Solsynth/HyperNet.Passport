@@ -16,7 +16,7 @@ func getOidcConfiguration(c *fiber.Ctx) error {
 		"issuer":                                           viper.GetString("security.issuer"),
 		"authorization_endpoint":                           fmt.Sprintf("%s/authorize", basepath),
 		"token_endpoint":                                   fmt.Sprintf("%s/api/auth/token", basepath),
-		"userinfo_endpoint":                                fmt.Sprintf("%s/api/users/me", basepath),
+		"userinfo_endpoint":                                fmt.Sprintf("%s/api/users/me/oidc", basepath),
 		"response_types_supported":                         []string{"code", "token"},
 		"grant_types_supported":                            []string{"authorization_code", "implicit", "refresh_token"},
 		"subject_types_supported":                          []string{"public"},

@@ -60,6 +60,7 @@ func MapAPIs(app *fiber.App, baseURL string) {
 			me.Put("/banner", setBanner)
 
 			me.Get("/", getUserinfo)
+			me.Get("/oidc", getUserinfoForOidc)
 			me.Put("/", updateUserinfo)
 			me.Get("/events", getEvents)
 			me.Get("/tickets", getTickets)
