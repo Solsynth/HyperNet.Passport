@@ -119,13 +119,13 @@ func CheckFactor(factor models.AuthFactor, code string) error {
 		)
 	case models.EmailPasswordFactor:
 		identifier := fmt.Sprintf("%s%d", gap.FactorOtpPrefix, factor.ID)
-		sub, err := gap.Jt.PullSubscribe(identifier, "otp_consumer", nats.Durable("otp_consumer"))
+		sub, err := gap.Jt.PullSubscribe(identifier, "otp_validator")
 		if err != nil {
 			log.Error().Err(err).Msg("Error subscribing to subject when validating factor code...")
 			return fmt.Errorf("error subscribing to subject: %v", err)
 		}
 
-		msgs, err := sub.Fetch(1, nats.MaxWait(2*time.Second))
+		msgs, err := sub.Fetch(1, nats.MaxWait(3*time.Second))
 		if err != nil {
 			log.Error().Err(err).Msg("Error fetching message when validating factor code...")
 			return fmt.Errorf("error fetching message: %v", err)
