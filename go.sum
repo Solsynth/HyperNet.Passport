@@ -37,6 +37,8 @@ git.solsynth.dev/hypernet/nexus v0.0.0-20241123050605-25ab1371739b h1:8yB9kMwEMY
 git.solsynth.dev/hypernet/nexus v0.0.0-20241123050605-25ab1371739b/go.mod h1:PhLCv2lsNoscPVJbkWnxwQnJ141lc4RIEkVffrHwl4s=
 git.solsynth.dev/hypernet/pusher v0.0.0-20241026153052-cd2c326efa4e h1:DtHhMjgxS/spUt/KEdbRFtaVnepI6Vx8pbHdJaNH1hs=
 git.solsynth.dev/hypernet/pusher v0.0.0-20241026153052-cd2c326efa4e/go.mod h1:XHTqFU/vBe4JiuAjl87GUcL8+w/IizSNoqH6n3WkQFc=
+git.solsynth.dev/hypernet/wallet v0.0.0-20250128182545-a311bddc2533 h1:KH8Hk6S2VZijmNiGLAKXrwmz1XBBLtD/e7nEa68AxBk=
+git.solsynth.dev/hypernet/wallet v0.0.0-20250128182545-a311bddc2533/go.mod h1:WgS+wpp2TYU1ZFUhET9eEw9AMS6TRowQ41yto0FnZZY=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
