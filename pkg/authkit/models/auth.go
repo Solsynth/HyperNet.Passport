@@ -16,8 +16,8 @@ type AuthFactorType = int8
 const (
 	PasswordAuthFactor = AuthFactorType(iota)
 	EmailPasswordFactor
-	InAppNotifyFactor
 	TimeOtpFactor
+	InAppNotifyFactor
 )
 
 type AuthFactor struct {
