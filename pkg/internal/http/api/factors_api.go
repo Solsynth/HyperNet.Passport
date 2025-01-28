@@ -8,6 +8,7 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/pquerna/otp/totp"
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
@@ -142,7 +143,12 @@ func createFactor(c *fiber.Ctx) error {
 		factor.Config = datatypes.NewJSONType(data)
 	}
 
-	return c.JSON(factor)
+	var out map[string]any
+	raw, _ := jsoniter.Marshal(factor)
+	jsoniter.Unmarshal(raw, &out)
+	out["config"] = factor.Config.Data()
+
+	return c.JSON(out)
 }
 
 func deleteFactor(c *fiber.Ctx) error {
