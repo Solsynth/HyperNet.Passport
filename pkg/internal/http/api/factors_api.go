@@ -8,7 +8,10 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
+	"github.com/pquerna/otp/totp"
 	"github.com/samber/lo"
+	"github.com/spf13/viper"
+	"gorm.io/datatypes"
 )
 
 func getAvailableFactors(c *fiber.Ctx) error {
@@ -100,8 +103,43 @@ func createFactor(c *fiber.Ctx) error {
 		Account:   user,
 		AccountID: user.ID,
 	}
+
+	additionalOnceConfig := map[string]any{}
+
+	switch data.Type {
+	case models.TimeOtpFactor:
+		cfg := totp.GenerateOpts{
+			Issuer:      viper.GetString("name"),
+			AccountName: user.Name,
+			Period:      30,
+			SecretSize:  20,
+			Digits:      6,
+		}
+		key, err := totp.Generate(cfg)
+		if err != nil {
+			return fmt.Errorf("unable to generate totp key: %v", err)
+		}
+		factor.Secret = key.Secret()
+		factor.Config = datatypes.NewJSONType(map[string]any{
+			"issuer":       cfg.Issuer,
+			"account_name": cfg.AccountName,
+			"period":       cfg.Period,
+			"secret_size":  cfg.SecretSize,
+			"digits":       cfg.Digits,
+		})
+		additionalOnceConfig["url"] = key.URL()
+	}
+
 	if err := database.C.Create(&factor).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	if len(additionalOnceConfig) > 0 {
+		data := factor.Config.Data()
+		for k, v := range additionalOnceConfig {
+			data[k] = v
+		}
+		factor.Config = datatypes.NewJSONType(data)
 	}
 
 	return c.JSON(factor)

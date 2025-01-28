@@ -11,6 +11,7 @@ import (
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
 	"github.com/google/uuid"
 	"github.com/nats-io/nats.go"
+	"github.com/pquerna/otp/totp"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
@@ -70,6 +71,36 @@ func CountUserFactor(userId uint) int64 {
 
 func GetFactorCode(factor models.AuthFactor) (bool, error) {
 	switch factor.Type {
+	case models.InAppNotifyFactor:
+		var user models.Account
+		if err := database.C.Where(&models.Account{
+			BaseModel: models.BaseModel{ID: factor.AccountID},
+		}).First(&user).Error; err != nil {
+			return true, err
+		}
+
+		secret := uuid.NewString()[:6]
+
+		identifier := fmt.Sprintf("%s%d", gap.FactorOtpPrefix, factor.ID)
+		_, err := gap.Jt.Publish(identifier, []byte(secret))
+		if err != nil {
+			return true, fmt.Errorf("error during publish message: %v", err)
+		} else {
+			log.Info().Uint("factor", factor.ID).Str("secret", secret).Msg("Published one-time-password to JetStream...")
+		}
+
+		err = PushNotification(models.Notification{
+			Topic:     "passport.security.otp",
+			Title:     "Your login one-time-password",
+			Body:      fmt.Sprintf("`%s` is your login verification code. It will expires in 30 minutes.", secret),
+			Account:   user,
+			AccountID: user.ID,
+		}, true)
+		if err != nil {
+			log.Warn().Err(err).Uint("factor", factor.ID).Msg("Failed to delivery one-time-password via notify...")
+			return true, nil
+		}
+		return true, nil
 	case models.EmailPasswordFactor:
 		var user models.Account
 		if err := database.C.Where(&models.Account{
@@ -103,7 +134,6 @@ func GetFactorCode(factor models.AuthFactor) (bool, error) {
 			return true, nil
 		}
 		return true, nil
-
 	default:
 		return false, nil
 	}
@@ -117,6 +147,13 @@ func CheckFactor(factor models.AuthFactor, code string) error {
 			nil,
 			fmt.Errorf("invalid password"),
 		)
+	case models.TimeOtpFactor:
+		lo.Ternary(
+			totp.Validate(code, factor.Secret),
+			nil,
+			fmt.Errorf("invalid verification code"),
+		)
+	case models.InAppNotifyFactor:
 	case models.EmailPasswordFactor:
 		identifier := fmt.Sprintf("%s%d", gap.FactorOtpPrefix, factor.ID)
 		sub, err := gap.Jt.PullSubscribe(identifier, "otp_validator", nats.BindStream("OTPs"))
