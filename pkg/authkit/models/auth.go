@@ -23,9 +23,9 @@ const (
 type AuthFactor struct {
 	BaseModel
 
-	Type   int8    `json:"type"`
-	Secret string  `json:"-"`
-	Config JSONMap `json:"config"`
+	Type   int8              `json:"type"`
+	Secret string            `json:"-"`
+	Config datatypes.JSONMap `json:"config"`
 
 	Account   Account `json:"account"`
 	AccountID uint    `json:"account_id"`
