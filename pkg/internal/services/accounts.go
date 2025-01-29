@@ -149,12 +149,8 @@ func CreateAccount(name, nick, email, password string) (models.Account, error) {
 
 	if err := database.C.Create(&user).Error; err != nil {
 		return user, err
-	} else if viper.GetInt("default_user_group") > 0 {
-		database.C.Create(&models.AccountGroupMember{
-			AccountID: user.ID,
-			GroupID:   uint(viper.GetInt("default_user_group")),
-		})
 	}
+	// Only gave user permission group after they confiremd the registeration
 
 	if tk, err := NewMagicToken(models.ConfirmMagicToken, &user, nil); err != nil {
 		return user, err
@@ -192,13 +188,16 @@ func ConfirmAccount(code string) error {
 func ForceConfirmAccount(user models.Account) error {
 	user.ConfirmedAt = lo.ToPtr(time.Now())
 
-	for k, v := range viper.GetStringMap("permissions.verified") {
-		if val, ok := user.PermNodes[k]; !ok {
-			user.PermNodes[k] = v
-		} else {
-			user.PermNodes[k] = val
-		}
+	if viper.GetInt("default_user_group") > 0 {
+		database.C.Create(&models.AccountGroupMember{
+			AccountID: user.ID,
+			GroupID:   uint(viper.GetInt("default_user_group")),
+		})
 	}
+
+	_ = database.C.Model(&models.AccountContact{}).Where("account_id = ?", user.ID).Updates(&models.AccountContact{
+		VerifiedAt: lo.ToPtr(time.Now()),
+	})
 
 	if err := database.C.Save(&user).Error; err != nil {
 		return err
