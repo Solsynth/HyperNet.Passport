@@ -75,7 +75,6 @@ func notifyOneUser(c *fiber.Ctx) error {
 		Metadata   map[string]any `json:"metadata"`
 		Priority   int            `json:"priority"`
 		IsRealtime bool           `json:"is_realtime"`
-		UserID     uint           `json:"user_id" validate:"required"`
 	}
 
 	if err := exts.BindAndValidate(c, &data); err != nil {
@@ -87,8 +86,10 @@ func notifyOneUser(c *fiber.Ctx) error {
 	}
 	operator := c.Locals("user").(models.Account)
 
+	userId, _ := c.ParamsInt("user", 0)
+
 	var user models.Account
-	if err := database.C.Where("id = ?", data.UserID).First(&user).Error; err != nil {
+	if err := database.C.Where("id = ?", userId).First(&user).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
 		services.AddAuditRecord(operator, "notify.one", c.IP(), c.Get(fiber.HeaderUserAgent), map[string]any{
