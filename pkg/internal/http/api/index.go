@@ -147,7 +147,7 @@ func MapAPIs(app *fiber.App, baseURL string) {
 
 		developers := api.Group("/dev").Name("Developers API")
 		{
-			developers.Post("/notify", notifyUser)
+			developers.Post("/notify/:user", notifyUser)
 			developers.Post("/notify/all", notifyAllUser)
 
 			bots := developers.Group("/bots").Name("Bots")

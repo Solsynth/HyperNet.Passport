@@ -25,7 +25,6 @@ func notifyUser(c *fiber.Ctx) error {
 		Metadata   map[string]any `json:"metadata"`
 		Priority   int            `json:"priority"`
 		IsRealtime bool           `json:"is_realtime"`
-		UserID     uint           `json:"user_id" validate:"required"`
 	}
 
 	if err := exts.BindAndValidate(c, &data); err != nil {
@@ -37,8 +36,10 @@ func notifyUser(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("unable to get client: %v", err))
 	}
 
+	userId, _ := c.ParamsInt("user")
+
 	var target models.Account
-	if target, err = services.GetAccount(data.UserID); err != nil {
+	if target, err = services.GetAccount(uint(userId)); err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
