@@ -127,7 +127,7 @@ func updateAccountLanguage(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.Account)
 
 	var data struct {
-		Language string `json:"language" validate:"required"`
+		Language string `json:"language" validate:"required,bcp47_language_tag"`
 	}
 
 	if err := exts.BindAndValidate(c, &data); err != nil {

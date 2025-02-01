@@ -71,6 +71,11 @@ func main() {
 		log.Info().Msg("Jwt private key loaded.")
 	}
 
+	// Load localization
+	if err := services.LoadLocalization(); err != nil {
+		log.Fatal().Err(err).Msg("An error occurred when loading localization.")
+	}
+
 	// Connect to database
 	if err := database.NewGorm(); err != nil {
 		log.Fatal().Err(err).Msg("An error occurred when connect to database.")

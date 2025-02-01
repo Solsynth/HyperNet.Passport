@@ -1,0 +1,7 @@
+{
+  "subjectLoginOneTimePassword": "您的验证码",
+  "shortBodyLoginOneTimePassword": "%s 是您的登录验证码，它将在 30 分钟后过期。",
+  "subjectConfirmRegistration": "确认您的注册",
+  "subjectResetPassword": "重置您的密码",
+  "subjectDeleteAccount": "确认您的帐户删除"
+}

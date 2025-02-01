@@ -1,0 +1,7 @@
+{
+  "subjectLoginOneTimePassword": "Login verification code",
+  "shortBodyLoginOneTimePassword": "%s is your login verification code. It will expires in 30 minutes.",
+  "subjectConfirmRegistration": "Confirm your registration",
+  "subjectResetPassword": "Reset your password",
+  "subjectDeleteAccount": "Confirm your account deletion"
+}

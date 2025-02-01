@@ -39,7 +39,7 @@ func requestFactorToken(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	if sent, err := services.GetFactorCode(factor); err != nil {
+	if sent, err := services.GetFactorCode(factor, c.IP()); err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	} else if !sent {
 		return c.SendStatus(fiber.StatusNoContent)

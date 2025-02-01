@@ -4,9 +4,29 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Fix list user relative return wrong data">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Account preferred language">
+      <change afterPath="$PROJECT_DIR$/locales/en-US.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/locales/zh-CN.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/internal/services/i18n.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/email/en-US/confirm-deletion.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/email/en-US/email-otp.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/email/en-US/register-confirm.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/email/en-US/reset-password.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/email/zh-CN/confirm-deletion.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/email/zh-CN/email-otp.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/email/zh-CN/register-confirm.tmpl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/email/zh-CN/reset-password.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/reports.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/reports.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/accounts_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/accounts_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/factors_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/factors_api.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/factors.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/factors.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/tokens.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/tokens.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.toml" beforeDir="false" afterPath="$PROJECT_DIR$/settings.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,8 +137,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-gosdk-d297c17c1fbd-b87a2f8923ed-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-243.21565.208" />
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-GO-243.21565.208" />
+        <option value="bundled-gosdk-d297c17c1fbd-85c80fddc9a6-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-243.23654.166" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-GO-243.23654.166" />
       </set>
     </attachedChunks>
   </component>
@@ -159,7 +179,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":bug: Fix unable get user full perm node" />
     <MESSAGE value=":loud_sound: Add verbose permission logging" />
     <MESSAGE value=":bug: Fix group permission didn't extend properly" />
     <MESSAGE value=":mute: Remove authenticate result logging" />
@@ -184,7 +203,8 @@
     <MESSAGE value=":zap: A separate API to only get notification count" />
     <MESSAGE value=":bug: Bug fixes on notifications" />
     <MESSAGE value=":bug: Fix list user relative return wrong data" />
-    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix list user relative return wrong data" />
+    <MESSAGE value=":sparkles: Account preferred language" />
+    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Account preferred language" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
@@ -193,11 +213,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/pkg/internal/services/factors.go</url>
-          <line>85</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/internal/services/notifications.go</url>
           <line>93</line>
