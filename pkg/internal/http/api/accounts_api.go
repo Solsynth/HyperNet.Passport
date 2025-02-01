@@ -120,6 +120,33 @@ func updateUserinfo(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusOK)
 }
 
+func updateAccountLanguage(c *fiber.Ctx) error {
+	if err := exts.EnsureAuthenticated(c); err != nil {
+		return err
+	}
+	user := c.Locals("user").(models.Account)
+
+	var data struct {
+		Language string `json:"language" validate:"required"`
+	}
+
+	if err := exts.BindAndValidate(c, &data); err != nil {
+		return err
+	}
+
+	if err := database.C.Model(&models.Account{}).Where("id = ?", user.ID).
+		Updates(&models.Account{Language: data.Language}).Error; err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	services.AddEvent(user.ID, "profile.edit.language", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+	services.InvalidAuthCacheWithUser(user.ID)
+
+	user.Language = data.Language
+
+	return c.JSON(user)
+}
+
 func doRegister(c *fiber.Ctx) error {
 	var data struct {
 		Name       string `json:"name" validate:"required,lowercase,alphanum,min=4,max=16"`

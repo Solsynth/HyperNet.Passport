@@ -2,10 +2,11 @@ package models
 
 import (
 	"fmt"
+	"time"
+
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"gorm.io/datatypes"
-	"time"
 
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
@@ -22,6 +23,7 @@ type Account struct {
 	ConfirmedAt *time.Time        `json:"confirmed_at"`
 	SuspendedAt *time.Time        `json:"suspended_at"`
 	PermNodes   datatypes.JSONMap `json:"perm_nodes"`
+	Language    string            `json:"language"`
 
 	AutomatedBy *Account `json:"automated_by" gorm:"foreignKey:AutomatedID"`
 	AutomatedID *uint    `json:"automated_id"`
