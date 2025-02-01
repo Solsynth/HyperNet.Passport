@@ -4,29 +4,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Account preferred language">
-      <change afterPath="$PROJECT_DIR$/locales/en-US.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/locales/zh-CN.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/internal/services/i18n.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/email/en-US/confirm-deletion.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/email/en-US/email-otp.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/email/en-US/register-confirm.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/email/en-US/reset-password.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/email/zh-CN/confirm-deletion.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/email/zh-CN/email-otp.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/email/zh-CN/register-confirm.tmpl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/email/zh-CN/reset-password.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Push email &amp; notification localization">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/accounts_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/accounts_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/factors_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/factors_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/factors.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/factors.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/tokens.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/tokens.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.toml" beforeDir="false" afterPath="$PROJECT_DIR$/settings.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/en-US.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en-US.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/zh-CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zh-CN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/reports.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/reports.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/ticket.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/ticket.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,35 +48,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;Go Build.Backend.executor&quot;: &quot;Debug&quot;,
-    &quot;Go 构建.Backend.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/littlesheep/Documents/Projects/Hypernet/Passport&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.intentionPowerPack&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/littlesheep/Documents/Projects/Hydrogen/Passport/web/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go Build.Backend.executor": "Run",
+    "Go 构建.Backend.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "master",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/Users/littlesheep/Documents/Projects/Hypernet/Passport",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.intentionPowerPack",
+    "ts.external.directory.path": "/Users/littlesheep/Documents/Projects/Hydrogen/Passport/web/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/keys" />
@@ -179,7 +162,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":loud_sound: Add verbose permission logging" />
     <MESSAGE value=":bug: Fix group permission didn't extend properly" />
     <MESSAGE value=":mute: Remove authenticate result logging" />
     <MESSAGE value=":truck: Rename daily-sign to check-in" />
@@ -204,7 +186,8 @@
     <MESSAGE value=":bug: Bug fixes on notifications" />
     <MESSAGE value=":bug: Fix list user relative return wrong data" />
     <MESSAGE value=":sparkles: Account preferred language" />
-    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Account preferred language" />
+    <MESSAGE value=":sparkles: Push email &amp; notification localization" />
+    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Push email &amp; notification localization" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
@@ -217,11 +200,6 @@
           <url>file://$PROJECT_DIR$/pkg/internal/services/notifications.go</url>
           <line>93</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/pkg/internal/services/notifications.go</url>
-          <line>73</line>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

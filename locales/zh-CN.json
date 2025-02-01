@@ -3,5 +3,9 @@
   "shortBodyLoginOneTimePassword": "%s 是您的登录验证码，它将在 30 分钟后过期。",
   "subjectConfirmRegistration": "确认您的注册",
   "subjectResetPassword": "重置您的密码",
-  "subjectDeleteAccount": "确认您的帐户删除"
+  "subjectDeleteAccount": "确认您的帐户删除",
+  "subjectLoginAlert": "登陆提醒",
+  "shortBodyLoginAlert": "您的帐户在 %s 登录，若它不是你的设备，请立即处理。",
+  "subjectAbuseReportUpdated": "举报状态已更新",
+  "shortBodyAbuseReportUpdated": "举报 #%d 已更新为 %s。管理员回复：%s"
 }

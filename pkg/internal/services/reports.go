@@ -42,9 +42,8 @@ func UpdateAbuseReportStatus(id uint, status, message string) error {
 
 	_ = NewNotification(models.Notification{
 		Topic:     "reports.feedback",
-		Title:     "Abuse report status has been changed.",
-		Subtitle:  fmt.Sprintf("The report #%d's status updated", id),
-		Body:      fmt.Sprintf("The report created by you with ID #%d's status has been changed to %s. Moderator message: %s", id, status, message),
+		Title:     GetLocalizedString("subjectAbuseReportUpdated", account.Language),
+		Body:      fmt.Sprintf(GetLocalizedString("shortBodyAbuseReportUpdated", account.Language), id, status, message),
 		Account:   account,
 		AccountID: account.ID,
 	})

@@ -3,5 +3,9 @@
   "shortBodyLoginOneTimePassword": "%s is your login verification code. It will expires in 30 minutes.",
   "subjectConfirmRegistration": "Confirm your registration",
   "subjectResetPassword": "Reset your password",
-  "subjectDeleteAccount": "Confirm your account deletion"
+  "subjectDeleteAccount": "Confirm your account deletion",
+  "subjectLoginAlert": "Login alert",
+  "shortBodyLoginAlert": "Your account got logged in from %s. If it's not your device, please deal with it immediately.",
+  "subjectAbuseReportUpdated": "Abuse report status has been changed",
+  "shortBodyAbuseReportUpdated": "Report #%d has been changed to %s. Moderator message: %s"
 }
