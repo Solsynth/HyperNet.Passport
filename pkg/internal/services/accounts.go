@@ -122,7 +122,7 @@ func SearchAccount(probe string) ([]models.Account, error) {
 	return accounts, nil
 }
 
-func CreateAccount(name, nick, email, password string) (models.Account, error) {
+func CreateAccount(name, nick, email, password, lang string) (models.Account, error) {
 	user := models.Account{
 		Name: name,
 		Nick: nick,
@@ -143,6 +143,7 @@ func CreateAccount(name, nick, email, password string) (models.Account, error) {
 				VerifiedAt: nil,
 			},
 		},
+		Language:    lang,
 		PermNodes:   datatypes.JSONMap{},
 		ConfirmedAt: nil,
 	}

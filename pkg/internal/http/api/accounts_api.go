@@ -153,6 +153,7 @@ func doRegister(c *fiber.Ctx) error {
 		Nick       string `json:"nick" validate:"required"`
 		Email      string `json:"email" validate:"required,email"`
 		Password   string `json:"password" validate:"required,min=4,max=32"`
+		Language   string `json:"language" validate:"required,bcp47_language_tag"`
 		MagicToken string `json:"magic_token"`
 	}
 
@@ -181,6 +182,7 @@ func doRegister(c *fiber.Ctx) error {
 		data.Nick,
 		data.Email,
 		data.Password,
+		data.Language,
 	); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
