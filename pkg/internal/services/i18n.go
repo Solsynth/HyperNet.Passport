@@ -19,7 +19,7 @@ const FallbackLanguage = "en-US"
 var LocaleBundle *i18n.Bundle
 
 func LoadLocalization() error {
-	LocaleBundle = i18n.NewBundle(language.English)
+	LocaleBundle = i18n.NewBundle(language.AmericanEnglish)
 	LocaleBundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 
 	var count int

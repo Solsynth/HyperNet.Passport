@@ -128,10 +128,15 @@ func ActiveTicket(ticket models.AuthTicket) (models.AuthTicket, error) {
 	if err := database.C.Save(&ticket).Error; err != nil {
 		return ticket, err
 	} else {
+		var account models.Account
+		if err := database.C.Where("id = ?", ticket.AccountID).Select("Language").First(&account).Error; err != nil {
+			return ticket, nil
+		}
+
 		_ = NewNotification(models.Notification{
 			Topic: "passport.security.alert",
-			Title: GetLocalizedString("subjectLoginAlert", ticket.Account.Language),
-			Body:  fmt.Sprintf(GetLocalizedString("shortBodyLoginAlert", ticket.Account.Language), ticket.IpAddress),
+			Title: GetLocalizedString("subjectLoginAlert", account.Language),
+			Body:  fmt.Sprintf(GetLocalizedString("shortBodyLoginAlert", account.Language), ticket.IpAddress),
 			Metadata: datatypes.JSONMap{
 				"ip_address":   ticket.IpAddress,
 				"created_at":   ticket.CreatedAt,

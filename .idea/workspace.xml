@@ -4,12 +4,18 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Push email &amp; notification localization">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":globe_with_meridians: Fully localized notification">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/en-US.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/en-US.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/zh-CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/zh-CN.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/reports.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/reports.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/i18n.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/i18n.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/internal/services/ticket.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/ticket.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/email/en-US/confirm-deletion.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/en-US/confirm-deletion.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/email/en-US/email-otp.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/en-US/email-otp.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/email/en-US/register-confirm.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/en-US/register-confirm.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/email/en-US/reset-password.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/en-US/reset-password.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/email/zh-CN/confirm-deletion.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/zh-CN/confirm-deletion.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/email/zh-CN/email-otp.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/zh-CN/email-otp.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/email/zh-CN/register-confirm.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/zh-CN/register-confirm.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/email/zh-CN/reset-password.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/zh-CN/reset-password.tmpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,11 +92,11 @@
       <recent name="$PROJECT_DIR$/pkg/internal/server/api" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates" />
       <recent name="$PROJECT_DIR$/pkg/authkit" />
       <recent name="$PROJECT_DIR$/web/src/views/flow" />
       <recent name="$PROJECT_DIR$/pkg/internal/server/exts" />
       <recent name="$PROJECT_DIR$/pkg/internal/server/api" />
-      <recent name="$PROJECT_DIR$/pkg/internal" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -162,7 +168,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":bug: Fix group permission didn't extend properly" />
     <MESSAGE value=":mute: Remove authenticate result logging" />
     <MESSAGE value=":truck: Rename daily-sign to check-in" />
     <MESSAGE value=":sparkles: Result modifiers in check-in" />
@@ -187,7 +192,8 @@
     <MESSAGE value=":bug: Fix list user relative return wrong data" />
     <MESSAGE value=":sparkles: Account preferred language" />
     <MESSAGE value=":sparkles: Push email &amp; notification localization" />
-    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Push email &amp; notification localization" />
+    <MESSAGE value=":globe_with_meridians: Fully localized notification" />
+    <option name="LAST_COMMIT_MESSAGE" value=":globe_with_meridians: Fully localized notification" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
