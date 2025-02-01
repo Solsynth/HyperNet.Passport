@@ -53,7 +53,6 @@ func MapAPIs(app *fiber.App, baseURL string) {
 
 		me := api.Group("/users/me").Name("Myself Operations")
 		{
-
 			me.Get("/avatar", getAvatar)
 			me.Get("/banner", getBanner)
 			me.Put("/avatar", setAvatar)
@@ -72,6 +71,15 @@ func MapAPIs(app *fiber.App, baseURL string) {
 			me.Post("/status", setStatus)
 			me.Put("/status", editStatus)
 			me.Delete("/status", clearStatus)
+
+			contacts := me.Group("/contacts").Name("Contacts")
+			{
+				contacts.Get("/", listContact)
+				contacts.Get("/:contactId", getContact)
+				contacts.Post("/", createContact)
+				contacts.Put("/:contactId", updateContact)
+				contacts.Delete("/:contactId", deleteContact)
+			}
 
 			factors := me.Group("/factors").Name("Factors")
 			{
