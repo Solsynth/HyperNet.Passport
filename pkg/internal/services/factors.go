@@ -118,7 +118,7 @@ func GetFactorCode(factor models.AuthFactor, ip string) (bool, error) {
 			To: user.GetPrimaryEmail().Content,
 			Email: pushkit.EmailData{
 				Subject: subject,
-				Text:    &content,
+				HTML:    &content,
 			},
 		})
 		if err != nil {

@@ -89,7 +89,7 @@ func NotifyMagicToken(token models.MagicToken) error {
 		To: user.GetPrimaryEmail().Content,
 		Email: pushkit.EmailData{
 			Subject: subject,
-			Text:    &content,
+			HTML:    &content,
 		},
 	})
 	return err
