@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":bug: Fix email html rendering">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":sparkles: Register with preferred language">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/accounts_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/accounts_api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/accounts.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/accounts.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/ticket.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/ticket.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,7 +159,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":sparkles: Result modifiers in check-in" />
     <MESSAGE value=":boom: Passing relationship api arguments in body instead of querystring" />
     <MESSAGE value=":sparkles: Better check in experience random algorithm" />
     <MESSAGE value=":sparkles: Better relationships stauts query" />
@@ -185,7 +183,8 @@
     <MESSAGE value=":globe_with_meridians: Fully localized notification" />
     <MESSAGE value=":bug: Bug fixes on localization" />
     <MESSAGE value=":bug: Fix email html rendering" />
-    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix email html rendering" />
+    <MESSAGE value=":sparkles: Register with preferred language" />
+    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: Register with preferred language" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">
