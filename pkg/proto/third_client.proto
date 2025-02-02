@@ -10,8 +10,11 @@ service ThirdClientService {
 
 message ThirdClientInfo {
   uint64 id = 1;
-  string name = 2;
-  string description = 3;
+  string alias = 2;
+  string name = 3;
+  string description = 4;
+  bool is_draft = 5;
+  optional uint64 account_id = 6;
 }
 
 message GetThirdClientRequest {
