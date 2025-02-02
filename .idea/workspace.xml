@@ -4,17 +4,17 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":necktie: Limit max auth steps to 2 for normal users">
+    <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":recycle: Replace i18n services with nexus one">
+      <change afterPath="$PROJECT_DIR$/pkg/internal/grpc/thrid_client.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/proto/third_client.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/gap/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/gap/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/factors.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/factors.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/i18n.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/reports.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/reports.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/ticket.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/ticket.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/tokens.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/tokens.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/proto/notify.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/notify.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/proto/notify_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/notify_grpc.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/proto/realm.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/realm.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/proto/realm_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/realm_grpc.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/proto/record.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/record.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/proto/record_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/record_grpc.pb.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,7 +167,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value=":sparkles: Better check in experience random algorithm" />
     <MESSAGE value=":sparkles: Better relationships stauts query" />
     <MESSAGE value=":truck: Move make friendship api" />
     <MESSAGE value=":boom: Move remove member api arguments from body to querystring just as messaging" />
@@ -192,7 +191,8 @@
     <MESSAGE value=":bug: Fix email html rendering" />
     <MESSAGE value=":sparkles: Register with preferred language" />
     <MESSAGE value=":necktie: Limit max auth steps to 2 for normal users" />
-    <option name="LAST_COMMIT_MESSAGE" value=":necktie: Limit max auth steps to 2 for normal users" />
+    <MESSAGE value=":recycle: Replace i18n services with nexus one" />
+    <option name="LAST_COMMIT_MESSAGE" value=":recycle: Replace i18n services with nexus one" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="VgoProject">

@@ -20,6 +20,7 @@ type App struct {
 	proto.UnimplementedRealmServiceServer
 	proto.UnimplementedAuditServiceServer
 	proto.UnimplementedNotifyServiceServer
+	proto.UnimplementedThirdClientServiceServer
 	health.UnimplementedHealthServer
 
 	srv *grpc.Server
@@ -36,6 +37,7 @@ func NewServer() *App {
 	proto.RegisterNotifyServiceServer(server.srv, server)
 	proto.RegisterRealmServiceServer(server.srv, server)
 	proto.RegisterAuditServiceServer(server.srv, server)
+	proto.RegisterThirdClientServiceServer(server.srv, server)
 	health.RegisterHealthServer(server.srv, server)
 
 	reflection.Register(server.srv)

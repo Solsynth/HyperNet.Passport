@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = ".;proto";
+
+package proto;
+
+service ThirdClientService {
+  rpc GetThirdClient(GetThirdClientRequest) returns (GetThirdClientResponse) {}
+}
+
+message ThirdClientInfo {
+  uint64 id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message GetThirdClientRequest {
+  uint64 client_id = 1;
+  optional string secret = 2;
+}
+
+message GetThirdClientResponse {
+  ThirdClientInfo info = 1;
+}
