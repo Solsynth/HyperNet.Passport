@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"git.solsynth.dev/hypernet/passport/pkg/proto"
@@ -10,9 +11,19 @@ import (
 )
 
 func (v *App) GetThirdClient(ctx context.Context, request *proto.GetThirdClientRequest) (*proto.GetThirdClientResponse, error) {
+	tx := database.C
+	if request.Id == nil && request.Alias == nil {
+		return nil, status.Error(codes.InvalidArgument, "either id or alias must be specified")
+	}
+	if request.Id != nil {
+		tx = tx.Where("id = ?", request.Id)
+	} else if request.Alias != nil {
+		tx = tx.Where("alias = ?", request.Alias)
+	}
+
 	var client models.ThirdClient
-	if err := database.C.Where("id = ?", request.ClientId).First(&client).Error; err != nil {
-		return nil, status.Errorf(codes.NotFound, "requested client with id %d was not found", request.ClientId)
+	if err := tx.First(&client).Error; err != nil {
+		return nil, status.Errorf(codes.NotFound, "requested client was not found")
 	}
 
 	if request.Secret != nil {

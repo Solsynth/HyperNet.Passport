@@ -18,8 +18,9 @@ message ThirdClientInfo {
 }
 
 message GetThirdClientRequest {
-  uint64 client_id = 1;
-  optional string secret = 2;
+  optional uint64 id = 1;
+  optional string alias = 2;
+  optional string secret = 3;
 }
 
 message GetThirdClientResponse {
