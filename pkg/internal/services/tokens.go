@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 	"strings"
 	"time"
 
@@ -62,22 +63,22 @@ func NotifyMagicToken(token models.MagicToken) error {
 	switch token.Type {
 	case models.ConfirmMagicToken:
 		link := fmt.Sprintf("%s/flow/accounts/confirm?code=%s", viper.GetString("frontend_app"), token.Code)
-		subject = fmt.Sprintf("[%s] %s", viper.GetString("name"), GetLocalizedString("subjectConfirmRegistration", user.Language))
-		content = RenderLocalizedTemplateHTML("register-confirm.tmpl", user.Language, map[string]any{
+		subject = fmt.Sprintf("[%s] %s", viper.GetString("name"), localize.L.GetLocalizedString("subjectConfirmRegistration", user.Language))
+		content = localize.L.RenderLocalizedTemplateHTML("register-confirm.tmpl", user.Language, map[string]any{
 			"User": user,
 			"Link": link,
 		})
 	case models.ResetPasswordMagicToken:
 		link := fmt.Sprintf("%s/flow/accounts/password-reset?code=%s", viper.GetString("frontend_app"), token.Code)
-		subject = fmt.Sprintf("[%s] %s", viper.GetString("name"), GetLocalizedString("subjectResetPassword", user.Language))
-		content = RenderLocalizedTemplateHTML("reset-password.tmpl", user.Language, map[string]any{
+		subject = fmt.Sprintf("[%s] %s", viper.GetString("name"), localize.L.GetLocalizedString("subjectResetPassword", user.Language))
+		content = localize.L.RenderLocalizedTemplateHTML("reset-password.tmpl", user.Language, map[string]any{
 			"User": user,
 			"Link": link,
 		})
 	case models.DeleteAccountMagicToken:
 		link := fmt.Sprintf("%s/flow/accounts/deletion?code=%s", viper.GetString("frontend_app"), token.Code)
-		subject = fmt.Sprintf("[%s] %s", viper.GetString("name"), GetLocalizedString("subjectDeleteAccount", user.Language))
-		content = RenderLocalizedTemplateHTML("confirm-deletion.tmpl", user.Language, map[string]any{
+		subject = fmt.Sprintf("[%s] %s", viper.GetString("name"), localize.L.GetLocalizedString("subjectDeleteAccount", user.Language))
+		content = localize.L.RenderLocalizedTemplateHTML("confirm-deletion.tmpl", user.Language, map[string]any{
 			"User": user,
 			"Link": link,
 		})

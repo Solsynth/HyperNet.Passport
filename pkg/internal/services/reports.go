@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 )
@@ -42,8 +43,8 @@ func UpdateAbuseReportStatus(id uint, status, message string) error {
 
 	_ = NewNotification(models.Notification{
 		Topic:     "reports.feedback",
-		Title:     GetLocalizedString("subjectAbuseReportUpdated", account.Language),
-		Body:      fmt.Sprintf(GetLocalizedString("shortBodyAbuseReportUpdated", account.Language), id, status, message),
+		Title:     localize.L.GetLocalizedString("subjectAbuseReportUpdated", account.Language),
+		Body:      fmt.Sprintf(localize.L.GetLocalizedString("shortBodyAbuseReportUpdated", account.Language), id, status, message),
 		Account:   account,
 		AccountID: account.ID,
 	})

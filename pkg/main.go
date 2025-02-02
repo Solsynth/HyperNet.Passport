@@ -72,7 +72,7 @@ func main() {
 	}
 
 	// Load localization
-	if err := services.LoadLocalization(); err != nil {
+	if err := gap.LoadLocalization(); err != nil {
 		log.Fatal().Err(err).Msg("An error occurred when loading localization.")
 	}
 

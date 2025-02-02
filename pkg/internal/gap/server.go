@@ -3,6 +3,7 @@ package gap
 import (
 	"errors"
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 	"strings"
 	"time"
 
@@ -80,4 +81,8 @@ func InitializeToNexus() error {
 	}
 
 	return err
+}
+
+func LoadLocalization() error {
+	return localize.LoadLocalization(viper.GetString("locales_path"), viper.GetString("templates_path"))
 }

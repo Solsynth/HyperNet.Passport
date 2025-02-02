@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 	"strings"
 	"time"
 
@@ -76,8 +77,8 @@ func GetFactorCode(factor models.AuthFactor, ip string) (bool, error) {
 
 		err = PushNotification(models.Notification{
 			Topic:     "passport.security.otp",
-			Title:     GetLocalizedString("subjectLoginOneTimePassword", user.Language),
-			Body:      fmt.Sprintf(GetLocalizedString("shortBodyLoginOneTimePassword", user.Language), secret),
+			Title:     localize.L.GetLocalizedString("subjectLoginOneTimePassword", user.Language),
+			Body:      fmt.Sprintf(localize.L.GetLocalizedString("shortBodyLoginOneTimePassword", user.Language), secret),
 			Account:   user,
 			AccountID: user.ID,
 			Metadata:  map[string]any{"secret": secret},
@@ -105,9 +106,9 @@ func GetFactorCode(factor models.AuthFactor, ip string) (bool, error) {
 			log.Info().Uint("factor", factor.ID).Str("secret", secret).Msg("Published one-time-password to JetStream...")
 		}
 
-		subject := fmt.Sprintf("[%s] %s", viper.GetString("name"), GetLocalizedString("subjectLoginOneTimePassword", user.Language))
+		subject := fmt.Sprintf("[%s] %s", viper.GetString("name"), localize.L.GetLocalizedString("subjectLoginOneTimePassword", user.Language))
 
-		content := RenderLocalizedTemplateHTML("email-otp.tmpl", user.Language, map[string]any{
+		content := localize.L.RenderLocalizedTemplateHTML("email-otp.tmpl", user.Language, map[string]any{
 			"Code": secret,
 			"User": user,
 			"IP":   ip,

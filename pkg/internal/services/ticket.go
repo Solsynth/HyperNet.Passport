@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 	"time"
 
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
@@ -137,8 +138,8 @@ func ActiveTicket(ticket models.AuthTicket) (models.AuthTicket, error) {
 
 		_ = NewNotification(models.Notification{
 			Topic: "passport.security.alert",
-			Title: GetLocalizedString("subjectLoginAlert", account.Language),
-			Body:  fmt.Sprintf(GetLocalizedString("shortBodyLoginAlert", account.Language), ticket.IpAddress),
+			Title: localize.L.GetLocalizedString("subjectLoginAlert", account.Language),
+			Body:  fmt.Sprintf(localize.L.GetLocalizedString("shortBodyLoginAlert", account.Language), ticket.IpAddress),
 			Metadata: datatypes.JSONMap{
 				"ip_address":   ticket.IpAddress,
 				"created_at":   ticket.CreatedAt,
