@@ -99,7 +99,7 @@ func PushNotification(notification models.Notification, skipNotifiableCheck ...b
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	_, err := proto.NewStreamServiceClient(gap.Nx.GetNexusGrpcConn()).PushStream(ctx, &proto.PushStreamRequest{
+	resp, err := proto.NewStreamServiceClient(gap.Nx.GetNexusGrpcConn()).PushStream(ctx, &proto.PushStreamRequest{
 		UserId: lo.ToPtr(uint64(notification.AccountID)),
 		Body: nex.WebSocketPackage{
 			Action:  "notifications.new",
@@ -111,6 +111,9 @@ func PushNotification(notification models.Notification, skipNotifiableCheck ...b
 	}
 
 	// Skip push notification
+	if resp.GetIsAllSuccess() {
+		return nil
+	}
 	if GetStatusDisturbable(notification.AccountID) != nil {
 		return nil
 	}

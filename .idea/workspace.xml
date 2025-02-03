@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":recycle: Replace i18n services with nexus one">
-      <change afterPath="$PROJECT_DIR$/pkg/internal/grpc/thrid_client.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/proto/third_client.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/grpc/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/grpc/server.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/notify.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/notify.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/notify_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/notify_grpc.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/realm.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/realm.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/realm_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/realm_grpc.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/record.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/record.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/proto/record_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/proto/record_grpc.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/services/notifications.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/notifications.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,16 +189,5 @@
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/pkg/internal/services/notifications.go</url>
-          <line>93</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
