@@ -3,12 +3,13 @@ package services
 import (
 	"context"
 	"fmt"
+	"reflect"
+	"time"
+
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
-	"reflect"
-	"time"
 
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
@@ -194,7 +195,7 @@ func PushNotificationBatch(notifications []models.Notification, skipNotifiableCh
 	stream := proto.NewStreamServiceClient(gap.Nx.GetNexusGrpcConn())
 	for _, notification := range notifications {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		_, _ = stream.PushStream(ctx, &proto.PushStreamRequest{
+		resp, err := stream.PushStream(ctx, &proto.PushStreamRequest{
 			UserId: lo.ToPtr(uint64(notification.AccountID)),
 			Body: nex.WebSocketPackage{
 				Action:  "notifications.new",
@@ -202,6 +203,10 @@ func PushNotificationBatch(notifications []models.Notification, skipNotifiableCh
 			}.Marshal(),
 		})
 		cancel()
+
+		if err == nil && resp.GetIsAllSuccess() {
+			continue
+		}
 
 		// Skip push notification
 		if GetStatusDisturbable(notification.AccountID) != nil {
