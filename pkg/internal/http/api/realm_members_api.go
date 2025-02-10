@@ -99,17 +99,10 @@ func removeRealmMember(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	var account models.Account
-	if err := database.C.Where(&models.Account{
-		BaseModel: models.BaseModel{ID: uint(memberId)},
-	}).First(&account).Error; err != nil {
-		return fiber.NewError(fiber.StatusNotFound, err.Error())
-	}
-
 	var member models.RealmMember
 	if err := database.C.Where(&models.RealmMember{
+		BaseModel: models.BaseModel{ID: uint(memberId)},
 		RealmID:   realm.ID,
-		AccountID: account.ID,
 	}).First(&member).Error; err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
