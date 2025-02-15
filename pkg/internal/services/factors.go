@@ -2,9 +2,10 @@ package services
 
 import (
 	"fmt"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 	"strings"
 	"time"
+
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
@@ -75,14 +76,14 @@ func GetFactorCode(factor models.AuthFactor, ip string) (bool, error) {
 			log.Info().Uint("factor", factor.ID).Str("secret", secret).Msg("Published one-time-password to JetStream...")
 		}
 
-		err = PushNotification(models.Notification{
+		err = NewNotification(models.Notification{
 			Topic:     "passport.security.otp",
 			Title:     localize.L.GetLocalizedString("subjectLoginOneTimePassword", user.Language),
 			Body:      fmt.Sprintf(localize.L.GetLocalizedString("shortBodyLoginOneTimePassword", user.Language), secret),
 			Account:   user,
 			AccountID: user.ID,
 			Metadata:  map[string]any{"secret": secret},
-		}, true)
+		})
 		if err != nil {
 			log.Warn().Err(err).Uint("factor", factor.ID).Msg("Failed to delivery one-time-password via notify...")
 			return true, nil
