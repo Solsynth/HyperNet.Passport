@@ -112,6 +112,20 @@ func NewFriend(userA models.Account, userB models.Account, skipPending ...bool) 
 		Status:    models.RelationshipPending,
 	}
 
+	var dupeCount int
+	if rel, err := GetRelationWithTwoNode(userA.ID, userB.ID, true); err == nil {
+		relA = rel
+		dupeCount++
+	}
+	if rel, err := GetRelationWithTwoNode(userB.ID, userA.ID, true); err == nil {
+		relB = rel
+		dupeCount++
+	}
+
+	if dupeCount > 1 {
+		return relA, fmt.Errorf("unable to recreate a relationship with that user")
+	}
+
 	if len(skipPending) > 0 && skipPending[0] {
 		relA.Status = models.RelationshipFriend
 		relB.Status = models.RelationshipFriend
