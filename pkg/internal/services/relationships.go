@@ -1,8 +1,8 @@
 package services
 
 import (
-	"errors"
 	"fmt"
+
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
@@ -112,6 +112,10 @@ func NewFriend(userA models.Account, userB models.Account, skipPending ...bool) 
 		Status:    models.RelationshipPending,
 	}
 
+	if userA.ID == userB.ID {
+		return relA, fmt.Errorf("unable to make relationship with yourself")
+	}
+
 	var dupeCount int
 	if rel, err := GetRelationWithTwoNode(userA.ID, userB.ID, true); err == nil {
 		relA = rel
@@ -129,12 +133,6 @@ func NewFriend(userA models.Account, userB models.Account, skipPending ...bool) 
 	if len(skipPending) > 0 && skipPending[0] {
 		relA.Status = models.RelationshipFriend
 		relB.Status = models.RelationshipFriend
-	}
-
-	if userA.ID == userB.ID {
-		return relA, fmt.Errorf("unable to make relationship with yourself")
-	} else if _, err := GetRelationWithTwoNode(userA.ID, userB.ID, true); err == nil || !errors.Is(err, gorm.ErrRecordNotFound) {
-		return relA, fmt.Errorf("unable to recreate a relationship with that user")
 	}
 
 	if err := database.C.Save(&relA).Error; err != nil {
