@@ -133,6 +133,9 @@ func PushNotification(notification models.Notification, skipNotifiableCheck ...b
 	log.Debug().Str("topic", notification.Topic).Any("uid", notification.AccountID).Msg("Pushing notify to user...")
 
 	err = gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
+		Lang: lo.Map(subscribers, func(item models.NotificationSubscriber, index int) string {
+			return notification.Account.Language
+		}),
 		Providers:    providers,
 		Tokens:       tokens,
 		Notification: notification.EncodeToPushkit(),
@@ -213,6 +216,14 @@ func PushNotificationBatch(notifications []models.Notification, skipNotifiableCh
 	}
 
 	if err := gap.Px.PushNotifyBatch(pushkit.NotificationPushBatchRequest{
+		Lang: lo.Map(subscribers, func(item models.NotificationSubscriber, index int) string {
+			for idx := 0; idx < len(notifications); idx++ {
+				if item.AccountID == notifications[idx].AccountID {
+					return notifications[idx].Account.Language
+				}
+			}
+			return "en-US"
+		}),
 		Providers:    providers,
 		Tokens:       tokens,
 		Notification: notifications[0].EncodeToPushkit(),

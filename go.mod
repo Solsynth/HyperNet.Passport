@@ -4,7 +4,7 @@ go 1.23.2
 
 require (
 	git.solsynth.dev/hypernet/nexus v0.0.0-20250216103838-15c39609b897
-	git.solsynth.dev/hypernet/pusher v0.0.0-20241228030233-50ff8304e465
+	git.solsynth.dev/hypernet/pusher v0.0.0-20250216145944-5fb769823a88
 	git.solsynth.dev/hypernet/wallet v0.0.0-20250129150034-87b94cdb5488
 	github.com/dgraph-io/ristretto v0.2.0
 	github.com/eko/gocache/lib/v4 v4.1.6

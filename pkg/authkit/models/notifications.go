@@ -1,9 +1,10 @@
 package models
 
 import (
+	"time"
+
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
 	"gorm.io/datatypes"
-	"time"
 )
 
 type Notification struct {
