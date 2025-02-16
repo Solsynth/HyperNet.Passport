@@ -3,11 +3,12 @@ package services
 import (
 	"errors"
 	"fmt"
+	"strconv"
+
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"github.com/samber/lo"
 	"gorm.io/gorm"
-	"strconv"
 )
 
 func ListCommunityRealm() ([]models.Realm, error) {
@@ -162,5 +163,14 @@ func EditRealm(realm models.Realm) (models.Realm, error) {
 }
 
 func DeleteRealm(realm models.Realm) error {
-	return database.C.Delete(&realm).Error
+	tx := database.C.Begin()
+	if err := tx.Where("realm_id = ?", realm.ID).Delete(&models.RealmMember{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	if err := tx.Delete(&realm).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
 }
