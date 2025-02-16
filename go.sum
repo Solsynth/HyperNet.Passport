@@ -37,6 +37,8 @@ git.solsynth.dev/hypernet/nexus v0.0.0-20241123050605-25ab1371739b h1:8yB9kMwEMY
 git.solsynth.dev/hypernet/nexus v0.0.0-20241123050605-25ab1371739b/go.mod h1:PhLCv2lsNoscPVJbkWnxwQnJ141lc4RIEkVffrHwl4s=
 git.solsynth.dev/hypernet/nexus v0.0.0-20250202054714-6de240179f9c h1:z0//UGRwyZq1TIvn5/fGK5GCXr837KLFD3K0AkaKDyY=
 git.solsynth.dev/hypernet/nexus v0.0.0-20250202054714-6de240179f9c/go.mod h1:v+rpf1ZDRi8moaThTAkj5DMQU+rw96YTHcN8/7n/p2Y=
+git.solsynth.dev/hypernet/nexus v0.0.0-20250216103838-15c39609b897 h1:AmLZ/r70e2E06Bq1kdOFirH+Izv5w1vpmeQ+rJrfdTg=
+git.solsynth.dev/hypernet/nexus v0.0.0-20250216103838-15c39609b897/go.mod h1:v+rpf1ZDRi8moaThTAkj5DMQU+rw96YTHcN8/7n/p2Y=
 git.solsynth.dev/hypernet/pusher v0.0.0-20241228030233-50ff8304e465 h1:KFtv9lF0JMUGsq1uHwQvop8PTyqdiLuUQuRrd5WmzPk=
 git.solsynth.dev/hypernet/pusher v0.0.0-20241228030233-50ff8304e465/go.mod h1:XHTqFU/vBe4JiuAjl87GUcL8+w/IizSNoqH6n3WkQFc=
 git.solsynth.dev/hypernet/wallet v0.0.0-20250129150034-87b94cdb5488 h1:/9Ol+PfDQFAYtHo0kk6sxqiEsZ6epb6yUEsZJxy14Mk=

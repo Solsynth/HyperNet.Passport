@@ -66,6 +66,7 @@ func (v Account) EncodeToUserInfo() *proto.UserInfo {
 	return &proto.UserInfo{
 		Id:        uint64(v.ID),
 		Name:      v.Name,
+		Language:  v.Language,
 		PermNodes: nex.EncodeMap(v.PermNodes),
 		Metadata:  nex.EncodeMap(v),
 	}
