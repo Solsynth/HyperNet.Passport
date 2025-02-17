@@ -52,7 +52,7 @@ func getUserInBatch(c *fiber.Ctx) error {
 		Preload("Badges", func(db *gorm.DB) *gorm.DB {
 			return db.Order("badges.type DESC")
 		}).
-		First(&accounts).Error; err != nil {
+		Find(&accounts).Error; err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
