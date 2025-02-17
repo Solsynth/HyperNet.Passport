@@ -23,9 +23,11 @@ import (
 func getUserInBatch(c *fiber.Ctx) error {
 	id := c.Query("id")
 	list := strings.Split(id, ",")
+	var nameList []string
 	numericList := lo.Filter(lo.Map(list, func(str string, i int) int {
 		value, err := strconv.Atoi(str)
 		if err != nil {
+			nameList = append(nameList, str)
 			return 0
 		}
 		return value
@@ -33,9 +35,16 @@ func getUserInBatch(c *fiber.Ctx) error {
 		return vak > 0
 	})
 
+	tx := database.C
+	if len(numericList) > 0 {
+		tx = tx.Where("id IN ?", numericList)
+	}
+	if len(nameList) > 0 {
+		tx = tx.Or("name IN ?", nameList)
+	}
+
 	var accounts []models.Account
-	if err := database.C.
-		Where("id IN ?", numericList).
+	if err := tx.
 		Preload("Profile").
 		Preload("Badges", func(db *gorm.DB) *gorm.DB {
 			return db.Order("badges.type DESC")
