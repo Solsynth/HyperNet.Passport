@@ -48,6 +48,7 @@ func MapAPIs(app *fiber.App, baseURL string) {
 			}
 		}
 
+		api.Get("/users", getUserInBatch)
 		api.Get("/users/lookup", lookupAccount)
 		api.Get("/users/search", searchAccount)
 

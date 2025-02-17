@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
+	"gorm.io/gorm"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/http/exts"
 
@@ -15,8 +16,36 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/samber/lo"
 	"github.com/spf13/viper"
 )
+
+func getUserInBatch(c *fiber.Ctx) error {
+	id := c.Query("id")
+	list := strings.Split(id, ",")
+	numericList := lo.Filter(lo.Map(list, func(str string, i int) int {
+		value, err := strconv.Atoi(str)
+		if err != nil {
+			return 0
+		}
+		return value
+	}), func(vak int, idx int) bool {
+		return vak > 0
+	})
+
+	var accounts []models.Account
+	if err := database.C.
+		Where("id IN ?", numericList).
+		Preload("Profile").
+		Preload("Badges", func(db *gorm.DB) *gorm.DB {
+			return db.Order("badges.type DESC")
+		}).
+		First(&accounts).Error; err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(accounts)
+}
 
 func lookupAccount(c *fiber.Ctx) error {
 	probe := c.Query("probe")
