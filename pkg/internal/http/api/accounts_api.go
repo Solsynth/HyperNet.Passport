@@ -42,6 +42,9 @@ func getUserInBatch(c *fiber.Ctx) error {
 	if len(nameList) > 0 {
 		tx = tx.Or("name IN ?", nameList)
 	}
+	if len(nameList) == 0 && len(numericList) == 0 {
+		return c.JSON([]models.Account{})
+	}
 
 	var accounts []models.Account
 	if err := tx.
