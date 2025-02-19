@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3fefb2c4-b6f9-466b-a523-53352e8d6f95" name="更改" comment=":necktie: No longer return error when trying add a member who already in the realm">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/internal/services/relationships.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/services/relationships.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/internal/http/api/realm_members_api.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/internal/http/api/realm_members_api.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

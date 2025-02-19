@@ -136,7 +136,7 @@ func leaveRealm(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
-	if err := services.RemoveRealmMember(user, member, realm); err != nil {
+	if err := database.C.Delete(&member).Error; err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
 		return c.SendStatus(fiber.StatusOK)
