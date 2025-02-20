@@ -120,7 +120,7 @@ func AddRealmMember(user models.Account, affected models.Account, target models.
 		return nil
 	}
 
-	if !target.IsPublic && !target.IsCommunity {
+	if !target.IsCommunity {
 		if member, err := GetRealmMember(user.ID, target.ID); err != nil {
 			return fmt.Errorf("only realm member can add people: %v", err)
 		} else if member.PowerLevel < 50 {
