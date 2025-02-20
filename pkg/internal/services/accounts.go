@@ -329,6 +329,10 @@ func ConfirmResetPassword(code, newPassword string) error {
 func DeleteAccount(id uint) error {
 	tx := database.C.Begin()
 
+	if err := tx.Delete(&models.AuthTicket{}, "account_id = ?", id).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
 	if err := tx.Select(clause.Associations).Delete(&models.Account{}, "id = ?", id).Error; err != nil {
 		tx.Rollback()
 		return err
