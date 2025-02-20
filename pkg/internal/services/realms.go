@@ -15,7 +15,7 @@ func ListCommunityRealm() ([]models.Realm, error) {
 	var realms []models.Realm
 	if err := database.C.Where(&models.Realm{
 		IsCommunity: true,
-	}).Find(&realms).Error; err != nil {
+	}).Order("popularity DESC").Find(&realms).Error; err != nil {
 		return realms, err
 	}
 

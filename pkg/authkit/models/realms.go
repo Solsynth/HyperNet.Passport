@@ -15,6 +15,7 @@ type Realm struct {
 	Members      []RealmMember     `json:"members"`
 	Avatar       *string           `json:"avatar"`
 	Banner       *string           `json:"banner"`
+	Popularity   int               `json:"popularity"`
 	AccessPolicy datatypes.JSONMap `json:"access_policy"`
 	IsPublic     bool              `json:"is_public"`
 	IsCommunity  bool              `json:"is_community"`
