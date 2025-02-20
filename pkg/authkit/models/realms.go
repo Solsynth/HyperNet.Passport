@@ -6,6 +6,12 @@ import (
 	"gorm.io/datatypes"
 )
 
+const (
+	RealmPopularityMemberFactor = 5
+	RealmPopularityPostFactor   = 10
+	RealmPopularityChatFactor   = 2
+)
+
 type Realm struct {
 	BaseModel
 

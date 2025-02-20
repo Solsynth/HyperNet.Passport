@@ -141,7 +141,14 @@ func AddRealmMember(user models.Account, affected models.Account, target models.
 		RealmID:   target.ID,
 		AccountID: affected.ID,
 	}
+
 	err := database.C.Save(&member).Error
+	if err == nil {
+		database.C.Model(&models.Realm{}).
+			Where("id = ?", target.ID).
+			Update("popularity", gorm.Expr("popularity + ?", models.RealmPopularityMemberFactor))
+	}
+
 	return err
 }
 
@@ -154,7 +161,15 @@ func RemoveRealmMember(user models.Account, affected models.RealmMember, target 
 		}
 	}
 
-	return database.C.Delete(&affected).Error
+	if err := database.C.Delete(&affected).Error; err != nil {
+		return err
+	}
+
+	database.C.Model(&models.Realm{}).
+		Where("id = ?", target.ID).
+		Update("popularity", gorm.Expr("popularity - ?", models.RealmPopularityMemberFactor))
+
+	return nil
 }
 
 func EditRealm(realm models.Realm) (models.Realm, error) {
