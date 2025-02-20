@@ -205,6 +205,9 @@ func doRegister(c *fiber.Ctx) error {
 		data.Nick = strings.TrimSpace(data.Nick)
 		data.Email = strings.TrimSpace(data.Email)
 	}
+	if _, err := strconv.Atoi(data.Name); err == nil {
+		return fiber.NewError(fiber.StatusBadRequest, "invalid account name, cannot be pure number")
+	}
 	if !services.ValidateAccountName(data.Nick, 4, 24) {
 		return fiber.NewError(fiber.StatusBadRequest, "invalid account nick, length requires 4 to 24")
 	}
