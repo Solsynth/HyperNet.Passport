@@ -34,12 +34,11 @@ func AddNotifySubscriber(user models.Account, provider, id, tk, ua string) (mode
 			AccountID:   user.ID,
 		}
 	} else {
-		prev = subscriber
+		subscriber = prev
+		subscriber.UserAgent = ua
+		subscriber.Provider = provider
+		subscriber.DeviceToken = tk
 	}
-
-	subscriber.UserAgent = ua
-	subscriber.Provider = provider
-	subscriber.DeviceToken = tk
 
 	var err error
 	if !reflect.DeepEqual(subscriber, prev) {
