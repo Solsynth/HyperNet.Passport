@@ -151,8 +151,8 @@ func MapAPIs(app *fiber.App, baseURL string) {
 			realms.Put("/:realmId", editRealm)
 			realms.Delete("/:realmId", deleteRealm)
 			realms.Post("/:realm/members", addRealmMember)
-			realms.Delete("/:realm/members/:memberId", removeRealmMember)
 			realms.Delete("/:realm/members/me", leaveRealm)
+			realms.Delete("/:realm/members/:memberId", removeRealmMember)
 		}
 
 		developers := api.Group("/dev").Name("Developers API")
