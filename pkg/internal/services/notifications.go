@@ -25,7 +25,7 @@ func AddNotifySubscriber(user models.Account, provider, id, tk, ua string) (mode
 	if err := database.C.Where(&models.NotificationSubscriber{
 		DeviceID:  id,
 		AccountID: user.ID,
-	}); err != nil {
+	}).First(&prev).Error; err != nil {
 		subscriber = models.NotificationSubscriber{
 			UserAgent:   ua,
 			Provider:    provider,
