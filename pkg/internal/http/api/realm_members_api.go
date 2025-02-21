@@ -7,6 +7,7 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"github.com/gofiber/fiber/v2"
 	"strconv"
+	"strings"
 )
 
 func listRealmMembers(c *fiber.Ctx) error {
@@ -92,7 +93,7 @@ func removeRealmMember(c *fiber.Ctx) error {
 	}
 	user := c.Locals("user").(models.Account)
 	alias := c.Params("realm")
-	memberId, _ := c.ParamsInt("memberId", 0)
+	memberId := c.Params("memberId")
 
 	realm, err := services.GetRealmWithAlias(alias)
 	if err != nil {
@@ -100,11 +101,25 @@ func removeRealmMember(c *fiber.Ctx) error {
 	}
 
 	var member models.RealmMember
-	if err := database.C.Where(&models.RealmMember{
-		BaseModel: models.BaseModel{ID: uint(memberId)},
-		RealmID:   realm.ID,
-	}).First(&member).Error; err != nil {
-		return fiber.NewError(fiber.StatusNotFound, err.Error())
+	if strings.EqualFold(memberId, "me") {
+		if err := database.C.Where(&models.RealmMember{
+			BaseModel: models.BaseModel{ID: user.ID},
+			RealmID:   realm.ID,
+		}).First(&member).Error; err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
+	} else {
+		numericId, err := strconv.Atoi(memberId)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, "invalid member id")
+		}
+
+		if err := database.C.Where(&models.RealmMember{
+			BaseModel: models.BaseModel{ID: uint(numericId)},
+			RealmID:   realm.ID,
+		}).First(&member).Error; err != nil {
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
+		}
 	}
 
 	if err := services.RemoveRealmMember(user, member, realm); err != nil {
