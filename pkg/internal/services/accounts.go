@@ -342,11 +342,12 @@ func DeleteAccount(id uint) error {
 		return err
 	} else {
 		InvalidAuthCacheWithUser(id)
-		_, _ = proto.NewDirectoryServiceClient(gap.Nx.GetNexusGrpcConn()).BroadcastEvent(context.Background(), &proto.EventInfo{
+		conn := gap.Nx.GetNexusGrpcConn()
+		_, _ = proto.NewDirectoryServiceClient(conn).BroadcastEvent(context.Background(), &proto.EventInfo{
 			Event: "deletion",
 			Data: nex.EncodeMap(map[string]any{
 				"type": "account",
-				"id":   fmt.Sprintf("%d", id),
+				"id":   id,
 			}),
 		})
 	}

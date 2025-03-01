@@ -2,18 +2,19 @@ package main
 
 import (
 	"fmt"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
-	"github.com/fatih/color"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
+	"github.com/fatih/color"
 
 	pkg "git.solsynth.dev/hypernet/passport/pkg/internal"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/grpc"
-	"git.solsynth.dev/hypernet/passport/pkg/internal/http"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/web"
 	"github.com/robfig/cron/v3"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/cache"
@@ -55,7 +56,7 @@ func main() {
 	if reader, err := sec.NewInternalTokenReader(viper.GetString("security.internal_public_key")); err != nil {
 		log.Error().Err(err).Msg("An error occurred when reading internal public key for jwt. Authentication related features will be disabled.")
 	} else {
-		http.IReader = reader
+		web.IReader = reader
 		log.Info().Msg("Internal jwt public key loaded.")
 	}
 	if reader, err := sec.NewJwtReader(viper.GetString("security.public_key")); err != nil {
@@ -89,7 +90,7 @@ func main() {
 	}
 
 	// App
-	go http.NewServer().Listen()
+	go web.NewServer().Listen()
 
 	// Grpc App
 	go grpc.NewServer().Listen()
