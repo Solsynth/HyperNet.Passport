@@ -17,6 +17,7 @@ type App struct {
 	nroto.UnimplementedAuthServiceServer
 	nroto.UnimplementedDirectoryServiceServer
 	nroto.UnimplementedUserServiceServer
+	nroto.UnimplementedStreamServiceServer
 	proto.UnimplementedRealmServiceServer
 	proto.UnimplementedAuditServiceServer
 	proto.UnimplementedNotifyServiceServer
@@ -34,6 +35,7 @@ func NewServer() *App {
 	nroto.RegisterAuthServiceServer(server.srv, server)
 	nroto.RegisterUserServiceServer(server.srv, server)
 	nroto.RegisterDirectoryServiceServer(server.srv, server)
+	nroto.RegisterStreamServiceServer(server.srv, server)
 	proto.RegisterNotifyServiceServer(server.srv, server)
 	proto.RegisterRealmServiceServer(server.srv, server)
 	proto.RegisterAuditServiceServer(server.srv, server)

@@ -30,3 +30,7 @@ func GetRedirectUri(c *fiber.Ctx, fallback ...string) *string {
 		return nil
 	}
 }
+
+func ValidateStruct(in any) error {
+	return validation.Struct(in)
+}
