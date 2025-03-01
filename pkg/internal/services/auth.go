@@ -3,9 +3,10 @@ package services
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
-	"time"
 
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/marshaler"
@@ -48,7 +49,11 @@ func GetAuthContext(sessionId uint) (models.AuthTicket, error) {
 		ctx = *val.(*models.AuthTicket)
 	} else {
 		ctx, err = CacheAuthContext(sessionId)
-		log.Debug().Uint("session", sessionId).Msg("Created a new auth context cache")
+		if err != nil {
+			log.Error().Err(err).Msg("Unable to cache auth context")
+		} else {
+			log.Debug().Uint("session", sessionId).Msg("Created a new auth context cache")
+		}
 	}
 
 	return ctx, err
@@ -97,7 +102,7 @@ func CacheAuthContext(sessionId uint) (models.AuthTicket, error) {
 		store.WithTags([]string{"auth-context", fmt.Sprintf("user#%d", user.ID)}),
 	)
 
-	return ticket, nil
+	return ticket, err
 }
 
 func InvalidAuthCacheWithUser(userId uint) {
