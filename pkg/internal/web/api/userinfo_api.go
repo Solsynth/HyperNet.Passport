@@ -44,7 +44,7 @@ func getOtherUserinfo(c *fiber.Ctx) error {
 	if err := tx.
 		Preload("Profile").
 		Preload("Badges", func(db *gorm.DB) *gorm.DB {
-			return db.Order("badges.type DESC")
+			return db.Order("badges.is_active DESC, badges.type DESC")
 		}).
 		First(&account).Error; err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())

@@ -18,11 +18,11 @@ func ActiveBadge(badge models.Badge) error {
 	accountId := badge.AccountID
 	tx := database.C.Begin()
 
-	if err := tx.Model(&badge).Where("account_id = ?", accountId).Update("is_active", false).Error; err != nil {
+	if err := tx.Model(&models.Badge{}).Where("account_id = ?", accountId).Update("is_active", false).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	if err := tx.Model(&badge).Where("id = ?", badge.ID).Update("is_active", true).Error; err != nil {
+	if err := tx.Model(&models.Badge{}).Where("id = ?", badge.ID).Update("is_active", true).Error; err != nil {
 		tx.Rollback()
 		return err
 	}

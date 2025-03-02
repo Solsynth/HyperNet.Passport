@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	"fmt"
+
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
@@ -46,7 +47,7 @@ func (v *App) GetUser(ctx context.Context, request *proto.GetUserRequest) (*prot
 		if err := tx.
 			Preload("Profile").
 			Preload("Badges", func(db *gorm.DB) *gorm.DB {
-				return db.Order("badges.type DESC")
+				return db.Order("badges.is_active DESC, badges.type DESC")
 			}).
 			First(&account).Error; err != nil {
 			return nil, status.Errorf(codes.NotFound, fmt.Sprintf("requested user with id %d was not found", request.GetUserId()))

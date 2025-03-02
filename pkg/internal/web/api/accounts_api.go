@@ -50,7 +50,7 @@ func getUserInBatch(c *fiber.Ctx) error {
 	if err := tx.
 		Preload("Profile").
 		Preload("Badges", func(db *gorm.DB) *gorm.DB {
-			return db.Order("badges.type DESC")
+			return db.Order("badges.is_active DESC, badges.type DESC")
 		}).
 		Find(&accounts).Error; err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
@@ -148,7 +148,7 @@ func updateUserinfo(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	var links = make(map[string]any)
+	links := make(map[string]any)
 	for k, v := range data.Links {
 		links[k] = v
 	}
