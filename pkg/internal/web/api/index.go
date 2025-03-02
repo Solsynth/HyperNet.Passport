@@ -37,6 +37,11 @@ func MapControllers(app *fiber.App, baseURL string) {
 			preferences.Put("/notifications", updateNotificationPreference)
 		}
 
+		badges := api.Group("/badges").Name("Badges")
+		{
+			badges.Post("/:badgeId/active", activeUserBadge)
+		}
+
 		reports := api.Group("/reports").Name("Reports API")
 		{
 			abuse := reports.Group("/abuse").Name("Abuse Reports")
