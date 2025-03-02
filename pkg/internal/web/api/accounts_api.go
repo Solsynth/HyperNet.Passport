@@ -119,11 +119,16 @@ func updateUserinfo(c *fiber.Ctx) error {
 	user := c.Locals("user").(models.Account)
 
 	var data struct {
-		Nick        string    `json:"nick" validate:"required"`
-		Description string    `json:"description"`
-		FirstName   string    `json:"first_name"`
-		LastName    string    `json:"last_name"`
-		Birthday    time.Time `json:"birthday"`
+		Nick        string            `json:"nick" validate:"required"`
+		Description string            `json:"description"`
+		FirstName   string            `json:"first_name"`
+		LastName    string            `json:"last_name"`
+		Location    string            `json:"location"`
+		TimeZone    string            `json:"time_zone"`
+		Gender      string            `json:"gender"`
+		Pronouns    string            `json:"pronouns"`
+		Links       map[string]string `json:"links"`
+		Birthday    time.Time         `json:"birthday"`
 	}
 
 	if err := exts.BindAndValidate(c, &data); err != nil {
@@ -143,8 +148,18 @@ func updateUserinfo(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
+	var links = make(map[string]any)
+	for k, v := range data.Links {
+		links[k] = v
+	}
+
 	account.Nick = data.Nick
-	account.Description = data.Description
+	account.Profile.Gender = data.Gender
+	account.Profile.Pronouns = data.Pronouns
+	account.Profile.Location = data.Location
+	account.Profile.TimeZone = data.TimeZone
+	account.Profile.Links = links
+	account.Profile.Description = data.Description
 	account.Profile.FirstName = data.FirstName
 	account.Profile.LastName = data.LastName
 	account.Profile.Birthday = &data.Birthday

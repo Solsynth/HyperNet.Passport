@@ -17,7 +17,6 @@ type Account struct {
 
 	Name        string            `json:"name" gorm:"uniqueIndex"`
 	Nick        string            `json:"nick"`
-	Description string            `json:"description"`
 	Avatar      *string           `json:"avatar"`
 	Banner      *string           `json:"banner"`
 	ConfirmedAt *time.Time        `json:"confirmed_at"`
@@ -39,6 +38,9 @@ type Account struct {
 	Factors []AuthFactor `json:"factors,omitempty"`
 
 	Relations []AccountRelationship `json:"relations,omitempty" gorm:"foreignKey:AccountID"`
+
+	// Keep this for backward compability
+	Description string `json:"description" gorm:"-"`
 }
 
 func (v Account) GetAvatar() *string {
