@@ -8,6 +8,20 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func listUserBadge(c *fiber.Ctx) error {
+	if err := sec.EnsureAuthenticated(c); err != nil {
+		return err
+	}
+	user := c.Locals("user").(models.Account)
+
+	var badges []models.Badge
+	if err := database.C.Where("account_id = ?", user.ID).Find(&badges).Error; err != nil {
+		return err
+	}
+
+	return c.JSON(badges)
+}
+
 func activeUserBadge(c *fiber.Ctx) error {
 	if err := sec.EnsureAuthenticated(c); err != nil {
 		return err

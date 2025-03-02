@@ -39,6 +39,7 @@ func MapControllers(app *fiber.App, baseURL string) {
 
 		badges := api.Group("/badges").Name("Badges")
 		{
+			badges.Get("/me", listUserBadge)
 			badges.Post("/:badgeId/active", activeUserBadge)
 		}
 
@@ -78,6 +79,9 @@ func MapControllers(app *fiber.App, baseURL string) {
 			me.Post("/status", setStatus)
 			me.Put("/status", editStatus)
 			me.Delete("/status", clearStatus)
+
+			me.Get("/pages", getOwnAccountPage)
+			me.Put("/pages", updateAccountPage)
 
 			contacts := me.Group("/contacts").Name("Contacts")
 			{
@@ -122,6 +126,7 @@ func MapControllers(app *fiber.App, baseURL string) {
 		{
 			directory.Get("/", getOtherUserinfo)
 			directory.Get("/status", getStatus)
+			directory.Get("/pages", getAccountPage)
 
 			directory.Get("/check-in", listOtherUserCheckInRecord)
 		}
