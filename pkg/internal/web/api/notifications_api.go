@@ -12,7 +12,7 @@ import (
 	"github.com/samber/lo"
 )
 
-func getNotifications(c *fiber.Ctx) error {
+func listNotification(c *fiber.Ctx) error {
 	take := c.QueryInt("take", 0)
 	offset := c.QueryInt("offset", 0)
 
