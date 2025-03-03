@@ -48,7 +48,7 @@ func (v *App) PushStream(_ context.Context, request *proto.PushStreamRequest) (*
 		var data struct {
 			UserID    uint   `json:"user_id" validate:"required"`
 			KeypairID string `json:"keypair_id" validate:"required"`
-			ClientID  string `json:"-" validate:"required"`
+			ClientID  string `json:"client_id" validate:"required"`
 		}
 
 		err := jsoniter.Unmarshal(in.RawPayload(), &data)
@@ -80,7 +80,7 @@ func (v *App) PushStream(_ context.Context, request *proto.PushStreamRequest) (*
 			KeypairID  string `json:"keypair_id" validate:"required"`
 			PublicKey  string `json:"public_key"`
 			PrivateKey string `json:"private_key"`
-			ClientID   string `json:"-" validate:"required"`
+			ClientID   string `json:"client_id" validate:"required"`
 		}
 
 		err := jsoniter.Unmarshal(in.RawPayload(), &data)
