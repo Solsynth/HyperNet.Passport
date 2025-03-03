@@ -69,10 +69,12 @@ func (v *App) PushStream(_ context.Context, request *proto.PushStreamRequest) (*
 			break
 		}
 
+		raw, _ := jsoniter.Marshal(data)
+
 		// Forward ask request
 		sc.PushStream(context.Background(), &proto.PushStreamRequest{
 			UserId: lo.ToPtr(uint64(data.UserID)),
-			Body:   request.GetBody(),
+			Body:   raw,
 		})
 	case "kex.ack":
 		var data struct {
@@ -111,10 +113,12 @@ func (v *App) PushStream(_ context.Context, request *proto.PushStreamRequest) (*
 			break
 		}
 
+		raw, _ := jsoniter.Marshal(data)
+
 		// Forward ack request
 		sc.PushStream(context.Background(), &proto.PushStreamRequest{
 			ClientId: request.ClientId,
-			Body:     request.GetBody(),
+			Body:     raw,
 		})
 	}
 
