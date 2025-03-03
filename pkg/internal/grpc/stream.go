@@ -69,12 +69,13 @@ func (v *App) PushStream(_ context.Context, request *proto.PushStreamRequest) (*
 			break
 		}
 
-		raw, _ := jsoniter.Marshal(data)
-
 		// Forward ask request
 		sc.PushStream(context.Background(), &proto.PushStreamRequest{
 			UserId: lo.ToPtr(uint64(data.UserID)),
-			Body:   raw,
+			Body: nex.WebSocketPackage{
+				Action:  "kex.ask",
+				Payload: data,
+			}.Marshal(),
 		})
 	case "kex.ack":
 		var data struct {
@@ -113,12 +114,13 @@ func (v *App) PushStream(_ context.Context, request *proto.PushStreamRequest) (*
 			break
 		}
 
-		raw, _ := jsoniter.Marshal(data)
-
 		// Forward ack request
 		sc.PushStream(context.Background(), &proto.PushStreamRequest{
 			ClientId: request.ClientId,
-			Body:     raw,
+			Body: nex.WebSocketPackage{
+				Action:  "kex.ack",
+				Payload: data,
+			}.Marshal(),
 		})
 	}
 
