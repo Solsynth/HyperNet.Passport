@@ -113,7 +113,7 @@ func (v *App) PushStream(_ context.Context, request *proto.PushStreamRequest) (*
 
 		// Forward ack request
 		sc.PushStream(context.Background(), &proto.PushStreamRequest{
-			ClientId: request.ClientId,
+			ClientId: &data.ClientID,
 			Body: nex.WebSocketPackage{
 				Action:  "kex.ack",
 				Payload: data,
