@@ -87,9 +87,6 @@ func (v *App) PushStream(_ context.Context, request *proto.PushStreamRequest) (*
 		}
 
 		err := jsoniter.Unmarshal(in.RawPayload(), &data)
-		if request.ClientId != nil {
-			data.ClientID = *request.ClientId
-		}
 		if err == nil {
 			err = exts.ValidateStruct(data)
 		}
