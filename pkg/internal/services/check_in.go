@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"math/rand"
 	"time"
 
@@ -17,10 +18,8 @@ import (
 )
 
 func CheckCanCheckIn(user models.Account) error {
-	probe := time.Now().Format("2006-01-02")
-
 	var record models.CheckInRecord
-	if err := database.C.Where("account_id = ? AND created_at::date = ?", user.ID, probe).First(&record).Error; err != nil {
+	if err := database.C.Where("account_id = ? AND created_at::date = CURRENT_DATE", user.ID).First(&record).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil
 		}
@@ -29,11 +28,27 @@ func CheckCanCheckIn(user models.Account) error {
 	return fmt.Errorf("today's check in record exists")
 }
 
-func GetTodayCheckIn(user models.Account) (models.CheckInRecord, error) {
-	probe := time.Now().Format("2006-01-02")
+func GetCheckInStreak(user models.Account) (int64, error) {
+	var streaks int64
+	if err := database.C.Raw(`WITH dates AS (
+			SELECT DISTINCT created_at::DATE AS created_date
+			FROM check_in_records
+			WHERE created_at::DATE <= CURRENT_DATE
+		),
+		streak AS (
+			SELECT created_date,
+				   created_date - INTERVAL '1 day' * ROW_NUMBER() OVER (ORDER BY created_date) AS grp
+			FROM dates
+		)
+		SELECT COUNT(*) FROM streak WHERE grp = (SELECT MIN(grp) FROM streak);`).Scan(&streaks).Error; err != nil {
+		return streaks, err
+	}
+	return streaks, nil
+}
 
+func GetTodayCheckIn(user models.Account) (models.CheckInRecord, error) {
 	var record models.CheckInRecord
-	if err := database.C.Where("account_id = ? AND created_at::date = ?", user.ID, probe).First(&record).Error; err != nil {
+	if err := database.C.Where("account_id = ? AND created_at::date = CURRENT_DATE", user.ID).First(&record).Error; err != nil {
 		return record, fmt.Errorf("unable get check in record: %v", err)
 	}
 	return record, nil
@@ -48,19 +63,20 @@ func CheckIn(user models.Account) (models.CheckInRecord, error) {
 	}
 
 	tier := rand.Intn(5)
+	streak, _ := GetCheckInStreak(user)
 
-	expMax := 100 * (tier + 1)
 	expMin := 100
-	exp := rand.Intn(expMax+1-expMin) + expMin
+	exp := expMin + int(math.Max(float64(streak)*50, 10*50))
 
 	coinMax := 10.0 * float64(tier+1)
 	coinMin := 10.0
-	rawCoins := coinMax + rand.Float64()*(coinMax-coinMin)
+	rawCoins := coinMax + rand.Float64()*(coinMax-coinMin) + math.Max(float64(streak)*10, float64(100*10))
 
 	record = models.CheckInRecord{
 		ResultTier:       tier,
 		ResultExperience: exp,
 		ResultCoin:       float64(int(rawCoins*100)) / 100,
+		CurrentStreak:    int(streak),
 		AccountID:        user.ID,
 	}
 

@@ -8,6 +8,7 @@ type CheckInRecord struct {
 	ResultTier       int     `json:"result_tier"`
 	ResultExperience int     `json:"result_experience"`
 	ResultCoin       float64 `json:"result_coin"`
+	CurrentStreak    int     `json:"current_streak"`
 
 	// The result modifiers are some random tips that will show up in the client;
 	// This field is to use to make sure the tips will be the same when the client is reloaded.
