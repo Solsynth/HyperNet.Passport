@@ -33,14 +33,14 @@ func GetCheckInStreak(user models.Account) (int64, error) {
 	if err := database.C.Raw(`WITH dates AS (
 			SELECT DISTINCT created_at::DATE AS created_date
 			FROM check_in_records
-			WHERE created_at::DATE <= CURRENT_DATE
+			WHERE created_at::DATE <= CURRENT_DATE AND account_id = ?
 		),
 		streak AS (
 			SELECT created_date,
 				   created_date - INTERVAL '1 day' * ROW_NUMBER() OVER (ORDER BY created_date) AS grp
 			FROM dates
 		)
-		SELECT COUNT(*) FROM streak WHERE grp = (SELECT MIN(grp) FROM streak);`).Scan(&streaks).Error; err != nil {
+		SELECT COUNT(*) FROM streak WHERE grp = (SELECT MIN(grp) FROM streak);`, user.ID).Scan(&streaks).Error; err != nil {
 		return streaks, err
 	}
 	return streaks, nil
