@@ -66,11 +66,11 @@ func CheckIn(user models.Account) (models.CheckInRecord, error) {
 	streak, _ := GetCheckInStreak(user)
 
 	expMin := 100
-	exp := expMin + int(math.Max(float64(streak)*50, 10*50))
+	exp := expMin + int(math.Max(float64(streak)*5, 10*5))
 
 	coinMax := 10.0 * float64(tier+1)
 	coinMin := 10.0
-	rawCoins := coinMax + rand.Float64()*(coinMax-coinMin) + math.Max(float64(streak)*10, float64(100*10))
+	rawCoins := coinMax + rand.Float64()*(coinMax-coinMin) + math.Max(float64(streak)*0.5, float64(100*0.5))
 
 	record = models.CheckInRecord{
 		ResultTier:       tier,
