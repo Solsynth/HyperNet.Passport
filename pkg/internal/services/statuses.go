@@ -3,9 +3,10 @@ package services
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
-	"time"
 
 	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
@@ -27,11 +28,11 @@ func GetStatus(uid uint) (models.Status, error) {
 	contx := context.Background()
 
 	if val, err := marshal.Get(contx, GetStatusCacheKey(uid), new(models.Status)); err == nil {
-		status := val.(models.Status)
+		status := val.(*models.Status)
 		if status.ClearAt != nil && status.ClearAt.Before(time.Now()) {
 			marshal.Delete(contx, GetStatusCacheKey(uid))
 		} else {
-			return status, nil
+			return *status, nil
 		}
 	}
 	var status models.Status
