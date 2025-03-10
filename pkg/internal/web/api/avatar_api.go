@@ -1,12 +1,16 @@
 package api
 
 import (
+	"strconv"
+
+	"git.solsynth.dev/hypernet/paperclip/pkg/filekit"
+	"git.solsynth.dev/hypernet/paperclip/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/web/exts"
 	"github.com/gofiber/fiber/v2"
-	"strconv"
 )
 
 func setAvatar(c *fiber.Ctx) error {
@@ -23,6 +27,7 @@ func setAvatar(c *fiber.Ctx) error {
 		return err
 	}
 
+	og := user.Avatar
 	user.Avatar = &data.AttachmentID
 
 	if err := database.C.Save(&user).Error; err != nil {
@@ -31,6 +36,17 @@ func setAvatar(c *fiber.Ctx) error {
 		services.AddEvent(user.ID, "profile.edit.avatar", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
 		services.InvalidAuthCacheWithUser(user.ID)
 	}
+
+	if og != nil && len(*og) > 0 {
+		filekit.CountAttachmentUsage(gap.Nx, &proto.UpdateUsageRequest{
+			Rid:   []string{*og},
+			Delta: -1,
+		})
+	}
+	filekit.CountAttachmentUsage(gap.Nx, &proto.UpdateUsageRequest{
+		Rid:   []string{*user.Avatar},
+		Delta: 1,
+	})
 
 	return c.SendStatus(fiber.StatusOK)
 }
@@ -49,6 +65,7 @@ func setBanner(c *fiber.Ctx) error {
 		return err
 	}
 
+	og := user.Banner
 	user.Banner = &data.AttachmentID
 
 	if err := database.C.Save(&user).Error; err != nil {
@@ -57,6 +74,17 @@ func setBanner(c *fiber.Ctx) error {
 		services.AddEvent(user.ID, "profile.edit.banner", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
 		services.InvalidAuthCacheWithUser(user.ID)
 	}
+
+	if og != nil && len(*og) > 0 {
+		filekit.CountAttachmentUsage(gap.Nx, &proto.UpdateUsageRequest{
+			Rid:   []string{*og},
+			Delta: -1,
+		})
+	}
+	filekit.CountAttachmentUsage(gap.Nx, &proto.UpdateUsageRequest{
+		Rid:   []string{*user.Banner},
+		Delta: 1,
+	})
 
 	return c.SendStatus(fiber.StatusOK)
 }
