@@ -8,6 +8,8 @@ import (
 
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
+	"git.solsynth.dev/hypernet/paperclip/pkg/filekit"
+	pproto "git.solsynth.dev/hypernet/paperclip/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
@@ -73,6 +75,20 @@ func GetRealmWithAlias(alias string) (models.Realm, error) {
 func NewRealm(realm models.Realm, user models.Account) (models.Realm, error) {
 	realm.Members = []models.RealmMember{
 		{AccountID: user.ID, PowerLevel: 100},
+	}
+
+	var attachments []string
+	if realm.Avatar != nil && len(*realm.Avatar) > 0 {
+		attachments = append(attachments, *realm.Avatar)
+	}
+	if realm.Banner != nil && len(*realm.Banner) > 0 {
+		attachments = append(attachments, *realm.Banner)
+	}
+	if len(attachments) > 0 {
+		filekit.CountAttachmentUsage(gap.Nx, &pproto.UpdateUsageRequest{
+			Rid:   attachments,
+			Delta: 1,
+		})
 	}
 
 	err := database.C.Save(&realm).Error
@@ -176,8 +192,31 @@ func RemoveRealmMember(user models.Account, affected models.RealmMember, target 
 	return nil
 }
 
-func EditRealm(realm models.Realm) (models.Realm, error) {
+func EditRealm(realm, og models.Realm) (models.Realm, error) {
 	err := database.C.Save(&realm).Error
+	if err == nil {
+		var minusAttachments, plusAttachments []string
+		if realm.Avatar != og.Avatar && realm.Avatar != nil {
+			minusAttachments = append(minusAttachments, *og.Avatar)
+			plusAttachments = append(plusAttachments, *realm.Avatar)
+		}
+		if realm.Banner != og.Banner && realm.Banner != nil {
+			minusAttachments = append(minusAttachments, *og.Banner)
+			plusAttachments = append(plusAttachments, *realm.Banner)
+		}
+		if len(minusAttachments) > 0 {
+			filekit.CountAttachmentUsage(gap.Nx, &pproto.UpdateUsageRequest{
+				Rid:   minusAttachments,
+				Delta: -1,
+			})
+		}
+		if len(plusAttachments) > 0 {
+			filekit.CountAttachmentUsage(gap.Nx, &pproto.UpdateUsageRequest{
+				Rid:   plusAttachments,
+				Delta: 1,
+			})
+		}
+	}
 	return realm, err
 }
 
@@ -194,6 +233,20 @@ func DeleteRealm(realm models.Realm) error {
 	if err := tx.Commit().Error; err != nil {
 		return err
 	} else {
+		var attachments []string
+		if realm.Avatar != nil && len(*realm.Avatar) > 0 {
+			attachments = append(attachments, *realm.Avatar)
+		}
+		if realm.Banner != nil && len(*realm.Banner) > 0 {
+			attachments = append(attachments, *realm.Banner)
+		}
+		if len(attachments) > 0 {
+			filekit.CountAttachmentUsage(gap.Nx, &pproto.UpdateUsageRequest{
+				Rid:   attachments,
+				Delta: -1,
+			})
+		}
+
 		conn := gap.Nx.GetNexusGrpcConn()
 		_, _ = proto.NewDirectoryServiceClient(conn).BroadcastEvent(context.Background(), &proto.EventInfo{
 			Event: "deletion",

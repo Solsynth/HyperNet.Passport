@@ -124,6 +124,7 @@ func editRealm(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
+	og := realm
 	realm.Alias = data.Alias
 	realm.Name = data.Name
 	realm.Description = data.Description
@@ -133,7 +134,7 @@ func editRealm(c *fiber.Ctx) error {
 	realm.IsPublic = data.IsPublic
 	realm.IsCommunity = data.IsCommunity
 
-	realm, err := services.EditRealm(realm)
+	realm, err := services.EditRealm(realm, og)
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
