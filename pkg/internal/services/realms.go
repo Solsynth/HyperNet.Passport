@@ -1,12 +1,16 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strconv"
 
+	"git.solsynth.dev/hypernet/nexus/pkg/nex"
+	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 	"github.com/samber/lo"
 	"gorm.io/gorm"
 )
@@ -187,5 +191,17 @@ func DeleteRealm(realm models.Realm) error {
 		tx.Rollback()
 		return err
 	}
-	return tx.Commit().Error
+	if err := tx.Commit().Error; err != nil {
+		return err
+	} else {
+		conn := gap.Nx.GetNexusGrpcConn()
+		_, _ = proto.NewDirectoryServiceClient(conn).BroadcastEvent(context.Background(), &proto.EventInfo{
+			Event: "deletion",
+			Data: nex.EncodeMap(map[string]any{
+				"type": "realm",
+				"id":   realm.ID,
+			}),
+		})
+	}
+	return nil
 }
