@@ -36,7 +36,10 @@ func updateAuthPreference(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "preferences.edit", "auth", c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "preferences.edit", map[string]any{
+			"type":        "auth",
+			"preferences": data,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 	}
 
 	return c.JSON(cfg.Config.Data())
@@ -73,7 +76,10 @@ func updateNotificationPreference(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "preferences.edit", "notifications", c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "preferences.edit", map[string]any{
+			"type":        "notify",
+			"preferences": data,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 	}
 
 	return c.JSON(notification)

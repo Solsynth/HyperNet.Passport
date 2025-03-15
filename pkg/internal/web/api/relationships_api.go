@@ -87,7 +87,9 @@ func editRelationship(c *fiber.Ctx) error {
 	if friendship, err := services.EditRelationship(relationship); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "relationships.edit", strconv.Itoa(int(relationship.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "relationships.edit", map[string]any{
+			"relationship": relationship,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.JSON(friendship)
 	}
 }
@@ -111,7 +113,9 @@ func deleteRelationship(c *fiber.Ctx) error {
 	if err := services.DeleteRelationship(relationship); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "relationships.delete", strconv.Itoa(int(relationship.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "relationships.delete", map[string]any{
+			"relationship": relationship,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.JSON(relationship)
 	}
 }
@@ -149,7 +153,9 @@ func makeFriendship(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "relationships.friends.new", strconv.Itoa(int(related.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "relationships.friends.new", map[string]any{
+			"related": related,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.JSON(friend)
 	}
 }
@@ -185,7 +191,9 @@ func makeBlockship(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "relationships.blocks.new", strconv.Itoa(int(related.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "relationships.blocks.new", map[string]any{
+			"related": related,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.JSON(friend)
 	}
 }
@@ -205,7 +213,9 @@ func acceptFriend(c *fiber.Ctx) error {
 	if err := services.HandleFriend(user, related, true); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "relationships.friends.accept", strconv.Itoa(relatedId), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "relationships.friends.accept", map[string]any{
+			"related": related,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.SendStatus(fiber.StatusOK)
 	}
 }
@@ -225,7 +235,9 @@ func declineFriend(c *fiber.Ctx) error {
 	if err := services.HandleFriend(user, related, false); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "relationships.friends.decline", strconv.Itoa(relatedId), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "relationships.friends.decline", map[string]any{
+			"related": related,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.SendStatus(fiber.StatusOK)
 	}
 }

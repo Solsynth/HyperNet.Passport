@@ -95,7 +95,9 @@ func authorizeThirdClient(c *fiber.Ctx) error {
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		} else {
-			services.AddEvent(user.ID, "oauth.connect", client.Alias, c.IP(), c.Get(fiber.HeaderUserAgent))
+			services.AddEvent(user.ID, "oauth.connect", map[string]any{
+				"client": client,
+			}, c.IP(), c.Get(fiber.HeaderUserAgent))
 			return c.JSON(fiber.Map{
 				"ticket":       ticket,
 				"redirect_uri": redirect,
@@ -118,7 +120,9 @@ func authorizeThirdClient(c *fiber.Ctx) error {
 		} else if access, refresh, err := services.GetToken(ticket); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		} else {
-			services.AddEvent(user.ID, "oauth.connect", client.Alias, c.IP(), c.Get(fiber.HeaderUserAgent))
+			services.AddEvent(user.ID, "oauth.connect", map[string]any{
+				"client": client,
+			}, c.IP(), c.Get(fiber.HeaderUserAgent))
 			return c.JSON(fiber.Map{
 				"access_token":  access,
 				"refresh_token": refresh,

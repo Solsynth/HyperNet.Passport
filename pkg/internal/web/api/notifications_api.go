@@ -1,7 +1,6 @@
 package api
 
 import (
-	"strconv"
 	"time"
 
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
@@ -87,7 +86,9 @@ func markNotificationRead(c *fiber.Ctx) error {
 	if err := database.C.Save(&notify).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		services.AddEvent(user.ID, "notifications.mark.read", strconv.Itoa(int(notify.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "notifications.mark.read", map[string]any{
+			"notification_id": notify.ID,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.SendStatus(fiber.StatusOK)
 	}
 }
@@ -111,7 +112,9 @@ func markNotificationReadBatch(c *fiber.Ctx) error {
 		Updates(&models.Notification{ReadAt: lo.ToPtr(time.Now())}).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		services.AddEvent(user.ID, "notifications.markBatch.read", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "notifications.markBatch.read", map[string]any{
+			"notification_id": data.MessageIDs,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.SendStatus(fiber.StatusOK)
 	}
 }
@@ -127,7 +130,9 @@ func markNotificationAllRead(c *fiber.Ctx) error {
 		Updates(&models.Notification{ReadAt: lo.ToPtr(time.Now())}); tx.Error != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, tx.Error.Error())
 	} else {
-		services.AddEvent(user.ID, "notifications.markAll.read", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "notifications.markAll.read", map[string]any{
+			"count": tx.RowsAffected,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.JSON(fiber.Map{
 			"count": tx.RowsAffected,
 		})
@@ -186,7 +191,9 @@ func addNotifySubscriber(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	services.AddEvent(user.ID, "notifications.subscribe.push", data.DeviceID, c.IP(), c.Get(fiber.HeaderUserAgent))
+	services.AddEvent(user.ID, "notifications.subscribe.push", map[string]any{
+		"device_id": data.DeviceID,
+	}, c.IP(), c.Get(fiber.HeaderUserAgent))
 	return c.JSON(subscriber)
 }
 
@@ -205,6 +212,8 @@ func removeNotifySubscriber(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	services.AddEvent(user.ID, "notifications.unsubscribe.push", device, c.IP(), c.Get(fiber.HeaderUserAgent))
+	services.AddEvent(user.ID, "notifications.unsubscribe.push", map[string]any{
+		"device_id": device,
+	}, c.IP(), c.Get(fiber.HeaderUserAgent))
 	return c.SendStatus(fiber.StatusOK)
 }

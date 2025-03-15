@@ -1,8 +1,6 @@
 package api
 
 import (
-	"strconv"
-
 	"git.solsynth.dev/hypernet/paperclip/pkg/filekit"
 	"git.solsynth.dev/hypernet/paperclip/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
@@ -33,7 +31,7 @@ func setAvatar(c *fiber.Ctx) error {
 	if err := database.C.Save(&user).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		services.AddEvent(user.ID, "profile.edit.avatar", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "profile.edit.avatar", nil, c.IP(), c.Get(fiber.HeaderUserAgent))
 		services.InvalidAuthCacheWithUser(user.ID)
 	}
 
@@ -71,7 +69,7 @@ func setBanner(c *fiber.Ctx) error {
 	if err := database.C.Save(&user).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		services.AddEvent(user.ID, "profile.edit.banner", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "profile.edit.banner", nil, c.IP(), c.Get(fiber.HeaderUserAgent))
 		services.InvalidAuthCacheWithUser(user.ID)
 	}
 

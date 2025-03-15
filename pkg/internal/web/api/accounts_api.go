@@ -170,7 +170,7 @@ func updateUserinfo(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	services.AddEvent(user.ID, "profile.edit", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+	services.AddEvent(user.ID, "profile.edit", nil, c.IP(), c.Get(fiber.HeaderUserAgent))
 	services.InvalidAuthCacheWithUser(account.ID)
 
 	return c.SendStatus(fiber.StatusOK)
@@ -195,7 +195,7 @@ func updateAccountLanguage(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	services.AddEvent(user.ID, "profile.edit.language", strconv.Itoa(int(user.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+	services.AddEvent(user.ID, "profile.edit.language", nil, c.IP(), c.Get(fiber.HeaderUserAgent))
 	services.InvalidAuthCacheWithUser(user.ID)
 
 	user.Language = data.Language

@@ -6,7 +6,6 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/web/exts"
 	"github.com/gofiber/fiber/v2"
-	"strconv"
 )
 
 func listCheckInRecord(c *fiber.Ctx) error {
@@ -99,7 +98,9 @@ func doCheckIn(c *fiber.Ctx) error {
 	if record, err := services.CheckIn(user); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {
-		services.AddEvent(user.ID, "checkIn", strconv.Itoa(int(record.ID)), c.IP(), c.Get(fiber.HeaderUserAgent))
+		services.AddEvent(user.ID, "checkIn", map[string]any{
+			"check_in_record": record,
+		}, c.IP(), c.Get(fiber.HeaderUserAgent))
 		return c.JSON(record)
 	}
 }

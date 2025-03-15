@@ -6,14 +6,16 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-var writeEventQueue []models.ActionEvent
-var writeAuditQueue []models.AuditRecord
+var (
+	writeEventQueue []models.ActionEvent
+	writeAuditQueue []models.AuditRecord
+)
 
 // AddEvent to keep operation logs by user themselves clear to query
-func AddEvent(user uint, event, target, ip, ua string) {
+func AddEvent(user uint, event string, meta map[string]any, ip, ua string) {
 	writeEventQueue = append(writeEventQueue, models.ActionEvent{
 		Type:      event,
-		Target:    target,
+		Metadata:  meta,
 		IpAddress: ip,
 		UserAgent: ua,
 		AccountID: user,
