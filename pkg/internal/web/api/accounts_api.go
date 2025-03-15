@@ -265,6 +265,24 @@ func doRegisterConfirm(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusOK)
 }
 
+func reNotifyRegisterConfirm(c *fiber.Ctx) error {
+	if err := exts.EnsureAuthenticated(c); err != nil {
+		return err
+	}
+	user := c.Locals("user").(models.Account)
+
+	var magicToken models.MagicToken
+	if err := database.C.Where("account_id = ? AND type = ?", user.ID, models.ConfirmMagicToken).First(&magicToken).Error; err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if err := services.NotifyMagicToken(magicToken); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	return c.SendStatus(fiber.StatusOK)
+}
+
 func requestDeleteAccount(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err

@@ -71,9 +71,10 @@ func MapControllers(app *fiber.App, baseURL string) {
 			me.Put("/language", updateAccountLanguage)
 			me.Get("/events", getEvents)
 			me.Get("/tickets", getTickets)
-			me.Delete("/tickets/:ticketId", killTicket)
+			me.Delete("/tickets/:ticketId", deleteTicket)
 
 			me.Post("/confirm", doRegisterConfirm)
+			me.Patch("/confirm", reNotifyRegisterConfirm)
 
 			me.Get("/status", getMyselfStatus)
 			me.Post("/status", setStatus)

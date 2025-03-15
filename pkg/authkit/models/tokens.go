@@ -14,8 +14,9 @@ const (
 type MagicToken struct {
 	BaseModel
 
-	Code      string     `json:"code"`
-	Type      int8       `json:"type"`
-	AccountID *uint      `json:"account_id"`
-	ExpiredAt *time.Time `json:"expired_at"`
+	Code           string     `json:"code"`
+	Type           int8       `json:"type"`
+	AccountID      *uint      `json:"account_id"`
+	ExpiredAt      *time.Time `json:"expired_at"`
+	LastNotifiedAt *time.Time `json:"last_notified_at"`
 }

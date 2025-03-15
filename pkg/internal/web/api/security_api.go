@@ -39,7 +39,7 @@ func getTickets(c *fiber.Ctx) error {
 	})
 }
 
-func killTicket(c *fiber.Ctx) error {
+func deleteTicket(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}

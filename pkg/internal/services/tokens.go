@@ -2,9 +2,10 @@ package services
 
 import (
 	"fmt"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 	"strings"
 	"time"
+
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
@@ -46,9 +47,14 @@ func NewMagicToken(mode models.MagicTokenType, assignTo *models.Account, expired
 	}
 }
 
-func NotifyMagicToken(token models.MagicToken) error {
+func NotifyMagicToken(token models.MagicToken, skipCheck ...bool) error {
 	if token.AccountID == nil {
 		return fmt.Errorf("could notify a non-assign magic token")
+	}
+	if token.LastNotifiedAt != nil && (len(skipCheck) == 0 || !skipCheck[0]) {
+		if token.LastNotifiedAt.Unix() >= time.Now().Add(-60*time.Minute).Unix() {
+			return fmt.Errorf("magic token has been notified in an hour")
+		}
 	}
 
 	var user models.Account
@@ -93,5 +99,10 @@ func NotifyMagicToken(token models.MagicToken) error {
 			HTML:    &content,
 		},
 	})
+
+	if err == nil {
+		database.C.Model(&token).Update("last_notified_at", time.Now())
+	}
+
 	return err
 }
