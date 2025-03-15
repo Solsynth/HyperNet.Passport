@@ -2,8 +2,10 @@ package database
 
 import (
 	"fmt"
+
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/cruda"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
+	"github.com/oschwald/geoip2-golang"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
 	"github.com/spf13/viper"
@@ -27,4 +29,15 @@ func NewGorm() error {
 	})})
 
 	return err
+}
+
+var Gc *geoip2.Reader
+
+func NewGeoDB() error {
+	conn, err := geoip2.Open(viper.GetString("geoip_db"))
+	if err != nil {
+		return fmt.Errorf("failed to open geoip database: %v", err)
+	}
+	Gc = conn
+	return nil
 }

@@ -35,7 +35,9 @@ type AuthFactor struct {
 type AuthTicket struct {
 	BaseModel
 
-	Location     string                      `json:"location"`
+	Location     *string                     `json:"location"`
+	CoordinateX  *float64                    `json:"coordinate_x"`
+	CoordinateY  *float64                    `json:"coordinate_y"`
 	IpAddress    string                      `json:"ip_address"`
 	UserAgent    string                      `json:"user_agent"`
 	StepRemain   int                         `json:"step_remain"`

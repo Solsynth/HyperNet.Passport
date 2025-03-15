@@ -2,8 +2,11 @@ package services
 
 import (
 	"fmt"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
+	"net"
+	"strings"
 	"time"
+
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"gorm.io/datatypes"
@@ -68,19 +71,36 @@ func NewTicket(user models.Account, ip, ua string) (models.AuthTicket, error) {
 		}
 	}
 
+	var location *string
+	var coordinateX, coordinateY *float64
+	netIp := net.ParseIP(ip)
+	record, err := database.Gc.City(netIp)
+	if err == nil {
+		var locationNames []string
+		locationNames = append(locationNames, record.City.Names["en"])
+		for _, subs := range record.Subdivisions {
+			locationNames = append(locationNames, subs.Names["en"])
+		}
+		location = lo.ToPtr(strings.Join(locationNames, ", "))
+		coordinateX = &record.Location.Latitude
+		coordinateY = &record.Location.Longitude
+	}
+
 	ticket = models.AuthTicket{
 		Claims:      []string{"*"},
 		Audiences:   []string{InternalTokenAudience},
 		IpAddress:   ip,
 		UserAgent:   ua,
 		StepRemain:  steps,
+		Location:    location,
+		CoordinateX: coordinateX,
+		CoordinateY: coordinateY,
 		ExpiredAt:   nil,
 		AvailableAt: nil,
 		AccountID:   user.ID,
 	}
 
-	err := database.C.Save(&ticket).Error
-
+	err = database.C.Save(&ticket).Error
 	return ticket, err
 }
 

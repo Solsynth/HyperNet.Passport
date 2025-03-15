@@ -83,6 +83,9 @@ func main() {
 	} else if err := database.RunMigration(database.C); err != nil {
 		log.Fatal().Err(err).Msg("An error occurred when running database auto migration.")
 	}
+	if err := database.NewGeoDB(); err != nil {
+		log.Fatal().Err(err).Msg("An error occurred when connect to geoip database.")
+	}
 
 	// Initialize cache
 	if err := cache.NewStore(); err != nil {

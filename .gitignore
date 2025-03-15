@@ -2,4 +2,6 @@
 /uploads
 /keys
 
+geoip.mmdb
+
 .DS_Store
