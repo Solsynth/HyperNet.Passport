@@ -118,6 +118,9 @@ func deleteContact(c *fiber.Ctx) error {
 	if err := database.C.Where("account_id = ? AND id = ?", user.ID, contactId).First(&contact).Error; err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
+	if contact.IsPrimary {
+		return fiber.NewError(fiber.StatusBadRequest, "cannot delete primary contact")
+	}
 
 	if err := database.C.Delete(&contact).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
