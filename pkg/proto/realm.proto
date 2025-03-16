@@ -32,6 +32,7 @@ message ListRealmRequest {
 
 message LookupUserRealmRequest {
   uint64 user_id = 1;
+  optional bool include_public = 2;
 }
 
 message LookupRealmRequest {

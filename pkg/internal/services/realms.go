@@ -37,7 +37,7 @@ func ListOwnedRealm(user models.Account) ([]models.Realm, error) {
 	return realms, nil
 }
 
-func ListAvailableRealm(user models.Account) ([]models.Realm, error) {
+func ListAvailableRealm(user models.Account, includePublic ...bool) ([]models.Realm, error) {
 	var realms []models.Realm
 	var members []models.RealmMember
 	if err := database.C.Where(&models.RealmMember{
@@ -50,7 +50,12 @@ func ListAvailableRealm(user models.Account) ([]models.Realm, error) {
 		return item.RealmID
 	})
 
-	if err := database.C.Where("id IN ?", idx).Find(&realms).Error; err != nil {
+	tx := database.C
+	if len(includePublic) > 0 && includePublic[0] {
+		tx = tx.Where("is_public = ?", true)
+	}
+
+	if err := tx.Where("id IN ?", idx).Find(&realms).Error; err != nil {
 		return realms, err
 	}
 
