@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	"fmt"
+
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 
@@ -17,7 +18,7 @@ func (v *App) ListAvailableRealm(ctx context.Context, request *proto.LookupUserR
 	if err != nil {
 		return nil, fmt.Errorf("unable to find target account: %v", err)
 	}
-	realms, err := services.ListAvailableRealm(account)
+	realms, err := services.ListAvailableRealm(account, request.GetIncludePublic())
 	if err != nil {
 		return nil, err
 	}
