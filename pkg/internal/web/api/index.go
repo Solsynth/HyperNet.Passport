@@ -127,7 +127,7 @@ func MapControllers(app *fiber.App, baseURL string) {
 		{
 			directory.Get("/", getOtherUserinfo)
 			directory.Get("/status", getStatus)
-			directory.Get("/pages", getAccountPage)
+			directory.Get("/page", getAccountPage)
 
 			directory.Get("/check-in", listOtherUserCheckInRecord)
 		}
