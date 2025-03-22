@@ -31,16 +31,27 @@ func CheckCanCheckIn(user models.Account) error {
 func GetCheckInStreak(user models.Account) (int64, error) {
 	var streaks int64
 	if err := database.C.Raw(`WITH dates AS (
-			SELECT DISTINCT created_at::DATE AS created_date
-			FROM check_in_records
-			WHERE created_at::DATE <= CURRENT_DATE AND account_id = ?
-		),
-		streak AS (
-			SELECT created_date,
-				   created_date - INTERVAL '1 day' * ROW_NUMBER() OVER (ORDER BY created_date) AS grp
-			FROM dates
-		)
-		SELECT COUNT(*) FROM streak WHERE grp = (SELECT MIN(grp) FROM streak);`, user.ID).Scan(&streaks).Error; err != nil {
+    SELECT DISTINCT created_at::DATE AS created_date
+    FROM check_in_records
+    WHERE created_at::DATE <= CURRENT_DATE
+      AND account_id = ?
+),
+streak AS (
+    SELECT created_date,
+           created_date - INTERVAL '1 day' * (ROW_NUMBER() OVER (ORDER BY created_date)) AS grp
+    FROM dates
+),
+grouped_streaks AS (
+    SELECT grp, COUNT(*) AS streak_length, MAX(created_date) AS last_date
+    FROM streak
+    GROUP BY grp
+),
+last_streak AS (
+    SELECT streak_length
+    FROM grouped_streaks
+    WHERE last_date = (SELECT MAX(created_date) FROM dates)
+)
+SELECT COALESCE(streak_length, 0) FROM last_streak;`, user.ID).Scan(&streaks).Error; err != nil {
 		return streaks, err
 	}
 	return streaks, nil

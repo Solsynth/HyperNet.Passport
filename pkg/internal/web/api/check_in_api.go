@@ -3,6 +3,7 @@ package api
 import (
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/web/exts"
 	"github.com/gofiber/fiber/v2"
@@ -94,6 +95,17 @@ func doCheckIn(c *fiber.Ctx) error {
 		return err
 	}
 	user := c.Locals("user").(models.Account)
+
+	var data struct {
+		CaptchaToken string `json:"captcha_token" validate:"required"`
+	}
+	if err := exts.BindAndValidate(c, &data); err != nil {
+		return err
+	}
+
+	if !gap.Nx.ValidateCaptcha(data.CaptchaToken, c.IP()) {
+		return fiber.NewError(fiber.StatusBadRequest, "captcha check failed")
+	}
 
 	if record, err := services.CheckIn(user); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())

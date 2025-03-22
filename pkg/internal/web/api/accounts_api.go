@@ -9,6 +9,7 @@ import (
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"gorm.io/gorm"
 
+	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/web/exts"
 
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
@@ -136,7 +137,7 @@ func updateUserinfo(c *fiber.Ctx) error {
 	} else {
 		data.Nick = strings.TrimSpace(data.Nick)
 	}
-	if !services.ValidateAccountName(data.Nick, 4, 24) {
+	if !services.ValidateAccountName(data.Nick, 1, 24) {
 		return fiber.NewError(fiber.StatusBadRequest, "invalid account nick, length requires 4 to 24")
 	}
 
@@ -205,12 +206,13 @@ func updateAccountLanguage(c *fiber.Ctx) error {
 
 func doRegister(c *fiber.Ctx) error {
 	var data struct {
-		Name       string `json:"name" validate:"required,lowercase,alphanum,min=4,max=16"`
-		Nick       string `json:"nick" validate:"required"`
-		Email      string `json:"email" validate:"required,email"`
-		Password   string `json:"password" validate:"required,min=4,max=32"`
-		Language   string `json:"language" validate:"required,bcp47_language_tag"`
-		MagicToken string `json:"magic_token"`
+		Name         string `json:"name" validate:"required,lowercase,alphanum,min=4,max=16"`
+		Nick         string `json:"nick" validate:"required"`
+		Email        string `json:"email" validate:"required,email"`
+		Password     string `json:"password" validate:"required,min=4,max=32"`
+		Language     string `json:"language" validate:"required,bcp47_language_tag"`
+		CaptchaToken string `json:"captcha_token" validate:"required"`
+		MagicToken   string `json:"magic_token"`
 	}
 
 	if err := exts.BindAndValidate(c, &data); err != nil {
@@ -223,7 +225,7 @@ func doRegister(c *fiber.Ctx) error {
 	if _, err := strconv.Atoi(data.Name); err == nil {
 		return fiber.NewError(fiber.StatusBadRequest, "invalid account name, cannot be pure number")
 	}
-	if !services.ValidateAccountName(data.Nick, 4, 24) {
+	if !services.ValidateAccountName(data.Nick, 1, 24) {
 		return fiber.NewError(fiber.StatusBadRequest, "invalid account nick, length requires 4 to 24")
 	}
 	if viper.GetBool("use_registration_magic_token") && len(data.MagicToken) <= 0 {
@@ -234,6 +236,10 @@ func doRegister(c *fiber.Ctx) error {
 		} else {
 			database.C.Delete(&tk)
 		}
+	}
+
+	if !gap.Nx.ValidateCaptcha(data.CaptchaToken, c.IP()) {
+		return fiber.NewError(fiber.StatusBadRequest, "captcha check failed")
 	}
 
 	if user, err := services.CreateAccount(
