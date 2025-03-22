@@ -29,6 +29,7 @@ func NewServer() *App {
 		EnableIPValidation:    true,
 		ServerHeader:          "HyperNet.Passport",
 		AppName:               "HyperNet.Passport",
+		ReadBufferSize:        5 * 1024 * 1024, // 5MB for large JWT
 		ProxyHeader:           fiber.HeaderXForwardedFor,
 		JSONEncoder:           jsoniter.ConfigCompatibleWithStandardLibrary.Marshal,
 		JSONDecoder:           jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal,
