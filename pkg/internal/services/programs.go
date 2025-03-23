@@ -9,7 +9,9 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 	"git.solsynth.dev/hypernet/wallet/pkg/proto"
+	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
+	"gorm.io/datatypes"
 )
 
 func JoinProgram(user models.Account, program models.Program) (models.ProgramMember, error) {
@@ -36,6 +38,8 @@ func JoinProgram(user models.Account, program models.Program) (models.ProgramMem
 	}
 	if err := database.C.Create(&member).Error; err != nil {
 		return member, err
+	} else {
+		PostJoinProgram(member)
 	}
 	return member, nil
 }
@@ -47,6 +51,8 @@ func LeaveProgram(user models.Account, program models.Program) error {
 	}
 	if err := database.C.Delete(&member).Error; err != nil {
 		return err
+	} else {
+		PostLeaveProgram(member)
 	}
 	return nil
 }
@@ -85,4 +91,49 @@ func PeriodicChargeProgramFee() {
 			}
 		}
 	}
+}
+
+func PostJoinProgram(member models.ProgramMember) error {
+	badge := member.Program.Badge.Data()
+	if len(badge.Type) > 0 {
+		accountBadge := models.Badge{
+			Type:      badge.Type,
+			AccountID: member.AccountID,
+			Metadata:  datatypes.JSONMap(badge.Metadata),
+		}
+		if err := database.C.Create(&accountBadge).Error; err != nil {
+			log.Error().Err(err).Msg("Failed to create badge for program member...")
+			return err
+		}
+	}
+	group := member.Program.Group.Data()
+	if group.ID > 0 {
+		accountGroup := models.AccountGroupMember{
+			GroupID:   group.ID,
+			AccountID: member.AccountID,
+		}
+		if err := database.C.Create(&accountGroup).Error; err != nil {
+			log.Error().Err(err).Msg("Failed to create group for program member...")
+			return err
+		}
+	}
+	return nil
+}
+
+func PostLeaveProgram(member models.ProgramMember) error {
+	badge := member.Program.Badge.Data()
+	if len(badge.Type) > 0 {
+		if err := database.C.Where("account_id = ? AND type = ?", member.AccountID, badge.Type).Delete(&models.Badge{}).Error; err != nil {
+			log.Error().Err(err).Msg("Failed to delete badge for program member...")
+			return err
+		}
+	}
+	group := member.Program.Group.Data()
+	if group.ID > 0 {
+		if err := database.C.Where("account_id = ? AND group_id = ?", member.AccountID, group.ID).Delete(&models.AccountGroupMember{}).Error; err != nil {
+			log.Error().Err(err).Msg("Failed to delete group for program member...")
+			return err
+		}
+	}
+	return nil
 }
