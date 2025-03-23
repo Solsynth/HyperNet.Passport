@@ -104,6 +104,7 @@ func main() {
 	quartz.AddFunc("@every 60m", services.DoAutoDatabaseCleanup)
 	quartz.AddFunc("@midnight", services.RecycleUnConfirmAccount)
 	quartz.AddFunc("@every 60s", services.SaveEventChanges)
+	quartz.AddFunc("@midnight", services.PeriodicChargeProgramFee)
 	quartz.Start()
 
 	// Messages

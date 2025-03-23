@@ -166,6 +166,15 @@ func MapControllers(app *fiber.App, baseURL string) {
 			realms.Delete("/:realm/me", leaveRealm)
 		}
 
+		programs := api.Group("/programs").Name("Programs API")
+		{
+			programs.Get("/", listProgram)
+			programs.Get("/members", listProgramMembership)
+			programs.Get("/:programId", getProgram)
+			programs.Post("/:programId", joinProgram)
+			programs.Delete("/:programId", leaveProgram)
+		}
+
 		developers := api.Group("/dev").Name("Developers API")
 		{
 			developers.Post("/notify/:user", notifyUser)
