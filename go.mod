@@ -6,7 +6,7 @@ require (
 	git.solsynth.dev/hypernet/nexus v0.0.0-20250322115040-e670724c4c18
 	git.solsynth.dev/hypernet/paperclip v0.0.0-20250310151112-1d866f317f47
 	git.solsynth.dev/hypernet/pusher v0.0.0-20250216145944-5fb769823a88
-	git.solsynth.dev/hypernet/wallet v0.0.0-20250129150034-87b94cdb5488
+	git.solsynth.dev/hypernet/wallet v0.0.0-20250323095812-468cd655f886
 	github.com/dgraph-io/ristretto v0.2.0
 	github.com/eko/gocache/lib/v4 v4.1.6
 	github.com/eko/gocache/store/ristretto/v4 v4.2.2
@@ -19,6 +19,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12
 	github.com/nats-io/nats.go v1.37.0
+	github.com/oschwald/geoip2-golang v1.11.0
 	github.com/pquerna/otp v1.4.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.33.0
@@ -67,7 +68,6 @@ require (
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.5.0 // indirect
-	github.com/oschwald/geoip2-golang v1.11.0 // indirect
 	github.com/oschwald/maxminddb-golang v1.13.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/philhofer/fwd v1.1.3-0.20240916144458-20a13a1f6b7c // indirect

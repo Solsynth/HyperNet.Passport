@@ -121,6 +121,7 @@ func CheckIn(user models.Account) (models.CheckInRecord, error) {
 	_, err = wc.MakeTransactionWithAccount(ctx, &proto.MakeTransactionWithAccountRequest{
 		PayeeAccountId: lo.ToPtr(uint64(user.ID)),
 		Amount:         record.ResultCoin,
+		Currency:       "normal",
 		Remark:         "Daily Check-In Rewards",
 	})
 	if err != nil {
