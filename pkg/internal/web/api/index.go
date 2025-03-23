@@ -198,6 +198,9 @@ func MapControllers(app *fiber.App, baseURL string) {
 			}
 		}
 
+		api.Post("/permissions/check", checkPermission)
+		api.Post("/permissions/check/:userId", checkUserPermission)
+
 		api.All("/*", func(c *fiber.Ctx) error {
 			return fiber.ErrNotFound
 		})
