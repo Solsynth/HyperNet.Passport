@@ -70,7 +70,7 @@ func ChargeForProgram(member models.ProgramMember) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 	_, err = wc.MakeTransactionWithAccount(ctx, &proto.MakeTransactionWithAccountRequest{
-		PayeeAccountId: lo.ToPtr(uint64(member.AccountID)),
+		PayerAccountId: lo.ToPtr(uint64(member.AccountID)),
 		Amount:         pricing.Amount,
 		Currency:       pricing.Currency,
 		Remark:         fmt.Sprintf("Program Membership: %s", member.Program.Name),
