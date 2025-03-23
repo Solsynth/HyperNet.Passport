@@ -20,7 +20,7 @@ func JoinProgram(user models.Account, program models.Program) (models.ProgramMem
 		return member, fmt.Errorf("program member already exists")
 	}
 	var profile models.AccountProfile
-	if err := database.C.Where("account_id = ?", user.ID).Select("Experience").First(&profile).Error; err != nil {
+	if err := database.C.Where("account_id = ?", user.ID).Select("experience").First(&profile).Error; err != nil {
 		return member, err
 	}
 	if program.ExpRequirement < int64(profile.Experience) {
