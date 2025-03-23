@@ -23,7 +23,7 @@ func JoinProgram(user models.Account, program models.Program) (models.ProgramMem
 	if err := database.C.Where("account_id = ?", user.ID).Select("experience").First(&profile).Error; err != nil {
 		return member, err
 	}
-	if program.ExpRequirement < int64(profile.Experience) {
+	if program.ExpRequirement > int64(profile.Experience) {
 		return member, fmt.Errorf("insufficient experience")
 	}
 	member = models.ProgramMember{
