@@ -46,7 +46,9 @@ func JoinProgram(user models.Account, program models.Program) (models.ProgramMem
 
 func LeaveProgram(user models.Account, program models.Program) error {
 	var member models.ProgramMember
-	if err := database.C.Where("account_id = ? AND program_id = ?", user.ID, program.ID).First(&member).Error; err != nil {
+	if err := database.C.Where("account_id = ? AND program_id = ?", user.ID, program.ID).
+		Preload("Program").
+		First(&member).Error; err != nil {
 		return err
 	}
 	if err := database.C.Delete(&member).Error; err != nil {
