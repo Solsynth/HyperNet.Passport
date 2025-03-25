@@ -2,10 +2,11 @@ package services
 
 import (
 	"fmt"
-	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
-	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"strconv"
 	"time"
+
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"github.com/samber/lo"
@@ -35,8 +36,7 @@ func GetToken(ticket models.AuthTicket) (atk, rtk string, err error) {
 		return
 	}
 
-	ticket.LastGrantAt = lo.ToPtr(time.Now())
-	database.C.Save(&ticket)
+	database.C.Model(&ticket).Update("last_grant_at", time.Now())
 
 	return
 }

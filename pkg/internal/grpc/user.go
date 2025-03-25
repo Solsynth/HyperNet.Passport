@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"maps"
+
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
@@ -62,6 +64,17 @@ func (v *App) GetUser(ctx context.Context, request *proto.GetUserRequest) (*prot
 				if _, ok := account.PermNodes[k]; !ok {
 					account.PermNodes[k] = v
 				}
+			}
+		}
+
+		punishments, err := services.ListPunishments(account)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, fmt.Sprintf("unable to get account punishments: %v", err))
+		}
+		account.Punishments = punishments
+		for _, punishment := range punishments {
+			if punishment.Type == models.PunishmentTypeLimited && len(punishment.PermNodes) > 0 {
+				maps.Copy(account.PermNodes, punishment.PermNodes)
 			}
 		}
 

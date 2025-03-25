@@ -39,6 +39,8 @@ type Account struct {
 
 	Relations []AccountRelationship `json:"relations,omitempty" gorm:"foreignKey:AccountID"`
 
+	Punishments []Punishment `json:"punishments,omitempty"`
+
 	// Keep this for backward compability
 	Description string `json:"description" gorm:"-"`
 }
