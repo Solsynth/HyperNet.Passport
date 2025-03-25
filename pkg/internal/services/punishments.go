@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"time"
 
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
+	"github.com/rs/zerolog/log"
 )
 
 func NewPunishment(in models.Punishment, moderator ...models.Account) (models.Punishment, error) {
@@ -29,21 +31,72 @@ func NewPunishment(in models.Punishment, moderator ...models.Account) (models.Pu
 
 	if err := database.C.Create(&in).Error; err != nil {
 		return in, err
+	} else {
+		var moderator = "System"
+		if in.Moderator != nil {
+			moderator = fmt.Sprintf("@%s", in.Moderator.Name)
+		}
+		err = NewNotification(models.Notification{
+			Topic:     "passport.punishments",
+			Title:     localize.L.GetLocalizedString("subjectPunishmentCreated", in.Account.Language),
+			Subtitle:  fmt.Sprintf(localize.L.GetLocalizedString("subtitlePunishment", in.Account.Language), in.ID, moderator),
+			Body:      fmt.Sprintf(localize.L.GetLocalizedString("shortBodyPunishmentCreated", in.Account.Language), in.Reason),
+			Account:   in.Account,
+			AccountID: in.Account.ID,
+			Metadata:  map[string]any{"punishment": in},
+		})
+		if err != nil {
+			log.Warn().Err(err).Uint("case", in.ID).Msg("Failed to delivery punishment via notify...")
+		}
 	}
 
 	return in, nil
 }
 
-func EditPunishment(punishment models.Punishment) (models.Punishment, error) {
-	if err := database.C.Save(&punishment).Error; err != nil {
-		return punishment, err
+func EditPunishment(in models.Punishment) (models.Punishment, error) {
+	if err := database.C.Save(&in).Error; err != nil {
+		return in, err
+	} else {
+		var moderator = "System"
+		if in.Moderator != nil {
+			moderator = fmt.Sprintf("@%s", in.Moderator.Name)
+		}
+		err = NewNotification(models.Notification{
+			Topic:     "passport.punishments",
+			Title:     localize.L.GetLocalizedString("subjectPunishmentUpdated", in.Account.Language),
+			Subtitle:  fmt.Sprintf(localize.L.GetLocalizedString("subtitlePunishment", in.Account.Language), in.ID, moderator),
+			Body:      fmt.Sprintf(localize.L.GetLocalizedString("shortBodyPunishmentUpdated", in.Account.Language), in.ID),
+			Account:   in.Account,
+			AccountID: in.Account.ID,
+			Metadata:  map[string]any{"punishment": in},
+		})
+		if err != nil {
+			log.Warn().Err(err).Uint("case", in.ID).Msg("Failed to delivery punishment via notify...")
+		}
 	}
-	return punishment, nil
+	return in, nil
 }
 
-func DeletePunishment(punishment models.Punishment) error {
-	if err := database.C.Delete(&punishment).Error; err != nil {
+func DeletePunishment(in models.Punishment) error {
+	if err := database.C.Delete(&in).Error; err != nil {
 		return err
+	} else {
+		var moderator = "System"
+		if in.Moderator != nil {
+			moderator = fmt.Sprintf("@%s", in.Moderator.Name)
+		}
+		err = NewNotification(models.Notification{
+			Topic:     "passport.punishments",
+			Title:     localize.L.GetLocalizedString("subjectPunishmentDeleted", in.Account.Language),
+			Subtitle:  fmt.Sprintf(localize.L.GetLocalizedString("subtitlePunishment", in.Account.Language), in.ID, moderator),
+			Body:      fmt.Sprintf(localize.L.GetLocalizedString("shortBodyPunishmentDeleted", in.Account.Language), in.ID),
+			Account:   in.Account,
+			AccountID: in.Account.ID,
+			Metadata:  map[string]any{"punishment": in},
+		})
+		if err != nil {
+			log.Warn().Err(err).Uint("case", in.ID).Msg("Failed to delivery punishment via notify...")
+		}
 	}
 	return nil
 }

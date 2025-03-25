@@ -7,5 +7,12 @@
   "subjectLoginAlert": "登陆提醒",
   "shortBodyLoginAlert": "您的帐户在 %s 登录，若它不是你的设备，请立即处理。",
   "subjectAbuseReportUpdated": "举报状态已更新",
-  "shortBodyAbuseReportUpdated": "举报 #%d 已更新为 %s。管理员回复：%s"
+  "shortBodyAbuseReportUpdated": "举报 #%d 已更新为 %s。管理员回复：%s",
+  "subtitlePunishment": "案件 #%d 由 %s 处理",
+  "subjectPunishmentCreated": "你收到了一份处分",
+  "shortBodyPunishmentCreated": "你因为 %s 而被处分，详情请在应用内查看。",
+  "subjectPunishmentUpdated": "你的处分已更新",
+  "shortBodyPunishmentUpdated": "你的处分 #%s 已更新。详情请在应用内查看。",
+  "subjectPunishmentDeleted": "你的处分已撤销",
+  "shortBodyPunishmentDeleted": "你的处分 #%s 已撤销。"
 }

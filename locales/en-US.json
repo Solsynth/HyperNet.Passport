@@ -7,5 +7,12 @@
   "subjectLoginAlert": "Login alert",
   "shortBodyLoginAlert": "Your account got logged in from %s. If it's not your device, please deal with it immediately.",
   "subjectAbuseReportUpdated": "Abuse report status has been changed",
-  "shortBodyAbuseReportUpdated": "Report #%d has been changed to %s. Moderator message: %s"
+  "shortBodyAbuseReportUpdated": "Report #%d has been changed to %s. Moderator message: %s",
+  "subtitlePunishment": "Case #%d Moderated by %s",
+  "subjectPunishmentCreated": "You have been punished",
+  "shortBodyPunishmentCreated": "You have been punished for %s. Learn more inside the app.",
+  "subjectPunishmentUpdated": "Your punishment has been updated",
+  "shortBodyPunishmentUpdated": "Your punishment #%s has been updated. Learn more inside the app.",
+  "subjectPunishmentDeleted": "Your punishment has been revoked",
+  "shortBodyPunishmentDeleted": "Your punishment #%s has been revoked."
 }

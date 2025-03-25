@@ -32,6 +32,7 @@ var AutoMaintainRange = []any{
 	&models.AbuseReport{},
 	&models.Program{},
 	&models.ProgramMember{},
+	&models.Punishment{},
 }
 
 func RunMigration(source *gorm.DB) error {
