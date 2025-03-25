@@ -67,7 +67,7 @@ func MapControllers(app *fiber.App, baseURL string) {
 
 			me.Get("/", getUserinfo)
 			me.Get("/oidc", getUserinfoForOidc)
-			me.Put("/", updateUserinfo)
+			me.Put("/", editUserinfo)
 			me.Put("/language", updateAccountLanguage)
 			me.Get("/events", getEvents)
 			me.Get("/tickets", getTickets)

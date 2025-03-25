@@ -113,7 +113,7 @@ func getUserinfo(c *fiber.Ctx) error {
 	return c.JSON(resp)
 }
 
-func updateUserinfo(c *fiber.Ctx) error {
+func editUserinfo(c *fiber.Ctx) error {
 	if err := exts.EnsureAuthenticated(c); err != nil {
 		return err
 	}

@@ -26,9 +26,7 @@ func setAvatar(c *fiber.Ctx) error {
 	}
 
 	og := user.Avatar
-	user.Avatar = &data.AttachmentID
-
-	if err := database.C.Save(&user).Error; err != nil {
+	if err := database.C.Model(&user).Update("avatar", data.AttachmentID).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
 		services.AddEvent(user.ID, "profile.edit.avatar", nil, c.IP(), c.Get(fiber.HeaderUserAgent))
@@ -64,9 +62,7 @@ func setBanner(c *fiber.Ctx) error {
 	}
 
 	og := user.Banner
-	user.Banner = &data.AttachmentID
-
-	if err := database.C.Save(&user).Error; err != nil {
+	if err := database.C.Model(&user).Update("banner", data.AttachmentID).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
 		services.AddEvent(user.ID, "profile.edit.banner", nil, c.IP(), c.Get(fiber.HeaderUserAgent))
