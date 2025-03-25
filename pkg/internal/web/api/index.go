@@ -54,6 +54,16 @@ func MapControllers(app *fiber.App, baseURL string) {
 			}
 		}
 
+		punishments := api.Group("/punishments").Name("Punishments API")
+		{
+			punishments.Get("/", listUserPunishment)
+			punishments.Get("/given", listMadePunishment)
+			punishments.Get("/:id", getPunishment)
+			punishments.Post("/", createPunishment)
+			punishments.Put("/:id", editPunishment)
+			punishments.Delete("/:id", deletePunishment)
+		}
+
 		api.Get("/users", getUserInBatch)
 		api.Get("/users/lookup", lookupAccount)
 		api.Get("/users/search", searchAccount)

@@ -39,6 +39,8 @@ func doAuthenticate(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("account was not found: %v", err.Error()))
 	} else if user.SuspendedAt != nil {
 		return fiber.NewError(fiber.StatusForbidden, "account was suspended")
+	} else if err := services.CheckLoginAbility(user); err != nil {
+		return err
 	}
 
 	ticket, err := services.NewTicket(user, c.IP(), c.Get(fiber.HeaderUserAgent))
