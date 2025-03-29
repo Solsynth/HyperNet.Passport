@@ -22,7 +22,7 @@ var (
 	Nx *nex.Conn
 	Px *pushcon.Conn
 	Rx *rx.MqConn
-	Ca *cachekit.CaConn
+	Ca *cachekit.Conn
 )
 
 const (
@@ -64,7 +64,7 @@ func InitializeToNexus() error {
 	if err != nil {
 		return fmt.Errorf("error during initialize nexus rx module: %v", err)
 	}
-	Ca, err = cachekit.NewCaConn(Nx, time.Second*3)
+	Ca, err = cachekit.NewConn(Nx, time.Second*3)
 	if err != nil {
 		return fmt.Errorf("error during initialize nexus cache module: %v", err)
 	}
