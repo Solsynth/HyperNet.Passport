@@ -26,7 +26,7 @@ var (
 )
 
 const (
-	FactorOtpPrefix = "otp."
+	FactorOtpPrefix = "auth-otp"
 )
 
 func InitializeToNexus() error {

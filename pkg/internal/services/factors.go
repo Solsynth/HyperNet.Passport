@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/cachekit"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
@@ -12,7 +13,6 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit"
 	"github.com/google/uuid"
-	"github.com/nats-io/nats.go"
 	"github.com/pquerna/otp/totp"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
@@ -68,12 +68,12 @@ func GetFactorCode(factor models.AuthFactor, ip string) (bool, error) {
 
 		secret := uuid.NewString()[:6]
 
-		identifier := fmt.Sprintf("%s%d", gap.FactorOtpPrefix, factor.ID)
-		_, err := gap.Jt.Publish(identifier, []byte(secret))
+		identifier := fmt.Sprintf("%s#%d", gap.FactorOtpPrefix, factor.ID)
+		err := cachekit.Set(gap.Ca, identifier, secret, time.Minute*30, fmt.Sprintf("user#%d", factor.AccountID))
 		if err != nil {
-			return true, fmt.Errorf("error during publish message: %v", err)
+			return true, fmt.Errorf("error during creating otp: %v", err)
 		} else {
-			log.Info().Uint("factor", factor.ID).Str("secret", secret).Msg("Published one-time-password to JetStream...")
+			log.Info().Uint("factor", factor.ID).Str("secret", secret).Msg("Created one-time-password in cache...")
 		}
 
 		err = NewNotification(models.Notification{
@@ -99,12 +99,12 @@ func GetFactorCode(factor models.AuthFactor, ip string) (bool, error) {
 
 		secret := uuid.NewString()[:6]
 
-		identifier := fmt.Sprintf("%s%d", gap.FactorOtpPrefix, factor.ID)
-		_, err := gap.Jt.Publish(identifier, []byte(secret))
+		identifier := fmt.Sprintf("%s#%d", gap.FactorOtpPrefix, factor.ID)
+		err := cachekit.Set(gap.Ca, identifier, secret, time.Minute*30, fmt.Sprintf("user#%d", factor.AccountID))
 		if err != nil {
-			return true, fmt.Errorf("error during publish message: %v", err)
+			return true, fmt.Errorf("error during creating otp: %v", err)
 		} else {
-			log.Info().Uint("factor", factor.ID).Str("secret", secret).Msg("Published one-time-password to JetStream...")
+			log.Info().Uint("factor", factor.ID).Str("secret", secret).Msg("Created one-time-password in cache...")
 		}
 
 		subject := fmt.Sprintf("[%s] %s", viper.GetString("name"), localize.L.GetLocalizedString("subjectLoginOneTimePassword", user.Language))
@@ -149,33 +149,21 @@ func CheckFactor(factor models.AuthFactor, code string) error {
 		)
 	case models.InAppNotifyFactor:
 	case models.EmailPasswordFactor:
-		identifier := fmt.Sprintf("%s%d", gap.FactorOtpPrefix, factor.ID)
-		sub, err := gap.Jt.PullSubscribe(identifier, "otp_validator", nats.BindStream("OTPs"))
-		if err != nil {
-			log.Error().Err(err).Msg("Error subscribing to subject when validating factor code...")
-			return fmt.Errorf("error subscribing to subject: %v", err)
-		}
-		defer sub.Unsubscribe()
-
-		msgs, err := sub.Fetch(1, nats.MaxWait(3*time.Second))
+		identifier := fmt.Sprintf("%s#%d", gap.FactorOtpPrefix, factor.ID)
+		val, err := cachekit.Get[string](gap.Ca, identifier)
 		if err != nil {
 			log.Error().Err(err).Msg("Error fetching message when validating factor code...")
-			return fmt.Errorf("error fetching message: %v", err)
+			return fmt.Errorf("one-time-password not found or expired")
 		}
 
-		if len(msgs) > 0 {
-			msg := msgs[0]
-			if !strings.EqualFold(code, string(msg.Data)) {
-				return fmt.Errorf("invalid verification code")
-			}
-			log.Info().Uint("factor", factor.ID).Str("secret", code).Msg("Verified one-time-password...")
-			if err := msg.AckSync(); err != nil {
-				log.Warn().Err(err).Uint("factor", factor.ID).Msg("Failed to acknowledge message when validating factor code...")
-			}
-			return nil
+		if !strings.EqualFold(code, val) {
+			return fmt.Errorf("invalid verification code")
 		}
-
-		return fmt.Errorf("one-time-password not found or expired")
+		log.Info().Uint("factor", factor.ID).Str("secret", code).Msg("Verified one-time-password...")
+		if err := cachekit.Delete(gap.Ca, identifier); err != nil {
+			log.Error().Err(err).Msg("Error deleting the otp from cache...")
+		}
+		return nil
 	}
 
 	return nil
