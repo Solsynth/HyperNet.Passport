@@ -1,8 +1,11 @@
 package api
 
 import (
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/cachekit"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/web/exts"
 	"github.com/gofiber/fiber/v2"
 )
@@ -51,6 +54,8 @@ func deleteTicket(c *fiber.Ctx) error {
 		AccountID: user.ID,
 	}).Error; err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
+	} else {
+		cachekit.Delete(gap.Ca, services.KgAuthContextCache(uint(id)))
 	}
 
 	return c.SendStatus(fiber.StatusOK)

@@ -31,7 +31,7 @@ func Authenticate(sessionId uint) (ctx models.AuthTicket, perms map[string]any, 
 }
 
 func KgAuthContextCache(sessionId uint) string {
-	return fmt.Sprintf("auth-context#%d", sessionId)
+	return cachekit.FKey("auth-context", sessionId)
 }
 
 func GetAuthContext(sessionId uint) (models.AuthTicket, error) {
@@ -59,7 +59,6 @@ func CacheAuthContext(sessionId uint) (models.AuthTicket, error) {
 	var ticket models.AuthTicket
 	if err := database.C.
 		Where("id = ?", sessionId).
-		Preload("Account").
 		First(&ticket).Error; err != nil {
 		return ticket, fmt.Errorf("invalid auth ticket: %v", err)
 	} else if err := ticket.IsAvailable(); err != nil {
