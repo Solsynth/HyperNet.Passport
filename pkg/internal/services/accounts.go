@@ -26,7 +26,7 @@ import (
 )
 
 func KgAccountCache(query any) string {
-	return fmt.Sprintf("account#%v", query)
+	return cachekit.FKey(cachekit.DAUser, query)
 }
 
 func CacheAccount(account models.Account) {
