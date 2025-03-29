@@ -5,35 +5,23 @@ import (
 	"fmt"
 	"time"
 
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/cachekit"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 
-	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
-	"github.com/eko/gocache/lib/v4/cache"
-	"github.com/eko/gocache/lib/v4/marshaler"
-	"github.com/eko/gocache/lib/v4/store"
 	"github.com/samber/lo"
 )
 
-func GetStatusCacheKey(uid uint) string {
+func KgStatusCache(uid uint) string {
 	return fmt.Sprintf("user-status#%d", uid)
 }
 
 func GetStatus(uid uint) (models.Status, error) {
-	cacheManager := cache.New[any](localCache.S)
-	marshal := marshaler.New(cacheManager)
-	contx := context.Background()
-
-	if val, err := marshal.Get(contx, GetStatusCacheKey(uid), new(models.Status)); err == nil {
-		status := val.(*models.Status)
-		if status.ClearAt != nil && status.ClearAt.Before(time.Now()) {
-			marshal.Delete(contx, GetStatusCacheKey(uid))
-		} else {
-			return *status, nil
-		}
+	if val, err := cachekit.Get[models.Status](gap.Ca, KgStatusCache(uid)); err == nil {
+		return val, nil
 	}
 	var status models.Status
 	if err := database.C.
@@ -48,15 +36,12 @@ func GetStatus(uid uint) (models.Status, error) {
 }
 
 func CacheUserStatus(uid uint, status models.Status) {
-	cacheManager := cache.New[any](localCache.S)
-	marshal := marshaler.New(cacheManager)
-	contx := context.Background()
-
-	marshal.Set(
-		contx,
-		GetStatusCacheKey(uid),
+	cachekit.Set[models.Status](
+		gap.Ca,
+		KgStatusCache(uid),
 		status,
-		store.WithTags([]string{"user-status", fmt.Sprintf("user#%d", uid)}),
+		time.Minute*5,
+		fmt.Sprintf("user#%d", uid),
 	)
 }
 
@@ -124,11 +109,7 @@ func ClearStatus(user models.Account) error {
 		Updates(models.Status{ClearAt: lo.ToPtr(time.Now())}).Error; err != nil {
 		return err
 	} else {
-		cacheManager := cache.New[any](localCache.S)
-		marshal := marshaler.New(cacheManager)
-		contx := context.Background()
-
-		marshal.Delete(contx, GetStatusCacheKey(user.ID))
+		cachekit.Delete(gap.Ca, KgStatusCache(user.ID))
 	}
 
 	return nil

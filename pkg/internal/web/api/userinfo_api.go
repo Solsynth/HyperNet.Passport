@@ -1,18 +1,13 @@
 package api
 
 import (
-	"context"
 	"fmt"
 	"strconv"
 	"strings"
 
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/sec"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
-	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/web/exts"
-	"github.com/eko/gocache/lib/v4/cache"
-	"github.com/eko/gocache/lib/v4/marshaler"
-	"gorm.io/gorm"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/services"
@@ -22,47 +17,14 @@ import (
 func getOtherUserinfo(c *fiber.Ctx) error {
 	alias := c.Params("alias")
 
-	cacheManager := cache.New[any](localCache.S)
-	marshal := marshaler.New(cacheManager)
-	ctx := context.Background()
-
-	if val, err := marshal.Get(ctx, services.GetAccountCacheKey(alias), new(models.Account)); err == nil {
-		return c.JSON(*val.(*models.Account))
-	}
-
-	tx := database.C.Where("name = ?", alias)
-
+	var account models.Account
+	var err error
 	numericId, err := strconv.Atoi(alias)
 	if err == nil {
-		if val, err := marshal.Get(ctx, services.GetAccountCacheKey(numericId), new(models.Account)); err == nil {
-			return c.JSON(*val.(*models.Account))
-		}
-		tx = tx.Or("id = ?", numericId)
+		account, err = services.GetAccountForEnd(uint(numericId))
+	} else {
+		account, err = services.GetAccountForEnd(alias)
 	}
-
-	var account models.Account
-	if err := tx.
-		Preload("Profile").
-		Preload("Badges", func(db *gorm.DB) *gorm.DB {
-			return db.Order("badges.is_active DESC, badges.type DESC")
-		}).
-		First(&account).Error; err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	}
-
-	groups, err := services.GetUserAccountGroup(account)
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("unable to get account groups: %v", err))
-	}
-	for _, group := range groups {
-		for k, v := range group.PermNodes {
-			if _, ok := account.PermNodes[k]; !ok {
-				account.PermNodes[k] = v
-			}
-		}
-	}
-
-	services.CacheAccount(account)
 
 	return c.JSON(account)
 }

@@ -17,7 +17,6 @@ import (
 	"git.solsynth.dev/hypernet/passport/pkg/internal/web"
 	"github.com/robfig/cron/v3"
 
-	"git.solsynth.dev/hypernet/passport/pkg/internal/cache"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -85,11 +84,6 @@ func main() {
 	}
 	if err := database.NewGeoDB(); err != nil {
 		log.Fatal().Err(err).Msg("An error occurred when connect to geoip database.")
-	}
-
-	// Initialize cache
-	if err := cache.NewStore(); err != nil {
-		log.Fatal().Err(err).Msg("An error occurred when initializing cache.")
 	}
 
 	// App

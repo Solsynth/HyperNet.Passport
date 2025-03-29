@@ -34,7 +34,7 @@ func editUserPermission(c *fiber.Ctx) error {
 	prev := user.PermNodes
 	user.PermNodes = data.PermNodes
 
-	services.InvalidAuthCacheWithUser(user.ID)
+	services.InvalidUserAuthCache(user.ID)
 
 	if err := database.C.Save(&user).Error; err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())

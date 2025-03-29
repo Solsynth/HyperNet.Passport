@@ -1,18 +1,17 @@
 package gap
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 	"time"
 
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/cachekit"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/localize"
 
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
 	"git.solsynth.dev/hypernet/nexus/pkg/nex/rx"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/pusher/pkg/pushkit/pushcon"
-	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
 
@@ -23,7 +22,7 @@ var (
 	Nx *nex.Conn
 	Px *pushcon.Conn
 	Rx *rx.MqConn
-	Jt nats.JetStreamContext
+	Ca *cachekit.CaConn
 )
 
 const (
@@ -65,20 +64,9 @@ func InitializeToNexus() error {
 	if err != nil {
 		return fmt.Errorf("error during initialize nexus rx module: %v", err)
 	}
-	Jt, err = Rx.Nt.JetStream()
+	Ca, err = cachekit.NewCaConn(Nx, time.Second*3)
 	if err != nil {
-		return fmt.Errorf("error during initialize nats jetstream: %v", err)
-	}
-
-	jetstreamCfg := &nats.StreamConfig{
-		Name:     "OTPs",
-		Subjects: []string{fmt.Sprintf("%s>", FactorOtpPrefix)},
-		Storage:  nats.MemoryStorage,
-		MaxAge:   30 * time.Minute,
-	}
-	_, err = Jt.AddStream(jetstreamCfg)
-	if err != nil && !errors.Is(err, nats.ErrStreamNameAlreadyInUse) {
-		return fmt.Errorf("error during initialize jetstream stream: %v", err)
+		return fmt.Errorf("error during initialize nexus cache module: %v", err)
 	}
 
 	return err

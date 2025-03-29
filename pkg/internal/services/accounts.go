@@ -3,19 +3,18 @@ package services
 import (
 	"context"
 	"fmt"
+	"maps"
 	"time"
 	"unicode"
 
 	"git.solsynth.dev/hypernet/nexus/pkg/nex"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/cachekit"
 	"git.solsynth.dev/hypernet/nexus/pkg/proto"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
-	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
-	"github.com/eko/gocache/lib/v4/cache"
-	"github.com/eko/gocache/lib/v4/marshaler"
-	"github.com/eko/gocache/lib/v4/store"
 
 	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
 	"github.com/rs/zerolog/log"
@@ -26,28 +25,24 @@ import (
 	"github.com/samber/lo"
 )
 
-func GetAccountCacheKey(query any) string {
-	return fmt.Sprintf("account-query#%v", query)
+func KgAccountCache(query any) string {
+	return fmt.Sprintf("account#%v", query)
 }
 
 func CacheAccount(account models.Account) {
-	cacheManager := cache.New[any](localCache.S)
-	marshal := marshaler.New(cacheManager)
-	ctx := context.Background()
-
-	_ = marshal.Set(
-		ctx,
-		GetAccountCacheKey(account.Name),
+	cachekit.Set[models.Account](
+		gap.Ca,
+		KgAccountCache(account.Name),
 		account,
-		store.WithExpiration(30*time.Minute),
-		store.WithTags([]string{"account", fmt.Sprintf("user#%d", account.ID)}),
+		60*time.Minute,
+		fmt.Sprintf("user#%d", account.ID),
 	)
-	_ = marshal.Set(
-		ctx,
-		GetAccountCacheKey(account.ID),
+	cachekit.Set[models.Account](
+		gap.Ca,
+		KgAccountCache(account.ID),
 		account,
-		store.WithExpiration(30*time.Minute),
-		store.WithTags([]string{"account", fmt.Sprintf("user#%d", account.ID)}),
+		60*time.Minute,
+		fmt.Sprintf("user#%d", account.ID),
 	)
 }
 
@@ -61,6 +56,58 @@ func ValidateAccountName(val string, min, max int) bool {
 		}
 	}
 	return actualLength >= min && max >= actualLength
+}
+
+func GetAccountForEnd(id any) (models.Account, error) {
+	if val, err := cachekit.Get[models.Account](gap.Ca, KgAccountCache(id)); err == nil {
+		return val, err
+	}
+
+	var account models.Account
+	tx := database.C
+	switch id.(type) {
+	case uint:
+		tx = tx.Where("id = ?", id)
+	case string:
+		tx = tx.Where("name = ?", id)
+	default:
+		return account, fmt.Errorf("invalid account id type")
+	}
+
+	if err := tx.
+		Preload("Profile").
+		Preload("Badges", func(db *gorm.DB) *gorm.DB {
+			return db.Order("badges.is_active DESC, badges.type DESC")
+		}).
+		First(&account).Error; err != nil {
+		return account, fmt.Errorf("requested user with id %d was not found", id)
+	}
+
+	groups, err := GetUserAccountGroup(account)
+	if err != nil {
+		return account, fmt.Errorf("unable to get account groups: %v", err)
+	}
+	for _, group := range groups {
+		for k, v := range group.PermNodes {
+			if _, ok := account.PermNodes[k]; !ok {
+				account.PermNodes[k] = v
+			}
+		}
+	}
+
+	punishments, err := ListPunishments(account)
+	if err != nil {
+		return account, fmt.Errorf("unable to get account punishments: %v", err)
+	}
+	account.Punishments = punishments
+	for _, punishment := range punishments {
+		if punishment.Type == models.PunishmentTypeLimited && len(punishment.PermNodes) > 0 {
+			maps.Copy(account.PermNodes, punishment.PermNodes)
+		}
+	}
+	CacheAccount(account)
+
+	return account, nil
 }
 
 func GetAccount(id uint) (models.Account, error) {
@@ -204,7 +251,7 @@ func ForceConfirmAccount(user models.Account) error {
 		return err
 	}
 
-	InvalidAuthCacheWithUser(user.ID)
+	InvalidUserAuthCache(user.ID)
 
 	return nil
 }
@@ -341,7 +388,7 @@ func DeleteAccount(id uint) error {
 	if err := tx.Commit().Error; err != nil {
 		return err
 	} else {
-		InvalidAuthCacheWithUser(id)
+		InvalidUserAuthCache(id)
 		conn := gap.Nx.GetNexusGrpcConn()
 		_, _ = proto.NewDirectoryServiceClient(conn).BroadcastEvent(context.Background(), &proto.EventInfo{
 			Event: "deletion",

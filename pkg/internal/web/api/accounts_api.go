@@ -172,7 +172,7 @@ func editUserinfo(c *fiber.Ctx) error {
 	}
 
 	services.AddEvent(user.ID, "profile.edit", nil, c.IP(), c.Get(fiber.HeaderUserAgent))
-	services.InvalidAuthCacheWithUser(account.ID)
+	services.InvalidUserAuthCache(account.ID)
 
 	return c.SendStatus(fiber.StatusOK)
 }
@@ -197,7 +197,7 @@ func updateAccountLanguage(c *fiber.Ctx) error {
 	}
 
 	services.AddEvent(user.ID, "profile.edit.language", nil, c.IP(), c.Get(fiber.HeaderUserAgent))
-	services.InvalidAuthCacheWithUser(user.ID)
+	services.InvalidUserAuthCache(user.ID)
 
 	user.Language = data.Language
 

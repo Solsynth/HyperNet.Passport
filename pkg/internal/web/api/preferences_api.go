@@ -50,7 +50,7 @@ func getNotificationPreference(c *fiber.Ctx) error {
 		return err
 	}
 	user := c.Locals("user").(models.Account)
-	notification, err := services.GetNotificationPreference(user)
+	notification, err := services.GetNotifyPreference(user)
 	if err != nil {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
@@ -72,7 +72,7 @@ func updateNotificationPreference(c *fiber.Ctx) error {
 		return err
 	}
 
-	notification, err := services.UpdateNotificationPreference(user, data.Config)
+	notification, err := services.UpdateNotifyPreference(user, data.Config)
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	} else {

@@ -1,17 +1,15 @@
 package services
 
 import (
-	"context"
 	"fmt"
-	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
-	"github.com/rs/zerolog/log"
 	"time"
 
-	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/cachekit"
+	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
+	"github.com/rs/zerolog/log"
+
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
-	"github.com/eko/gocache/lib/v4/cache"
-	"github.com/eko/gocache/lib/v4/marshaler"
-	"github.com/eko/gocache/lib/v4/store"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 	"github.com/samber/lo"
 	"gorm.io/datatypes"
 )
@@ -41,46 +39,39 @@ func UpdateAuthPreference(account models.Account, config models.AuthConfig) (mod
 	return auth, err
 }
 
-func GetNotificationPreferenceCacheKey(accountId uint) string {
+func KgNotifyPreferenceCache(accountId uint) string {
 	return fmt.Sprintf("notification-preference#%d", accountId)
 }
 
-func GetNotificationPreference(account models.Account) (models.PreferenceNotification, error) {
+func GetNotifyPreference(account models.Account) (models.PreferenceNotification, error) {
 	var notification models.PreferenceNotification
-	cacheManager := cache.New[any](localCache.S)
-	marshal := marshaler.New(cacheManager)
-	ctx := context.Background()
-
-	if val, err := marshal.Get(ctx, GetNotificationPreferenceCacheKey(account.ID), new(models.PreferenceNotification)); err == nil {
-		notification = *val.(*models.PreferenceNotification)
-	} else {
-		if err := database.C.Where("account_id = ?", account.ID).First(&notification).Error; err != nil {
-			return notification, err
-		}
-		CacheNotificationPreference(notification)
+	if val, err := cachekit.Get[models.PreferenceNotification](
+		gap.Ca,
+		KgNotifyPreferenceCache(account.ID),
+	); err == nil {
+		return val, nil
 	}
-
+	if err := database.C.Where("account_id = ?", account.ID).First(&notification).Error; err != nil {
+		return notification, err
+	}
+	CacheNotifyPreference(notification)
 	return notification, nil
 }
 
-func CacheNotificationPreference(prefs models.PreferenceNotification) {
-	cacheManager := cache.New[any](localCache.S)
-	marshal := marshaler.New(cacheManager)
-	contx := context.Background()
-
-	_ = marshal.Set(
-		contx,
-		GetNotificationPreferenceCacheKey(prefs.AccountID),
+func CacheNotifyPreference(prefs models.PreferenceNotification) {
+	cachekit.Set[models.PreferenceNotification](
+		gap.Ca,
+		KgNotifyPreferenceCache(prefs.AccountID),
 		prefs,
-		store.WithExpiration(60*time.Minute),
-		store.WithTags([]string{"notification-preference", fmt.Sprintf("user#%d", prefs.AccountID)}),
+		time.Minute*60,
+		fmt.Sprintf("user#%d", prefs.AccountID),
 	)
 }
 
-func UpdateNotificationPreference(account models.Account, config map[string]bool) (models.PreferenceNotification, error) {
+func UpdateNotifyPreference(account models.Account, config map[string]bool) (models.PreferenceNotification, error) {
 	var notification models.PreferenceNotification
 	var err error
-	if notification, err = GetNotificationPreference(account); err != nil {
+	if notification, err = GetNotifyPreference(account); err != nil {
 		notification = models.PreferenceNotification{
 			AccountID: account.ID,
 			Config:    lo.MapValues(config, func(v bool, k string) any { return v }),
@@ -91,7 +82,7 @@ func UpdateNotificationPreference(account models.Account, config map[string]bool
 
 	err = database.C.Save(&notification).Error
 	if err == nil {
-		CacheNotificationPreference(notification)
+		CacheNotifyPreference(notification)
 	}
 
 	return notification, err
@@ -99,17 +90,16 @@ func UpdateNotificationPreference(account models.Account, config map[string]bool
 
 func CheckNotificationNotifiable(account models.Account, topic string) bool {
 	var notification models.PreferenceNotification
-	cacheManager := cache.New[any](localCache.S)
-	marshal := marshaler.New(cacheManager)
-	contx := context.Background()
-
-	if val, err := marshal.Get(contx, GetNotificationPreferenceCacheKey(account.ID), new(models.PreferenceNotification)); err == nil {
-		notification = val.(models.PreferenceNotification)
+	if val, err := cachekit.Get[models.PreferenceNotification](
+		gap.Ca,
+		KgNotifyPreferenceCache(account.ID),
+	); err == nil {
+		notification = val
 	} else {
 		if err := database.C.Where("account_id = ?", account.ID).First(&notification).Error; err != nil {
 			return true
 		}
-		CacheNotificationPreference(notification)
+		CacheNotifyPreference(notification)
 	}
 
 	if val, ok := notification.Config[topic]; ok {
@@ -121,20 +111,15 @@ func CheckNotificationNotifiable(account models.Account, topic string) bool {
 }
 
 func CheckNotificationNotifiableBatch(accounts []models.Account, topic string) []bool {
-	cacheManager := cache.New[any](localCache.S)
-	marshal := marshaler.New(cacheManager)
-	ctx := context.Background()
-
-	var notifiable = make([]bool, len(accounts))
+	notifiable := make([]bool, len(accounts))
 	var queryNeededIdx []uint
 	notificationMap := make(map[uint]models.PreferenceNotification)
 
 	// Check cache for each account
 	for _, account := range accounts {
-		cacheKey := GetNotificationPreferenceCacheKey(account.ID)
-		if val, err := marshal.Get(ctx, cacheKey, new(models.PreferenceNotification)); err == nil {
-			notification := val.(*models.PreferenceNotification)
-			notificationMap[account.ID] = *notification
+		cacheKey := KgNotifyPreferenceCache(account.ID)
+		if val, err := cachekit.Get[models.PreferenceNotification](gap.Ca, cacheKey); err == nil {
+			notificationMap[account.ID] = val
 		} else {
 			// Add to the list of accounts that need to be queried
 			queryNeededIdx = append(queryNeededIdx, account.ID)
@@ -154,7 +139,7 @@ func CheckNotificationNotifiableBatch(accounts []models.Account, topic string) [
 		// Cache the newly fetched notifications and add to the notificationMap
 		for _, notification := range dbNotifications {
 			notificationMap[notification.AccountID] = notification
-			CacheNotificationPreference(notification) // Cache the result
+			CacheNotifyPreference(notification) // Cache the result
 		}
 	}
 

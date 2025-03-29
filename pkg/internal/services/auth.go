@@ -1,19 +1,16 @@
 package services
 
 import (
-	"context"
 	"fmt"
 	"time"
 
+	"git.solsynth.dev/hypernet/nexus/pkg/nex/cachekit"
 	"git.solsynth.dev/hypernet/passport/pkg/authkit/models"
 	"git.solsynth.dev/hypernet/passport/pkg/internal/database"
+	"git.solsynth.dev/hypernet/passport/pkg/internal/gap"
 
-	"github.com/eko/gocache/lib/v4/cache"
-	"github.com/eko/gocache/lib/v4/marshaler"
-	"github.com/eko/gocache/lib/v4/store"
 	jsoniter "github.com/json-iterator/go"
 
-	localCache "git.solsynth.dev/hypernet/passport/pkg/internal/cache"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog/log"
 )
@@ -33,7 +30,7 @@ func Authenticate(sessionId uint) (ctx models.AuthTicket, perms map[string]any, 
 	return
 }
 
-func GetAuthContextCacheKey(sessionId uint) string {
+func KgAuthContextCache(sessionId uint) string {
 	return fmt.Sprintf("auth-context#%d", sessionId)
 }
 
@@ -41,12 +38,9 @@ func GetAuthContext(sessionId uint) (models.AuthTicket, error) {
 	var err error
 	var ctx models.AuthTicket
 
-	cacheManager := cache.New[any](localCache.S)
-	marshal := marshaler.New(cacheManager)
-
-	key := GetAuthContextCacheKey(sessionId)
-	if val, err := marshal.Get(context.Background(), key, new(models.AuthTicket)); err == nil {
-		ctx = *val.(*models.AuthTicket)
+	key := KgAuthContextCache(sessionId)
+	if val, err := cachekit.Get[models.AuthTicket](gap.Ca, key); err == nil {
+		ctx = val
 	} else {
 		ctx, err = CacheAuthContext(sessionId)
 		if err != nil {
@@ -90,27 +84,22 @@ func CacheAuthContext(sessionId uint) (models.AuthTicket, error) {
 	ticket.Account = user
 
 	// Put the data into the cache
-	cacheManager := cache.New[any](localCache.S)
-	marshal := marshaler.New(cacheManager)
-
-	key := GetAuthContextCacheKey(sessionId)
-	err = marshal.Set(
-		context.Background(),
+	key := KgAuthContextCache(sessionId)
+	err = cachekit.Set[models.AuthTicket](
+		gap.Ca,
 		key,
 		ticket,
-		store.WithExpiration(10*time.Minute),
-		store.WithTags([]string{"auth-context", fmt.Sprintf("user#%d", user.ID)}),
+		time.Minute*10,
+		"auth-context",
+		fmt.Sprintf("user#%d", user.ID),
 	)
+	if err != nil {
+		log.Error().Err(err).Msg("Unable to cache auth context...")
+	}
 
 	return ticket, err
 }
 
-func InvalidAuthCacheWithUser(userId uint) {
-	cacheManager := cache.New[any](localCache.S)
-	ctx := context.Background()
-
-	cacheManager.Invalidate(
-		ctx,
-		store.WithInvalidateTags([]string{"auth-context", fmt.Sprintf("user#%d", userId)}),
-	)
+func InvalidUserAuthCache(uid uint) {
+	cachekit.DeleteByTags(gap.Ca, "auth-context", fmt.Sprintf("user#%d", uid))
 }

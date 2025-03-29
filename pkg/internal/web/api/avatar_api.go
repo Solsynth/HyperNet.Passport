@@ -30,7 +30,7 @@ func setAvatar(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
 		services.AddEvent(user.ID, "profile.edit.avatar", nil, c.IP(), c.Get(fiber.HeaderUserAgent))
-		services.InvalidAuthCacheWithUser(user.ID)
+		services.InvalidUserAuthCache(user.ID)
 	}
 
 	if og != nil && len(*og) > 0 {
@@ -66,7 +66,7 @@ func setBanner(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
 		services.AddEvent(user.ID, "profile.edit.banner", nil, c.IP(), c.Get(fiber.HeaderUserAgent))
-		services.InvalidAuthCacheWithUser(user.ID)
+		services.InvalidUserAuthCache(user.ID)
 	}
 
 	if og != nil && len(*og) > 0 {
