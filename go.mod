@@ -3,7 +3,7 @@ module git.solsynth.dev/hypernet/passport
 go 1.23.2
 
 require (
-	git.solsynth.dev/hypernet/nexus v0.0.0-20250329043915-66df1392c40d
+	git.solsynth.dev/hypernet/nexus v0.0.0-20250329052546-e7d7cd1000db
 	git.solsynth.dev/hypernet/paperclip v0.0.0-20250310151112-1d866f317f47
 	git.solsynth.dev/hypernet/pusher v0.0.0-20250216145944-5fb769823a88
 	git.solsynth.dev/hypernet/wallet v0.0.0-20250323095812-468cd655f886
@@ -15,7 +15,6 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12
-	github.com/nats-io/nats.go v1.37.0
 	github.com/oschwald/geoip2-golang v1.11.0
 	github.com/pquerna/otp v1.4.0
 	github.com/robfig/cron/v3 v3.0.1
@@ -62,6 +61,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/nats-io/nats.go v1.37.0 // indirect
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.5.0 // indirect
