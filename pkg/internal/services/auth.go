@@ -42,6 +42,7 @@ func GetAuthContext(sessionId uint) (models.AuthTicket, error) {
 	if val, err := cachekit.Get[models.AuthTicket](gap.Ca, key); err == nil {
 		ctx = val
 	} else {
+		log.Error().Err(err).Msg("Unable to get auth context cache")
 		ctx, err = CacheAuthContext(sessionId)
 		if err != nil {
 			log.Error().Err(err).Msg("Unable to cache auth context")
