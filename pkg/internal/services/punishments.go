@@ -32,7 +32,7 @@ func NewPunishment(in models.Punishment, moderator ...models.Account) (models.Pu
 	if err := database.C.Create(&in).Error; err != nil {
 		return in, err
 	} else {
-		var moderator = "System"
+		moderator := "System"
 		if in.Moderator != nil {
 			moderator = fmt.Sprintf("@%s", in.Moderator.Name)
 		}
@@ -57,7 +57,7 @@ func EditPunishment(in models.Punishment) (models.Punishment, error) {
 	if err := database.C.Save(&in).Error; err != nil {
 		return in, err
 	} else {
-		var moderator = "System"
+		moderator := "System"
 		if in.Moderator != nil {
 			moderator = fmt.Sprintf("@%s", in.Moderator.Name)
 		}
@@ -81,7 +81,7 @@ func DeletePunishment(in models.Punishment) error {
 	if err := database.C.Delete(&in).Error; err != nil {
 		return err
 	} else {
-		var moderator = "System"
+		moderator := "System"
 		if in.Moderator != nil {
 			moderator = fmt.Sprintf("@%s", in.Moderator.Name)
 		}
@@ -125,7 +125,7 @@ func GetMadePunishment(id uint, moderator models.Account) (models.Punishment, er
 func ListPunishments(user models.Account) ([]models.Punishment, error) {
 	var punishments []models.Punishment
 	if err := database.C.
-		Where("account_id = ? AND (expired_at IS NULL OR expired_at <= ?)", user.ID, time.Now()).
+		Where("account_id = ? AND (expired_at IS NULL OR expired_at > ?)", user.ID, time.Now()).
 		Preload("Moderator").
 		Order("created_at DESC").
 		Find(&punishments).Error; err != nil {
@@ -183,7 +183,7 @@ func ListMadePunishments(moderator models.Account, take, offset int) ([]models.P
 
 func CheckLoginAbility(user models.Account) error {
 	var punishments []models.Punishment
-	if err := database.C.Where("account_id = ? AND (expired_at IS NULL OR expired_at <= ?)", user.ID, time.Now()).
+	if err := database.C.Where("account_id = ? AND (expired_at IS NULL OR expired_at > ?)", user.ID, time.Now()).
 		Find(&punishments).Error; err != nil {
 		return fmt.Errorf("failed to get punishments: %v", err)
 	}
