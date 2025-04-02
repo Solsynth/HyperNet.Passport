@@ -84,12 +84,14 @@ func PeriodicChargeProgramFee() {
 	var members []models.ProgramMember
 	// Every month paid once
 	if err := database.C.Where("last_paid IS NULL OR last_paid < ?", time.Now().AddDate(0, 0, -30)).
-		Preload("Program").Find(&members).Error; err != nil {
+		Preload("Program").Preload("Account").Find(&members).Error; err != nil {
 		return
 	}
 	for _, member := range members {
 		if err := ChargeForProgram(member); err == nil {
 			database.C.Model(&member).Update("last_paid", time.Now())
+		} else {
+			LeaveProgram(member.Account, member.Program)
 		}
 	}
 }
